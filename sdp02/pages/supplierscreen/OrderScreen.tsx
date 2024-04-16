@@ -8,7 +8,69 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+const formSchema = z.object({
+  customername: z.string().min(2, {
+    message: "Username must be at least 2 characters.",
+  }),
+  customeremail: z.string().min(2, {
+    message: "",
+  }),
+  orderid: z.string().min(2, {
+    message: "",
+  }),
+  street: z.string().min(2, {
+    message: "",
+  }),
+  addressnr: z.string().min(2, {
+    message: "",
+  }),
+  city: z.string().min(2, {
+    message: "",
+  }),
+  postalcode: z.string().min(2, {
+    message: "",
+  }),
+  country: z.string().min(2, {
+    message: "",
+  }),
+  lastpaymentupdate: z.string().min(2, {
+    message: "",
+  }),
+});
+
 export const OrderScreen = () => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      customername: "Temp",
+      customeremail: "Temp",
+      orderid: "Temp",
+      street: "Temp",
+      addressnr: "Temp",
+      city: "Temp",
+      postalcode: "Temp",
+      country: "Temp",
+      lastpaymentupdate: "Temp",
+    },
+  });
+
+  //Later nodig om tabellen te kunnen aanpassen bij aanpassing van statussen
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+  }
   return (
     <div>
       <Table className="border mt-4">
@@ -33,6 +95,130 @@ export const OrderScreen = () => {
           </TableRow>
         </TableBody>
       </Table>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <div className="grid grid-cols-3 gap-4">
+            <FormField
+              control={form.control}
+              name="customername"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="customeremail"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Customer Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="E-mail" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="orderid"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Order ID</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Order ID" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="street"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Street</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Street" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="addressnr"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Address Nr.</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Address Nr." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="city"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>City</FormLabel>
+                  <FormControl>
+                    <Input placeholder="City" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="postalcode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>PostalCode</FormLabel>
+                  <FormControl>
+                    <Input placeholder="PostalCode" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="country"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Country</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Country" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastpaymentupdate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Payment Update</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Reminder" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <Button className="mt-4 bg-red-500 text-dark">Submit</Button>
+        </form>
+      </Form>
       <Table className="border mt-4">
         <TableCaption>A list of orderitems</TableCaption>
         <TableHeader>
