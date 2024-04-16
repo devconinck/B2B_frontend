@@ -49,21 +49,29 @@ const formSchema = z.object({
   lastpaymentupdate: z.string().min(2, {
     message: "",
   }),
+  orderstatus: z.string().min(2, {
+    message: "",
+  }),
+  paymentstatus: z.string().min(2, {
+    message: "",
+  }),
 });
 
 export const OrderScreen = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      customername: "Temp",
-      customeremail: "Temp",
-      orderid: "Temp",
-      street: "Temp",
-      addressnr: "Temp",
-      city: "Temp",
-      postalcode: "Temp",
-      country: "Temp",
-      lastpaymentupdate: "Temp",
+      customername: "Customer Name",
+      customeremail: "Customer Email",
+      orderid: "Order ID",
+      street: "Street",
+      addressnr: "Address Nr",
+      city: "City",
+      postalcode: "Postal Code",
+      country: "Country",
+      lastpaymentupdate: "Last Update",
+      orderstatus: "Order Status",
+      paymentstatus: "Payment Status",
     },
   });
 
@@ -215,8 +223,36 @@ export const OrderScreen = () => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="orderstatus"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>OrderStatus</FormLabel>
+                  <FormControl>
+                    <Input placeholder="OrderStatus" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="paymentstatus"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>PaymentStatus</FormLabel>
+                  <FormControl>
+                    <Input placeholder="PaymentStatus" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div>
+              <Button className="mt-4 bg-red-500 text-dark">Submit</Button>
+            </div>
           </div>
-          <Button className="mt-4 bg-red-500 text-dark">Submit</Button>
         </form>
       </Form>
       <Table className="border mt-4">

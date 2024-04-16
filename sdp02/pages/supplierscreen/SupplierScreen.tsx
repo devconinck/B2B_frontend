@@ -38,7 +38,7 @@ export const SupplierScreen = () => {
             <li className="mb-2">
               <Button onClick={clickedNotifications}>
                 <BellRing className="mr-2 h-4 w-4" />
-                Customers
+                Notifications
               </Button>
             </li>
             <li className="mb-2">
