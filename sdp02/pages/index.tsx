@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { NextPage } from "next";
-import { OrderScreen } from "./supplierscreen/OrderScreen";
+import { SupplierScreen } from "./supplierscreen/SupplierScreen";
 
 const Home: NextPage = () => {
   return (
@@ -18,7 +18,7 @@ const Home: NextPage = () => {
       </div>
     </div>
     */
-    <OrderScreen />
+    <SupplierScreen />
   );
 };
 
