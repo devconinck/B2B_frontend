@@ -78,7 +78,7 @@ const columns: ColumnDef<Order>[] = [
     },
   },
   {
-    accessorKey: "customerName",
+    accessorKey: "customername",
     header: ({ column }) => {
       return (
         <div
@@ -92,7 +92,7 @@ const columns: ColumnDef<Order>[] = [
     },
   },
   {
-    accessorKey: "orderId",
+    accessorKey: "orderid",
     header: ({ column }) => {
       return (
         <div
@@ -106,7 +106,7 @@ const columns: ColumnDef<Order>[] = [
     },
   },
   {
-    accessorKey: "orderStatus",
+    accessorKey: "orderstatus",
     header: ({ column }) => {
       return (
         <div
@@ -120,7 +120,7 @@ const columns: ColumnDef<Order>[] = [
     },
   },
   {
-    accessorKey: "paymentStatus",
+    accessorKey: "paymentstatus",
     header: ({ column }) => {
       return (
         <div
@@ -160,187 +160,187 @@ const columns: ColumnDef<Order>[] = [
 
 interface Order {
   date: string;
-  customerName: string;
-  orderId: string;
-  orderStatus: string;
-  paymentStatus: string;
+  customername: string;
+  orderid: string;
+  orderstatus: string;
+  paymentstatus: string;
 }
 
 const mockOrders: Order[] = [
   {
     date: "2024-04-01",
-    customerName: "John Doe",
-    orderId: "ORD1234",
-    orderStatus: "Pending",
-    paymentStatus: "Unpaid",
+    customername: "John Doe",
+    orderid: "ORD1234",
+    orderstatus: "Pending",
+    paymentstatus: "Unpaid",
   },
   {
     date: "2024-04-02",
-    customerName: "Alice Johnson",
-    orderId: "ORD5678",
-    orderStatus: "Shipped",
-    paymentStatus: "Paid",
+    customername: "Alice Johnson",
+    orderid: "ORD5678",
+    orderstatus: "Shipped",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-03",
-    customerName: "Bob Smith",
-    orderId: "ORD9012",
-    orderStatus: "Delivered",
-    paymentStatus: "Paid",
+    customername: "Bob Smith",
+    orderid: "ORD9012",
+    orderstatus: "Delivered",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-04",
-    customerName: "Emily Brown",
-    orderId: "ORD3456",
-    orderStatus: "Pending",
-    paymentStatus: "Unpaid",
+    customername: "Emily Brown",
+    orderid: "ORD3456",
+    orderstatus: "Pending",
+    paymentstatus: "Unpaid",
   },
   {
     date: "2024-04-05",
-    customerName: "Sophia Martinez",
-    orderId: "ORD7890",
-    orderStatus: "Shipped",
-    paymentStatus: "Paid",
+    customername: "Sophia Martinez",
+    orderid: "ORD7890",
+    orderstatus: "Shipped",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-06",
-    customerName: "Michael Wilson",
-    orderId: "ORD2345",
-    orderStatus: "Delivered",
-    paymentStatus: "Paid",
+    customername: "Michael Wilson",
+    orderid: "ORD2345",
+    orderstatus: "Delivered",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-07",
-    customerName: "Emma Lee",
-    orderId: "ORD6789",
-    orderStatus: "Pending",
-    paymentStatus: "Unpaid",
+    customername: "Emma Lee",
+    orderid: "ORD6789",
+    orderstatus: "Pending",
+    paymentstatus: "Unpaid",
   },
   {
     date: "2024-04-08",
-    customerName: "Daniel Garcia",
-    orderId: "ORD0123",
-    orderStatus: "Shipped",
-    paymentStatus: "Paid",
+    customername: "Daniel Garcia",
+    orderid: "ORD0123",
+    orderstatus: "Shipped",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-09",
-    customerName: "Olivia Lopez",
-    orderId: "ORD4567",
-    orderStatus: "Delivered",
-    paymentStatus: "Paid",
+    customername: "Olivia Lopez",
+    orderid: "ORD4567",
+    orderstatus: "Delivered",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-10",
-    customerName: "Liam Moore",
-    orderId: "ORD8901",
-    orderStatus: "Pending",
-    paymentStatus: "Unpaid",
+    customername: "Liam Moore",
+    orderid: "ORD8901",
+    orderstatus: "Pending",
+    paymentstatus: "Unpaid",
   },
   {
     date: "2024-04-11",
-    customerName: "Ava Hernandez",
-    orderId: "ORD2345",
-    orderStatus: "Shipped",
-    paymentStatus: "Paid",
+    customername: "Ava Hernandez",
+    orderid: "ORD2345",
+    orderstatus: "Shipped",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-12",
-    customerName: "Noah Clark",
-    orderId: "ORD6789",
-    orderStatus: "Delivered",
-    paymentStatus: "Paid",
+    customername: "Noah Clark",
+    orderid: "ORD6789",
+    orderstatus: "Delivered",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-13",
-    customerName: "Isabella Lewis",
-    orderId: "ORD0123",
-    orderStatus: "Pending",
-    paymentStatus: "Unpaid",
+    customername: "Isabella Lewis",
+    orderid: "ORD0123",
+    orderstatus: "Pending",
+    paymentstatus: "Unpaid",
   },
   {
     date: "2024-04-14",
-    customerName: "James Young",
-    orderId: "ORD4567",
-    orderStatus: "Shipped",
-    paymentStatus: "Paid",
+    customername: "James Young",
+    orderid: "ORD4567",
+    orderstatus: "Shipped",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-15",
-    customerName: "Mia Rodriguez",
-    orderId: "ORD8901",
-    orderStatus: "Delivered",
-    paymentStatus: "Paid",
+    customername: "Mia Rodriguez",
+    orderid: "ORD8901",
+    orderstatus: "Delivered",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-16",
-    customerName: "William Scott",
-    orderId: "ORD2345",
-    orderStatus: "Pending",
-    paymentStatus: "Unpaid",
+    customername: "William Scott",
+    orderid: "ORD2345",
+    orderstatus: "Pending",
+    paymentstatus: "Unpaid",
   },
   {
     date: "2024-04-17",
-    customerName: "Charlotte Hall",
-    orderId: "ORD6789",
-    orderStatus: "Shipped",
-    paymentStatus: "Paid",
+    customername: "Charlotte Hall",
+    orderid: "ORD6789",
+    orderstatus: "Shipped",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-18",
-    customerName: "Ethan Allen",
-    orderId: "ORD0123",
-    orderStatus: "Delivered",
-    paymentStatus: "Paid",
+    customername: "Ethan Allen",
+    orderid: "ORD0123",
+    orderstatus: "Delivered",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-19",
-    customerName: "Harper King",
-    orderId: "ORD4567",
-    orderStatus: "Pending",
-    paymentStatus: "Unpaid",
+    customername: "Harper King",
+    orderid: "ORD4567",
+    orderstatus: "Pending",
+    paymentstatus: "Unpaid",
   },
   {
     date: "2024-04-20",
-    customerName: "Amelia Hill",
-    orderId: "ORD8901",
-    orderStatus: "Shipped",
-    paymentStatus: "Paid",
+    customername: "Amelia Hill",
+    orderid: "ORD8901",
+    orderstatus: "Shipped",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-12",
-    customerName: "Noah Clark",
-    orderId: "ORD6789",
-    orderStatus: "Delivered",
-    paymentStatus: "Paid",
+    customername: "Noah Clark",
+    orderid: "ORD6789",
+    orderstatus: "Delivered",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-13",
-    customerName: "Isabella Lewis",
-    orderId: "ORD0123",
-    orderStatus: "Pending",
-    paymentStatus: "Unpaid",
+    customername: "Isabella Lewis",
+    orderid: "ORD0123",
+    orderstatus: "Pending",
+    paymentstatus: "Unpaid",
   },
   {
     date: "2024-04-06",
-    customerName: "Michael Wilson",
-    orderId: "ORD2345",
-    orderStatus: "Delivered",
-    paymentStatus: "Paid",
+    customername: "Michael Wilson",
+    orderid: "ORD2345",
+    orderstatus: "Delivered",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-07",
-    customerName: "Emma Lee",
-    orderId: "ORD6789",
-    orderStatus: "Pending",
-    paymentStatus: "Unpaid",
+    customername: "Emma Lee",
+    orderid: "ORD6789",
+    orderstatus: "Pending",
+    paymentstatus: "Unpaid",
   },
   {
     date: "2024-04-02",
-    customerName: "Alice Johnson",
-    orderId: "ORD5678",
-    orderStatus: "Shipped",
-    paymentStatus: "Paid",
+    customername: "Alice Johnson",
+    orderid: "ORD5678",
+    orderstatus: "Shipped",
+    paymentstatus: "Paid",
   },
 ];
 
@@ -368,6 +368,11 @@ const OrderScreen: NextPage = () => {
   }
   return (
     <div className="container mx-auto py-10">
+      <div className="flex items-center justify-between space-y-2 mb-5">
+        <h2 className="text-2xl font-bold tracking-tight">
+          Here is an overview of all the orders to your company
+        </h2>
+      </div>
       <OrderTable columns={columns} data={mockOrders} />
       {/*<Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">

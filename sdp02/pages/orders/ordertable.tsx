@@ -10,6 +10,16 @@ import {
 } from "@/components/ui/table";
 
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+import {
   ColumnDef,
   SortingState,
   flexRender,
@@ -17,9 +27,12 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  ColumnFiltersState,
+  getFilteredRowModel,
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -31,6 +44,8 @@ export const OrderTable = <TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnFilter, setColumnFilter] = useState("orderid");
 
   const table = useReactTable({
     data,
@@ -39,13 +54,50 @@ export const OrderTable = <TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
+      columnFilters,
     },
   });
 
   return (
     <div>
+      <div className="flex items-center py-4">
+        <Input
+          placeholder={`Filter on ${columnFilter}...`}
+          value={
+            (table.getColumn(`${columnFilter}`)?.getFilterValue() as string) ??
+            ""
+          }
+          onChange={(event) =>
+            table
+              .getColumn(`${columnFilter}`)
+              ?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm mr-4"
+        />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">Select filter column</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56">
+            <DropdownMenuLabel>Filter Column</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuRadioGroup
+              value={columnFilter}
+              onValueChange={setColumnFilter}
+            >
+              {table.getAllColumns().map((column) => (
+                <DropdownMenuRadioItem key={column.id} value={column.id}>
+                  {column.id}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader className="bg-red-500 border-2 border-black">
