@@ -1,12 +1,7 @@
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { NextPage } from "next";
+
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,6 +16,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { OrderTable } from "./ordertable";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+} from "@radix-ui/react-dropdown-menu";
+
 const formSchema = z.object({
   customername: z.string().min(2, {
     message: "Username must be at least 2 characters.",
@@ -56,6 +61,102 @@ const formSchema = z.object({
     message: "",
   }),
 });
+
+const columns: ColumnDef<Order>[] = [
+  {
+    accessorKey: "date",
+    header: ({ column }) => {
+      return (
+        <div
+          className="flex items-center"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          <p className="mr-2">Date</p>
+          <ArrowUpDown className="h-4 w-4" />
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "customerName",
+    header: ({ column }) => {
+      return (
+        <div
+          className="flex items-center"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          <p className="mr-2">Customer Name</p>
+          <ArrowUpDown className="h-4 w-4" />
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "orderId",
+    header: ({ column }) => {
+      return (
+        <div
+          className="flex items-center"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          <p className="mr-2">Order ID</p>
+          <ArrowUpDown className="h-4 w-4" />
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "orderStatus",
+    header: ({ column }) => {
+      return (
+        <div
+          className="flex items-center"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          <p className="mr-2">Orderstatus</p>
+          <ArrowUpDown className="h-4 w-4" />
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "paymentStatus",
+    header: ({ column }) => {
+      return (
+        <div
+          className="flex items-center"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          <p className="mr-2">Paymentstatus</p>
+          <ArrowUpDown className="h-4 w-4" />
+        </div>
+      );
+    },
+  },
+  /*{
+    id: "actions",
+    cell: ({ row }) => {
+      const order = row.original;
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4 border-black" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+
+            <DropdownMenuItem>View customer</DropdownMenuItem>
+            <DropdownMenuItem>View payment details</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },*/
+];
 
 interface Order {
   date: string;
@@ -206,9 +307,44 @@ const mockOrders: Order[] = [
     orderStatus: "Shipped",
     paymentStatus: "Paid",
   },
+  {
+    date: "2024-04-12",
+    customerName: "Noah Clark",
+    orderId: "ORD6789",
+    orderStatus: "Delivered",
+    paymentStatus: "Paid",
+  },
+  {
+    date: "2024-04-13",
+    customerName: "Isabella Lewis",
+    orderId: "ORD0123",
+    orderStatus: "Pending",
+    paymentStatus: "Unpaid",
+  },
+  {
+    date: "2024-04-06",
+    customerName: "Michael Wilson",
+    orderId: "ORD2345",
+    orderStatus: "Delivered",
+    paymentStatus: "Paid",
+  },
+  {
+    date: "2024-04-07",
+    customerName: "Emma Lee",
+    orderId: "ORD6789",
+    orderStatus: "Pending",
+    paymentStatus: "Unpaid",
+  },
+  {
+    date: "2024-04-02",
+    customerName: "Alice Johnson",
+    orderId: "ORD5678",
+    orderStatus: "Shipped",
+    paymentStatus: "Paid",
+  },
 ];
 
-export const OrderScreen = () => {
+const OrderScreen: NextPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -231,33 +367,9 @@ export const OrderScreen = () => {
     console.log(values);
   }
   return (
-    <div>
-      <p>Test</p>
-      <Table className="border mt-4">
-        <TableCaption>A list of orders to the company</TableCaption>
-        <TableHeader>
-          <TableRow className="bg-red-500 border-b-2 border-black">
-            <TableHead>Date</TableHead>
-            <TableHead>Name Customer</TableHead>
-            <TableHead>Order ID</TableHead>
-            <TableHead>Orderstatus</TableHead>
-            <TableHead>Betaalstatus</TableHead>
-          </TableRow>
-        </TableHeader>
-        {/*Data uit de backend halen*/}
-        <TableBody>
-          {mockOrders.map((order) => (
-            <TableRow key={order.orderId}>
-              <TableCell>{order.date}</TableCell>
-              <TableCell>{order.customerName}</TableCell>
-              <TableCell>{order.orderId}</TableCell>
-              <TableCell>{order.orderStatus}</TableCell>
-              <TableCell>{order.paymentStatus}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <Form {...form}>
+    <div className="container mx-auto py-10">
+      <OrderTable columns={columns} data={mockOrders} />
+      {/*<Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <div className="grid grid-cols-3 gap-4">
             <FormField
@@ -429,7 +541,9 @@ export const OrderScreen = () => {
             <TableCell>€15.00</TableCell>
           </TableRow>
         </TableBody>
-      </Table>
+            </Table>*/}
     </div>
   );
 };
+
+export default OrderScreen;

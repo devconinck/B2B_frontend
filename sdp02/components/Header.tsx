@@ -1,20 +1,23 @@
 import Link from "next/link";
 import Container from "./ui/container";
+import Image from "next/image";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
-import { Menu, Moon, ShoppingCart, Sun } from "lucide-react";
+import { Menu } from "lucide-react";
 
 import ModeToggle from "./ModeToggle";
 
-const Header = () => {
+const Header = ({ onOrdersClick, onNotificationsClick }: any) => {
   const routes = [
     {
-      href: "/",
-      label: "Home",
+      href: "/notifications",
+      label: "Notifications",
+      onClick: onNotificationsClick,
     },
     {
-      href: "/contact",
-      label: "Contact",
+      href: "orders",
+      label: "Orders",
+      onClick: onOrdersClick,
     },
   ];
 
@@ -43,12 +46,24 @@ const Header = () => {
               </SheetContent>
             </Sheet>
             <Link href="/" className="ml-4 lg:ml-0">
-              <h1 className="text-xl font-bold">Frituur d`Aa</h1>
+              <Image
+                src="/logo/Delaware-logo.jpg"
+                alt="Logo delaware"
+                width={140}
+                height={70}
+              />
             </Link>
           </div>
           <nav className="mx-6 flex  items-center space-x-4 md:block lg:space-x-6">
             {routes.map((route, i) => (
-              <Button key={i} asChild variant="ghost">
+              <Button
+                key={i}
+                asChild
+                variant="ghost"
+                onClick={() => {
+                  route.onClick;
+                }}
+              >
                 <Link
                   key={i}
                   href={route.href}
@@ -60,9 +75,9 @@ const Header = () => {
             ))}
           </nav>
           <div className="mr-2 flex items-center">
-            <Link href={"/order"}>
+            {/*<Link href={"/order"}>
               <Button className="mr-4">Order</Button>
-            </Link>
+            </Link>*/}
             <ModeToggle />
           </div>
         </div>
