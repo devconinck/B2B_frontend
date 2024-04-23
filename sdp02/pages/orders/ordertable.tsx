@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { Link } from "react-router-dom";
+
 import {
   Table,
   TableBody,
@@ -70,6 +72,12 @@ export const OrderTable = <TData, TValue>({
     },
   });
 
+  const handleRowClick = (rowData: any) => {
+    console.log("test1");
+    <Link to="/orderdetails" />;
+    console.log("test2");
+  };
+
   return (
     <div>
       <div className="flex items-center py-4">
@@ -131,8 +139,8 @@ export const OrderTable = <TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
                   className="border-black hover:cursor-pointer"
+                  onClick={() => handleRowClick(row)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
