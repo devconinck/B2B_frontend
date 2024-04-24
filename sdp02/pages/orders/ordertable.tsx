@@ -55,7 +55,7 @@ export const OrderTable = <TData, TValue>({
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnFilter, setColumnFilter] = useState("orderid");
+  const [columnFilter, setColumnFilter] = useState("");
 
   const table = useReactTable({
     data,
