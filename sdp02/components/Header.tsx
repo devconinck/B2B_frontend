@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Container from "./ui/container";
+import Image from "next/image";
 import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Menu, Moon, ShoppingCart, Sun, Bell, Search } from "lucide-react";
