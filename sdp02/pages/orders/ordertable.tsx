@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Link } from "react-router-dom";
+import { useRouter } from "next/router";
 
 import {
   Table,
@@ -56,6 +56,7 @@ export const OrderTable = <TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnFilter, setColumnFilter] = useState("");
+  const router = useRouter();
 
   const table = useReactTable({
     data,
@@ -74,7 +75,7 @@ export const OrderTable = <TData, TValue>({
 
   const handleRowClick = (rowData: any) => {
     console.log("test1");
-    <Link to="/orderdetails" />;
+    router.push("/orderdetails");
     console.log("test2");
   };
 
