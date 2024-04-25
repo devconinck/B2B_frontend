@@ -38,9 +38,9 @@ const mockData = [
   },
   {
     id: 5,
-    message: "Payment request from Company 2",
+    message: "Order with id 1234 can be shipped",
     time: "3 days ago",
-    details: "Additional information here",
+    details: "All products are in stock",
   },
 ];
 
