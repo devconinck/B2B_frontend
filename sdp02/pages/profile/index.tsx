@@ -65,7 +65,7 @@ export default function Profile() {
                   disabled={!isEditing}
                 />
                 <Label htmlFor="city">City</Label>
-                <Input id="city" placeholder="City" />
+                <Input id="city" placeholder="City" disabled={!isEditing} />
                 <Label htmlFor="postal">Postal Code</Label>
                 <Input
                   id="postal"

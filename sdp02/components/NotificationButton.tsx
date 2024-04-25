@@ -28,7 +28,13 @@ export function NotificationButton() {
   /*
 Hier alle notifications ophalen en tonen in een lijst
 */
-  const notifications = ["Notification 1", "Notification 2", "Notification 3"];
+  const notifications = [
+    "Notification 1",
+    "Notification 2",
+    "Notification 3",
+    "Notification 4",
+    "Notification 5",
+  ];
 
   const handleNotifications = () => {
     router.push("/notifications");
