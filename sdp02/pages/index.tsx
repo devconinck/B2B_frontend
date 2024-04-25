@@ -4,7 +4,6 @@ import { NextPage } from "next";
 import Image from "next/image";
 const Home: NextPage = () => {
   return (
-    /*
     <div className="space-y-10 pb-10">
       <div className="overflow-hidden rounded-lg p-4 sm:p-6 lg:p-8">
         <div className="flex h-full w-full flex-col items-center justify-center gap-y-8 text-center">
@@ -37,8 +36,6 @@ const Home: NextPage = () => {
         </div>
       </div>
     </div>
-    */
-    <SupplierScreen />
   );
 };
 
