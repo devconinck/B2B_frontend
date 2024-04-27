@@ -129,14 +129,14 @@ const mockOrders: Order[] = [
     customername: "Bob Smith",
     orderid: "ORD9012",
     orderstatus: "Delivered",
-    paymentstatus: "Unpaid",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-04",
     customername: "Emily Brown",
     orderid: "ORD3456",
-    orderstatus: "Pending",
-    paymentstatus: "Unpaid",
+    orderstatus: "Placed",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-05",
@@ -177,8 +177,8 @@ const mockOrders: Order[] = [
     date: "2024-04-10",
     customername: "Liam Moore",
     orderid: "ORD8901",
-    orderstatus: "Pending",
-    paymentstatus: "Unpaid",
+    orderstatus: "Processed",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-11",
@@ -191,7 +191,7 @@ const mockOrders: Order[] = [
     date: "2024-04-12",
     customername: "Noah Clark",
     orderid: "ORD6789",
-    orderstatus: "Delivered",
+    orderstatus: "Placed",
     paymentstatus: "Unpaid",
   },
   {
@@ -199,7 +199,7 @@ const mockOrders: Order[] = [
     customername: "Isabella Lewis",
     orderid: "ORD0123",
     orderstatus: "Pending",
-    paymentstatus: "Unpaid",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-14",
@@ -240,7 +240,7 @@ const mockOrders: Order[] = [
     date: "2024-04-19",
     customername: "Harper King",
     orderid: "ORD4567",
-    orderstatus: "Pending",
+    orderstatus: "Processed",
     paymentstatus: "Unpaid",
   },
   {
@@ -262,7 +262,7 @@ const mockOrders: Order[] = [
     customername: "Isabella Lewis",
     orderid: "ORD0123",
     orderstatus: "Pending",
-    paymentstatus: "Unpaid",
+    paymentstatus: "Paid",
   },
   {
     date: "2024-04-06",
@@ -275,7 +275,7 @@ const mockOrders: Order[] = [
     date: "2024-04-07",
     customername: "Emma Lee",
     orderid: "ORD6789",
-    orderstatus: "Pending",
+    orderstatus: "Placed",
     paymentstatus: "Unpaid",
   },
   {
@@ -288,6 +288,14 @@ const mockOrders: Order[] = [
 ];
 
 const OrderScreen: NextPage = () => {
+  const filteredData = mockOrders.filter((order) => {
+    return (
+      order.orderstatus === "Placed" ||
+      order.orderstatus === "Processed" ||
+      (order.orderstatus === "Delivered" && order.paymentstatus === "Unpaid")
+    );
+  });
+
   return (
     <div className="container mx-auto py-10">
       <div className="flex items-center justify-between space-y-2 mb-5">
@@ -295,29 +303,7 @@ const OrderScreen: NextPage = () => {
           Here is an overview of all the orders to your company
         </h2>
       </div>
-      <OrderTable columns={columns} data={mockOrders} />
-      {/*
-      <Table className="border mt-4">
-        <TableCaption>A list of orderitems</TableCaption>
-        <TableHeader>
-          <TableRow className="bg-red-500">
-            <TableHead>In Stock</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Quantity</TableHead>
-            <TableHead>Total Productprice</TableHead>
-            <TableHead>Unit Price</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell>STOCK</TableCell>
-            <TableCell>ITEM</TableCell>
-            <TableCell>10</TableCell>
-            <TableCell>€150.00</TableCell>
-            <TableCell>€15.00</TableCell>
-          </TableRow>
-        </TableBody>
-            </Table>*/}
+      <OrderTable columns={columns} data={filteredData} />
     </div>
   );
 };
