@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
 
@@ -47,11 +47,15 @@ import { Input } from "@/components/ui/input";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  sortingValue: String;
+  decSorting: boolean;
 }
 
 export const OrderTable = <TData, TValue>({
   columns,
   data,
+  sortingValue,
+  decSorting,
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -73,10 +77,12 @@ export const OrderTable = <TData, TValue>({
     },
   });
 
+  useEffect(() => {
+    setSorting([{ id: `${sortingValue}`, desc: decSorting }]);
+  }, [sortingValue, decSorting]);
+
   const handleRowClick = (rowData: any) => {
-    console.log("test1");
     router.push("/orderdetails");
-    console.log("test2");
   };
 
   return (

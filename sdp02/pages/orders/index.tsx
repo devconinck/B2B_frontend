@@ -303,7 +303,12 @@ const OrderScreen: NextPage = () => {
           Here is an overview of all the orders to your company
         </h2>
       </div>
-      <OrderTable columns={columns} data={filteredData} />
+      <OrderTable
+        columns={columns}
+        data={filteredData}
+        sortingValue={"date"}
+        decSorting={true}
+      />
     </div>
   );
 };
