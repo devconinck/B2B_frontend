@@ -7,39 +7,50 @@ import { Menu, Moon, ShoppingCart, Sun, Bell, Search } from "lucide-react";
 import { Input } from "./ui/input";
 
 import ModeToggle from "./ModeToggle";
-import Image from "next/image";
 import { ProfileButton } from "./ProfileButton";
 import { NotificationButton } from "./NotificationButton";
 import { Separator } from "./ui/separator";
-import { useState } from "react";
-
-const mockData = [
-  { id: 1, name: "Company 1" },
-  { id: 2, name: "Company 2" },
-  { id: 3, name: "Company 3" },
-  { id: 4, name: "Company 4" },
-  { id: 5, name: "Company 5" },
-  { id: 6, name: "Company 6" },
-  { id: 7, name: "Company 7" },
-  { id: 8, name: "Company 8" },
-  { id: 9, name: "Company 9" },
-  { id: 10, name: "Company 10" },
-  { id: 11, name: "Company 11" },
-  { id: 12, name: "Company 12" },
-];
+import { useState, useRef, SetStateAction } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getAllCompanies } from "@/pages/api/companies";
+import Loader from "./Loader";
+import Error from "./Error";
 
 const Header = () => {
+  const {
+    data: companies,
+    isLoading,
+    error,
+  } = useQuery({ queryKey: ["companies"], queryFn: getAllCompanies });
+
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
   const [search, setSearch] = useState("");
   const [numResults, setNumResults] = useState(5);
 
-  const filteredCompanies = mockData
-    .filter((company) =>
-      company.name.toLowerCase().includes(search.toLowerCase())
-    )
-    .slice(0, numResults);
+  if (isLoading) {
+    return <Loader />;
+  }
+  if (error) {
+    //@ts-ignore
+    return <Error error={error} />;
+  }
 
-  const handleLoadMore = () => {
+  if (!companies) {
+    return <p>No products available</p>;
+  }
+
+  const handleSearch = (e: { target: { value: SetStateAction<string> } }) => {
+    setSearch(e.target.value);
+    setNumResults(5);
+  };
+  const filteredCompanies = companies.filter((company) =>
+    company.name?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const handleLoadMore = (e: React.MouseEvent) => {
     setNumResults(numResults + 5);
+    searchInputRef.current?.focus();
   };
 
   const routes = [
@@ -108,23 +119,24 @@ const Header = () => {
                 <div className="relative w-full appearance-none bg-background shadow-none md:w-2/3 lg:w-1/3">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
+                    ref={searchInputRef}
                     type="search"
                     placeholder="Search companies..."
                     className="w-full appearance-none bg-background pl-8 shadow-none "
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={handleSearch}
                   />
                   {search && (
                     <div className="absolute flex flex-col left-0 mt-2 w-full max-w-xl bg-white dark:bg-gray-900 rounded-md shadow-lg">
-                      {filteredCompanies.map((company) => (
+                      {filteredCompanies.slice(0, numResults).map((company) => (
                         <Link
-                          key={company.id}
+                          key={companies.indexOf(company)}
                           href={`/companies/${company.id}`}
                           onClick={() => setSearch("")}
                         >
                           {company.name}
                         </Link>
                       ))}
-                      {filteredCompanies.length < mockData.length && (
+                      {numResults < filteredCompanies.length && (
                         <Button
                           onClick={handleLoadMore}
                           type="button"

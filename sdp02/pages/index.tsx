@@ -2,6 +2,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { NextPage } from "next";
 import Image from "next/image";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getAllCompanies } from "./api/companies";
 const Home: NextPage = () => {
   return (
     <div className="space-y-10 pb-10">
