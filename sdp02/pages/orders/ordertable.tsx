@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { format } from "date-fns";
 
 import { useRouter } from "next/router";
 
@@ -10,16 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 import {
   ColumnDef,
@@ -43,6 +34,8 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DatePicker } from "./datepicker";
+import { DateRange } from "react-day-picker";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -58,9 +51,15 @@ export const OrderTable = <TData, TValue>({
   decSorting,
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnFilter, setColumnFilter] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const [selectedDateRange, setSelectedDateRange] = useState<
+    DateRange | undefined
+  >(undefined);
   const router = useRouter();
+
+  const handleRowClick = (rowData: any) => {
+    router.push("/orderdetails");
+  };
 
   const table = useReactTable({
     data,
@@ -69,11 +68,9 @@ export const OrderTable = <TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
-      columnFilters,
     },
   });
 
@@ -81,49 +78,43 @@ export const OrderTable = <TData, TValue>({
     setSorting([{ id: `${sortingValue}`, desc: decSorting }]);
   }, [sortingValue, decSorting]);
 
-  const handleRowClick = (rowData: any) => {
-    router.push("/orderdetails");
+  const handleSearchChange = (event: any) => {
+    setSearchValue(event.target.value);
+  };
+
+  useEffect(() => {
+    table.setGlobalFilter(searchValue);
+  }, [searchValue]);
+
+  const handleDateSelect = (dateRange: DateRange | undefined) => {
+    setSelectedDateRange(dateRange);
+    if (dateRange) {
+      const filterValue = {
+        from: dateRange?.from ? format(dateRange.from, "yyyy-MM-dd") : null,
+        to: dateRange?.to ? format(dateRange.to, "yyyy-MM-dd") : null,
+      };
+
+      const stringValue = JSON.stringify(filterValue);
+      console.log(stringValue);
+      table.getColumn("date")?.setFilterValue(stringValue);
+    } else {
+      table.getColumn("date")?.setFilterValue("");
+    }
   };
 
   return (
     <div>
       <div className="flex items-center py-4">
         <Input
-          placeholder={`Filter on ${columnFilter}...`}
-          value={
-            (table.getColumn(`${columnFilter}`)?.getFilterValue() as string) ??
-            ""
-          }
-          onChange={(event) =>
-            table
-              .getColumn(`${columnFilter}`)
-              ?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm mr-4"
+          placeholder={`Filter...`}
+          value={searchValue}
+          onChange={handleSearchChange}
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline">Select filter column</Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56">
-            <DropdownMenuLabel>Filter Column</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuRadioGroup
-              value={columnFilter}
-              onValueChange={setColumnFilter}
-            >
-              {table.getAllColumns().map((column) => (
-                <DropdownMenuRadioItem key={column.id} value={column.id}>
-                  {column.id}
-                </DropdownMenuRadioItem>
-              ))}
-            </DropdownMenuRadioGroup>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <DatePicker onDateSelect={handleDateSelect} />
       </div>
       <div className="rounded-md border">
         <Table>
-          <TableHeader className="bg-red-500 border-2 border-black">
+          <TableHeader className="">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
