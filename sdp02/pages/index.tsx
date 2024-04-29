@@ -32,6 +32,7 @@ const Home: NextPage = () => {
                   height="310"
                   src="/welcome.jpg"
                   width="550"
+                  priority={true}
                 />
               </div>
             </div>

@@ -1,37 +1,37 @@
 import { Button } from "@/components/ui/button";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
+import { getAllProductsForCompany } from "../api/companies";
+import { useQuery } from "@tanstack/react-query";
+import Loader from "@/components/Loader";
+import Error from "@/components/Error";
 
-const products = [
-  {
-    id: 1,
-    name: "Executive Chair",
-    description: "Comfortable and stylish chair for the office.",
-    price: 199,
-  },
-  {
-    id: 2,
-    name: "Ergonomic Chair",
-    description: "Designed for long hours of comfort and support.",
-    price: 249,
-  },
-  {
-    id: 3,
-    name: "Conference Chair",
-    description: "Sleek and modern chair for your meeting rooms.",
-    price: 299,
-  },
-  {
-    id: 4,
-    name: "Lounge Chair",
-    description: "Comfortable and stylish chair for your lobby.",
-    price: 399,
-  },
-];
 const CompanyPage: NextPage = () => {
   const router = useRouter();
 
   const companyId = router.query.id!!;
+  const {
+    data: products,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["products", companyId],
+    queryFn: () => getAllProductsForCompany(companyId[0]),
+  });
+
+  if (isLoading) {
+    return <Loader />;
+  }
+  if (error) {
+    //@ts-ignore
+    <Error error={error} />;
+  }
+
+  if (!products) {
+    return <p>No products available</p>;
+  }
+
+  console.log(products);
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
@@ -60,12 +60,12 @@ const CompanyPage: NextPage = () => {
                   className=" rounded-lg shadow-md overflow-hidden"
                 >
                   <div className="p-4">
-                    <h3 className="text-lg font-bold mb-2">{product.name}</h3>
+                    <h3 className="text-lg font-bold mb-2">
+                      {product.name ? product.name : product.productId}
+                    </h3>
                     <p className=" mb-4">{product.description}</p>
                     <div className="flex justify-between items-center">
-                      <span className="font-semibold text-lg">
-                        {product.price}
-                      </span>
+                      <span className="font-semibold text-lg"></span>
                       <Button size="sm" variant="outline">
                         Learn More
                       </Button>
