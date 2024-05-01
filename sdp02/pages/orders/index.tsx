@@ -1,10 +1,10 @@
 import { NextPage } from "next";
-import { useRouter } from "next/router";
 import { ColumnDef } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowUpDown } from "lucide-react";
 import { OrderTable } from "./ordertable";
 import { getAllOrdersFromCompany } from "../api/orders";
+import { Order } from "@/types";
 import Loader from "@/components/Loader";
 import Error from "@/components/Error";
 
@@ -115,7 +115,6 @@ const OrderScreen: NextPage = () => {
   });
 
   const filteredOrders = orders?.filter((order) => {
-    console.log(order.orderStatus);
     return (
       order.orderStatus === "Placed" ||
       order.orderStatus === "Processed" ||
@@ -132,7 +131,7 @@ const OrderScreen: NextPage = () => {
   if (!orders) {
     return <p>No orders available</p>;
   }
-  //console.log(orders.map((order) => ))
+
   return (
     <div className="container mx-auto py-10">
       <div className="flex items-center justify-between space-y-2 mb-5">

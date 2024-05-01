@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-
+import { useQuery } from "@tanstack/react-query";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
@@ -14,6 +14,12 @@ import { ArrowUpDown } from "lucide-react";
 import { OrderTable } from "../orders/ordertable";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/router";
+import Loader from "@/components/Loader";
+import Error from "@/components/Error";
+import { useContext } from "react";
+import CompaniesContext from "@/context/companiesContext";
+import { Company } from "@/types";
+import CustomerDetails from "./customerDetails";
 
 const labelFields = [
   "Customer Name",
@@ -285,6 +291,10 @@ const mockOrderItems: OrderItem[] = [
 const OrderDetails: NextPage = () => {
   const router = useRouter();
 
+  const companyId = "1";
+  const companies = useContext(CompaniesContext) as Company[];
+  const company = companies.find((company) => company.id === Number(companyId));
+
   const handleReturn = () => {
     router.push("/orders");
   };
@@ -302,27 +312,7 @@ const OrderDetails: NextPage = () => {
           <h2 className="text-2xl font-bold tracking-tight mt-4 ml-5 mb-6">
             Overview of the customer details
           </h2>
-          <div className="grid grid-cols-2 gap-4 mx-5 mb-5">
-            {labelFields.map((label, index) => {
-              return (
-                <div
-                  key={index}
-                  className="grid w-full max-w-sm items-center gap-1.5"
-                >
-                  <Label>{label}</Label>
-                  <Input
-                    type="text"
-                    id={label.toLowerCase().replaceAll(" ", "")}
-                    disabled={true}
-                    placeholder={label}
-                    value={
-                      mockCustomers[0][label.toLowerCase().replaceAll(" ", "")]
-                    }
-                  />
-                </div>
-              );
-            })}
-          </div>
+          <CustomerDetails />
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel defaultSize={50}>
