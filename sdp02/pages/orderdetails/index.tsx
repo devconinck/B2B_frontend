@@ -12,6 +12,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 
 import { OrderTable } from "../orders/ordertable";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/router";
 
 const labelFields = [
   "Customer Name",
@@ -281,6 +283,12 @@ const mockOrderItems: OrderItem[] = [
 ];
 
 const OrderDetails: NextPage = () => {
+  const router = useRouter();
+
+  const handleReturn = () => {
+    router.push("/orders");
+  };
+
   return (
     <div style={{ height: "90.75vh" }}>
       <ResizablePanelGroup
@@ -288,6 +296,9 @@ const OrderDetails: NextPage = () => {
         className="flex max-w-full rounde-lg border h-full"
       >
         <ResizablePanel defaultSize={50}>
+          <Button className="bg-[rgb(239,70,60)] m-4" onClick={handleReturn}>
+            RETURN TO ORDERS
+          </Button>
           <h2 className="text-2xl font-bold tracking-tight mt-4 ml-5 mb-6">
             Overview of the customer details
           </h2>
@@ -315,11 +326,16 @@ const OrderDetails: NextPage = () => {
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel defaultSize={50}>
-          <h2 className="text-2xl font-bold tracking-tight mt-4 ml-5 mb-6 flex items-center justify-center">
+          <h2 className="text-2xl font-bold tracking-tight mt-20 ml-5 mb-6 flex items-center justify-center">
             Overview of all the orderitems from the order
           </h2>
           <div className="flex h-full items-start justify-center">
-            <OrderTable columns={columns} data={mockOrderItems} />
+            <OrderTable
+              columns={columns}
+              data={mockOrderItems}
+              sortingValue={"name"}
+              decSorting={false}
+            />
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>

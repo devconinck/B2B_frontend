@@ -1,5 +1,5 @@
 import * as React from "react";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 
@@ -19,8 +19,8 @@ export const DatePicker = ({
   onDateSelect: (dateRange: DateRange | undefined) => void;
 }) => {
   const [date, setDate] = React.useState<DateRange | undefined>({
-    from: new Date(2024, 0, 1),
-    to: addDays(new Date(2024, 0, 1), 365),
+    from: undefined,
+    to: undefined,
   });
 
   const handleDateSelect = (selectedDate: DateRange | undefined) => {

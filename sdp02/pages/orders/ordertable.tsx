@@ -15,13 +15,13 @@ import {
 import {
   ColumnDef,
   SortingState,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-  ColumnFiltersState,
-  getFilteredRowModel,
 } from "@tanstack/react-table";
 
 import {
@@ -51,7 +51,10 @@ export const OrderTable = <TData, TValue>({
   decSorting,
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [searchValue, setSearchValue] = useState("");
+  const [dateFromValue, setDateFromValue] = useState("");
+  const [dateToValue, setDateToValue] = useState("");
   const [selectedDateRange, setSelectedDateRange] = useState<
     DateRange | undefined
   >(undefined);
@@ -68,9 +71,11 @@ export const OrderTable = <TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
+      columnFilters,
     },
   });
 
@@ -93,28 +98,32 @@ export const OrderTable = <TData, TValue>({
         from: dateRange?.from ? format(dateRange.from, "yyyy-MM-dd") : null,
         to: dateRange?.to ? format(dateRange.to, "yyyy-MM-dd") : null,
       };
-
-      const stringValue = JSON.stringify(filterValue);
-      console.log(stringValue);
-      table.getColumn("date")?.setFilterValue(stringValue);
+      setDateFromValue(JSON.stringify(filterValue.from));
+      setDateToValue(JSON.stringify(filterValue.to));
     } else {
       table.getColumn("date")?.setFilterValue("");
     }
   };
 
+  useEffect(() => {
+    table.getColumn("date")?.setFilterValue(dateFromValue);
+  }, [dateFromValue]);
+
   return (
     <div>
       <div className="flex items-center py-4">
         <Input
+          type="search"
           placeholder={`Filter...`}
           value={searchValue}
           onChange={handleSearchChange}
+          className="max-w-sm mr-2"
         />
         <DatePicker onDateSelect={handleDateSelect} />
       </div>
       <div className="rounded-md border">
         <Table>
-          <TableHeader className="">
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
