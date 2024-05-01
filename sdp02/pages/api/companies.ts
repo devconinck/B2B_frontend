@@ -17,7 +17,7 @@ export const getAllProductsForCompany = async (
 ): Promise<Product[]> => {
   try {
     return await axios
-      .get(`${baseUrl}/${companyId}`)
+      .get(`${baseUrl}/${companyId}/products`)
       .then((res) => res.data.items);
   } catch (error) {
     throw error;

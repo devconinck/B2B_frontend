@@ -42,7 +42,6 @@ const CompanyPage: NextPage = () => {
   if (!company) {
     return <p>Company not found</p>;
   }
-  console.log(company);
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
@@ -57,6 +56,7 @@ const CompanyPage: NextPage = () => {
                   width={200}
                   height={200}
                   className="w-32 h-32 object-cover rounded-full shadow-lg"
+                  priority={true}
                 />
                 {/* Optional: You can add a background overlay for contrast */}
                 <div className="absolute inset-0 bg-black opacity-25 rounded-full"></div>
