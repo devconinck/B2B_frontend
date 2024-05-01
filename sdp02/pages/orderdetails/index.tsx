@@ -13,6 +13,8 @@ import { ArrowUpDown } from "lucide-react";
 
 import { OrderTable } from "../orders/ordertable";
 
+import { handleDownloadInvoice } from "./invoice";
+
 const labelFields = [
   "Customer Name",
   "Customer Email",
@@ -291,6 +293,12 @@ const OrderDetails: NextPage = () => {
           <h2 className="text-2xl font-bold tracking-tight mt-4 ml-5 mb-6">
             Overview of the customer details
           </h2>
+          <button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+            onClick={handleDownloadInvoice}
+          >
+            Download Invoice
+          </button>
           <div className="grid grid-cols-2 gap-4 mx-5 mb-5">
             {labelFields.map((label, index) => {
               return (
