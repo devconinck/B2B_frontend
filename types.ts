@@ -70,3 +70,7 @@ export type OrderItem = {
 };
 
 export type Role = "admin" | "user";
+
+export interface EditableProfile {
+  isEditing: boolean;
+}
