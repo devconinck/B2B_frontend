@@ -1,26 +1,23 @@
 export type Company = {
   id: number;
-  bankAccountNr?: number;
-  customerStart?: Date;
-  isActive?: boolean;
-  logo?: string;
-  name?: string;
-  sector?: string;
-  vatNumber?: string;
-  city?: string;
-  country?: string;
-  number?: string;
-  street?: string;
-  zipCode?: string;
-  email?: string;
-  phoneNumber?: string;
-  account: Account[];
-  companyKnownCompaniesCompanyKnownCompaniesCompanyIdToCompany: CompanyKnownCompanies[];
-  companyKnownCompaniesCompanyKnownCompaniesKnownCompanyIdToCompany: CompanyKnownCompanies[];
-  companyPaymentOptions: CompanyPaymentOptions[];
-  orderTableOrderTableFromCompanyIdToCompany: OrderTable[];
-  orderTableOrderTableToCompanyIdToCompany: OrderTable[];
-  product: Product[];
+  name: string;
+  logo: string;
+  isActive: boolean;
+  vatNumber: string;
+  address: {
+    country: string;
+    city: string;
+    zipcode: string;
+    street: string;
+    number: string;
+  };
+  bankAccountNr: number;
+  contact: {
+    email: string;
+    phoneNumber: string;
+  };
+  customerStart: string;
+  sector: string;
 };
 export type Account = {
   id: number;

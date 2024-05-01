@@ -10,36 +10,24 @@ import ModeToggle from "./ModeToggle";
 import { ProfileButton } from "./ProfileButton";
 import { NotificationButton } from "./NotificationButton";
 import { Separator } from "./ui/separator";
-import { useState, useRef, SetStateAction } from "react";
+import { useState, useRef, SetStateAction, useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getAllCompanies } from "@/pages/api/companies";
 import Loader from "./Loader";
 import Error from "./Error";
+import CompaniesContext from "@/context/companiesContext";
+import { Company } from "@/types";
 
 const Header = () => {
-  const {
-    data: companies,
-    isLoading,
-    error,
-  } = useQuery({ queryKey: ["companies"], queryFn: getAllCompanies });
-
+  const companies: Company[] = useContext(CompaniesContext) as Company[];
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const [search, setSearch] = useState("");
   const [numResults, setNumResults] = useState(5);
 
-  if (isLoading) {
+  if (!companies) {
     return <Loader />;
   }
-  if (error) {
-    //@ts-ignore
-    return <Error error={error} />;
-  }
-
-  if (!companies) {
-    return <p>No products available</p>;
-  }
-
   const handleSearch = (e: { target: { value: SetStateAction<string> } }) => {
     setSearch(e.target.value);
     setNumResults(5);

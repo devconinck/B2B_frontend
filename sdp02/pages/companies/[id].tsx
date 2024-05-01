@@ -5,11 +5,20 @@ import { getAllProductsForCompany } from "../api/companies";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "@/components/Loader";
 import Error from "@/components/Error";
+import CompaniesContext from "@/context/companiesContext";
+import { Company } from "@/types";
+import { useContext } from "react";
+import Image from "next/image";
+import { Mail, Phone } from "lucide-react";
 
 const CompanyPage: NextPage = () => {
   const router = useRouter();
 
   const companyId = router.query.id!!;
+  const companies = useContext(CompaniesContext) as Company[];
+
+  const company = companies.find((company) => company.id === Number(companyId));
+
   const {
     data: products,
     isLoading,
@@ -30,20 +39,56 @@ const CompanyPage: NextPage = () => {
   if (!products) {
     return <p>No products available</p>;
   }
-
-  console.log(products);
+  if (!company) {
+    return <p>Company not found</p>;
+  }
+  console.log(company);
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <header className="bg-gray-100 dark:bg-slate-600 py-8 md:py-12 lg:py-16">
         <div className="container mx-auto px-4 md:px-6 lg:px-8">
-          <div className="flex flex-col items-center">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-2xl md:text-3xl font-bold">
-                Company {companyId}
-              </h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-center">
+            <div className="flex justify-center md:justify-start">
+              <div className="relative">
+                <Image
+                  src={"/random.png"}
+                  alt={company.name}
+                  width={200}
+                  height={200}
+                  className="w-32 h-32 object-cover rounded-full shadow-lg"
+                />
+                {/* Optional: You can add a background overlay for contrast */}
+                <div className="absolute inset-0 bg-black opacity-25 rounded-full"></div>
+              </div>
             </div>
-            <p className="mt-4">address for company {companyId}</p>
+            <div className="text-center  md:text-left">
+              <h1 className="text-2xl md:text-3xl font-bold">{company.name}</h1>
+              <p className="mt-2">
+                {company.address.street}, {company.address.city},{" "}
+                {company.address.zipcode}, {company.address.country}
+              </p>
+            </div>
+            <div className="text-center md:text-right space-y-3">
+              <p>
+                <a
+                  href={`mailto:${company.contact.email}`}
+                  className="flex items-center justify-center md:justify-start space-x-2 hover:text-red-500"
+                >
+                  <Mail className="" />
+                  <span className=" ">{company.contact.email}</span>
+                </a>
+              </p>
+              <p>
+                <a
+                  href={`tel:${company.contact.phoneNumber}`}
+                  className="flex items-center justify-center md:justify-start space-x-2 hover:text-red-500"
+                >
+                  <Phone />
+                  <span className="">{company.contact.phoneNumber}</span>
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </header>
