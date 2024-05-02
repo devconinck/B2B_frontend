@@ -41,14 +41,18 @@ export default function Profile() {
         <div className="mx-auto flex flex-col w-full max-w-6xl gap-6">
           <form className="flex flex-col gap-6">
 
-            <div className="flex flex-row justify-center gap-6">
+            <div className="flex flex-row justify-center gap-6 items-center">
               <CompanyDetails isEditing={isEditing}/>
-              <Address isEditing={isEditing}/>
-            </div>
-            <div className="flex flex-row justify-center gap-6">
               <div className="w-1/3">
                 <Contact isEditing={isEditing}/>
               </div>
+            </div>
+            <div className="flex justify-center">
+              <div className="max-w-xl">
+                <Address isEditing={isEditing}/>
+              </div>
+            </div>
+            <div className="flex flex-row justify-center gap-6">
               <div className="w-1/2">
                 <PersonalDetails isEditing={isEditing}/>
               </div>
