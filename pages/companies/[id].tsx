@@ -7,7 +7,7 @@ import Loader from "@/components/Loader";
 import Error from "@/components/Error";
 import CompaniesContext from "@/context/companiesContext";
 import { Company } from "@/types";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Image from "next/image";
 import { Mail, Phone } from "lucide-react";
 
@@ -18,6 +18,12 @@ const CompanyPage: NextPage = () => {
   const companies = useContext(CompaniesContext) as Company[];
 
   const company = companies.find((company) => company.id === Number(companyId));
+
+  const [expandedIndex, setExpandedIndex] = useState(null);
+
+  const toggleDescription = (index: any) => {
+    setExpandedIndex(expandedIndex == index ? null : index);
+  };
 
   const {
     data: products,
@@ -42,6 +48,8 @@ const CompanyPage: NextPage = () => {
   if (!company) {
     return <p>Company not found</p>;
   }
+
+  console.log(products);
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
@@ -102,18 +110,25 @@ const CompanyPage: NextPage = () => {
               {products.map((product, index) => (
                 <div
                   key={index}
-                  className=" rounded-lg shadow-md overflow-hidden"
+                  className="rounded-lg shadow-md overflow-hidden"
                 >
                   <div className="p-4">
                     <h3 className="text-lg font-bold mb-2">
                       {product.name ? product.name : product.productId}
                     </h3>
-                    <p className=" mb-4">{product.description}</p>
+                    <p className={expandedIndex === index ? "mb-2" : "hidden"}>
+                      {product.description}
+                    </p>
                     <div className="flex justify-between items-center">
-                      <span className="font-semibold text-lg"></span>
-                      <Button size="sm" variant="outline">
-                        Learn More
-                      </Button>
+                      <span className="font-semibold text-lg">
+                        Price: ${product.price}
+                      </span>
+                      <button
+                        onClick={() => toggleDescription(index)}
+                        className="text-blue-500"
+                      >
+                        {expandedIndex === index ? "Show Less" : "Learn More"}
+                      </button>
                     </div>
                   </div>
                 </div>

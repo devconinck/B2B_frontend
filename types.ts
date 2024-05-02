@@ -46,6 +46,7 @@ export type Product = {
   id: number;
   description: string;
   name: string;
+  price: number;
   PRODUCTAVAILABILITY?: string | null;
   PRODUCTCATEGORYID?: string | null;
   productId?: string | null;
@@ -75,3 +76,10 @@ export type Role = "admin" | "user";
 export interface EditableProfile {
   isEditing: boolean;
 }
+export type Order = {
+  date: string;
+  name: string | null;
+  orderId: string | null;
+  orderStatus: string;
+  paymentStatus: string;
+};
