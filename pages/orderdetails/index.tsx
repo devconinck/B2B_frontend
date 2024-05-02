@@ -311,6 +311,12 @@ const OrderDetails: NextPage = () => {
           <Button className="bg-[rgb(239,70,60)] m-4" onClick={handleReturn}>
             RETURN TO ORDERS
           </Button>
+          <Button
+            className="bg-[rgb(239,70,60)] m-4"
+            onClick={handleDownloadInvoice}
+          >
+            DOWNLOAD INVOICE
+          </Button>
           <h2 className="text-2xl font-bold tracking-tight mt-4 ml-5 mb-6">
             Overview of the customer details
           </h2>
