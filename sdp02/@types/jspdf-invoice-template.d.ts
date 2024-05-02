@@ -1,1 +1,1 @@
-declare module 'jspdf-invoice-template';
+declare module 'jspdf-invoice-template-nodejs';
