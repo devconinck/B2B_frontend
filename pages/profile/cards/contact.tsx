@@ -19,9 +19,9 @@ export const Contact: React.FC<EditableProfile> = ({isEditing}: EditableProfile)
         </CardHeader>
         <CardContent>
           <Label htmlFor="phone">Phone</Label>
-          <Input id="phone" placeholder="Phone" disabled={!isEditing} />
+          <Input id="phone" placeholder="0476795261" disabled={!isEditing} />
           <Label htmlFor="email">Email</Label>
-          <Input id="email" placeholder="Email" disabled={!isEditing} />
+          <Input id="email" placeholder="Charles.leclerc@icloud.com" disabled={!isEditing} />
         </CardContent>
       </Card>
     </div>

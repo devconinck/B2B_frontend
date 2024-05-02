@@ -35,14 +35,14 @@ export const CompanyDetails: React.FC<EditableProfile>  = ({isEditing}: Editable
                 <Label htmlFor="companyName">Company Name</Label>
                 <Input
                   id="companyName"
-                  placeholder="Company Name"
+                  placeholder="Fake Company 1"
                   disabled={!isEditing}
                 />
                 </div>
               </div>
 
               <Label htmlFor="sector">Sector</Label>
-              <Input id="sector" placeholder="Sector" disabled={!isEditing} />
+              <Input id="sector" placeholder="Agriculture" disabled={!isEditing} />
             </div>
 
             {/*

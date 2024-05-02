@@ -25,12 +25,12 @@ export const PersonalDetails: React.FC<EditableProfile>  = ({isEditing}: Editabl
 
           <div>
             <Label htmlFor="email">Email</Label>
-            <Input id="email" placeholder="Email" disabled={!isEditing} />
+            <Input id="email" placeholder="Charles.leclerc@icloud.com" disabled={!isEditing} />
           </div>
 
           <div>
             <Label htmlFor="password">Password</Label>
-            <Input id="password" placeholder="password" disabled={!isEditing} />
+            <Input id="password" placeholder="Test123!" disabled={!isEditing} />
           </div>
 
         </CardContent>
