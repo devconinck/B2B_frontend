@@ -114,6 +114,8 @@ const OrderScreen: NextPage = () => {
     queryFn: getAllOrdersFromCompany,
   });
 
+  const handleDateSelect = () => {};
+
   const filteredOrders = orders?.filter((order) => {
     return (
       order.orderStatus === "Placed" ||
@@ -144,6 +146,7 @@ const OrderScreen: NextPage = () => {
         data={orders}
         sortingValue={"date"}
         decSorting={true}
+        datePicker={true}
       />
     </div>
   );

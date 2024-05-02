@@ -42,6 +42,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   sortingValue: String;
   decSorting: boolean;
+  datePicker: boolean;
 }
 
 export const OrderTable = <TData, TValue>({
@@ -49,6 +50,7 @@ export const OrderTable = <TData, TValue>({
   data,
   sortingValue,
   decSorting,
+  datePicker,
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -101,14 +103,15 @@ export const OrderTable = <TData, TValue>({
       };
       setDateFromValue(JSON.stringify(filterValue.from));
       setDateToValue(JSON.stringify(filterValue.to));
+      console.log(selectedDateRange);
     } else {
       table.getColumn("date")?.setFilterValue("");
     }
   };
 
   useEffect(() => {
-    table.getColumn("date")?.setFilterValue(dateFromValue);
-  }, [dateFromValue]);
+    //table.getColumn("date")?.setFilterValue(selectedDateRange);
+  }, [selectedDateRange]);
 
   return (
     <div>
@@ -120,7 +123,7 @@ export const OrderTable = <TData, TValue>({
           onChange={handleSearchChange}
           className="max-w-sm mr-2"
         />
-        <DatePicker onDateSelect={handleDateSelect} />
+        {datePicker ? <DatePicker onDateSelect={handleDateSelect} /> : null}
       </div>
       <div className="rounded-md border">
         <Table>

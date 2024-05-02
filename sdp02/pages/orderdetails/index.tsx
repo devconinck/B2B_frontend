@@ -325,6 +325,7 @@ const OrderDetails: NextPage = () => {
               data={mockOrderItems}
               sortingValue={"name"}
               decSorting={false}
+              datePicker={false}
             />
           </div>
         </ResizablePanel>
