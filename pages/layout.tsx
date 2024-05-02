@@ -5,6 +5,7 @@ import { getAllCompanies } from "./api/companies";
 import Loader from "@/components/Loader";
 import Error from "@/components/Error";
 import CompaniesContext from "@/context/companiesContext";
+import ChatBot from "@/components/ChatBot";
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -33,6 +34,9 @@ export default function Layout({ children }: LayoutProps) {
       <CompaniesContext.Provider value={companies}>
         <Header />
         {children}
+        <div className="absolute bottom-0 right-0 radius-50">
+          <ChatBot></ChatBot>
+        </div>
       </CompaniesContext.Provider>
     </>
   );

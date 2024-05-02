@@ -25,9 +25,6 @@ const Header = () => {
   const [search, setSearch] = useState("");
   const [numResults, setNumResults] = useState(5);
 
-  if (!companies) {
-    return <Loader />;
-  }
   const handleSearch = (e: { target: { value: SetStateAction<string> } }) => {
     setSearch(e.target.value);
     setNumResults(5);
