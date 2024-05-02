@@ -19,6 +19,7 @@ export type Company = {
   customerStart: string;
   sector: string;
 };
+
 export type Account = {
   id: number;
   balance: number;
