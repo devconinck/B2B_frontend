@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-
+import { useQuery } from "@tanstack/react-query";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,6 +12,14 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 
 import { OrderTable } from "../orders/ordertable";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/router";
+import Loader from "@/components/Loader";
+import Error from "@/components/Error";
+import { useContext } from "react";
+import CompaniesContext from "@/context/companiesContext";
+import { Company } from "@/types";
+import CustomerDetails from "./customerDetails";
 
 import { handleDownloadInvoice } from "./invoice";
 
@@ -283,6 +291,16 @@ const mockOrderItems: OrderItem[] = [
 ];
 
 const OrderDetails: NextPage = () => {
+  const router = useRouter();
+
+  const companyId = "1";
+  const companies = useContext(CompaniesContext) as Company[];
+  const company = companies.find((company) => company.id === Number(companyId));
+
+  const handleReturn = () => {
+    router.push("/orders");
+  };
+
   return (
     <div style={{ height: "90.75vh" }}>
       <ResizablePanelGroup
@@ -290,45 +308,33 @@ const OrderDetails: NextPage = () => {
         className="flex max-w-full rounde-lg border h-full"
       >
         <ResizablePanel defaultSize={50}>
+          <Button className="bg-[rgb(239,70,60)] m-4" onClick={handleReturn}>
+            RETURN TO ORDERS
+          </Button>
+          <Button
+            className="bg-[rgb(239,70,60)] m-4"
+            onClick={handleDownloadInvoice}
+          >
+            DOWNLOAD INVOICE
+          </Button>
           <h2 className="text-2xl font-bold tracking-tight mt-4 ml-5 mb-6">
             Overview of the customer details
           </h2>
-          <button
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-            // TODO vervangen door correcte orderID
-            onClick={ () => handleDownloadInvoice(mockCustomers[0].orderid)}
-          >
-            Download Invoice
-          </button>
-          <div className="grid grid-cols-2 gap-4 mx-5 mb-5">
-            {labelFields.map((label, index) => {
-              return (
-                <div
-                  key={index}
-                  className="grid w-full max-w-sm items-center gap-1.5"
-                >
-                  <Label>{label}</Label>
-                  <Input
-                    type="text"
-                    id={label.toLowerCase().replaceAll(" ", "")}
-                    disabled={true}
-                    placeholder={label}
-                    value={
-                      mockCustomers[0][label.toLowerCase().replaceAll(" ", "")]
-                    }
-                  />
-                </div>
-              );
-            })}
-          </div>
+          <CustomerDetails />
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel defaultSize={50}>
-          <h2 className="text-2xl font-bold tracking-tight mt-4 ml-5 mb-6 flex items-center justify-center">
+          <h2 className="text-2xl font-bold tracking-tight mt-20 ml-5 mb-6 flex items-center justify-center">
             Overview of all the orderitems from the order
           </h2>
           <div className="flex h-full items-start justify-center">
-            <OrderTable columns={columns} data={mockOrderItems} />
+            <OrderTable
+              columns={columns}
+              data={mockOrderItems}
+              sortingValue={"name"}
+              decSorting={false}
+              datePicker={false}
+            />
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>

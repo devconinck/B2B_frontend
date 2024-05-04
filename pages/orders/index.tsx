@@ -1,9 +1,12 @@
 import { NextPage } from "next";
-
 import { ColumnDef } from "@tanstack/react-table";
+import { useQuery } from "@tanstack/react-query";
 import { ArrowUpDown } from "lucide-react";
-
 import { OrderTable } from "./ordertable";
+import { getAllOrdersFromCompany } from "../api/orders";
+import { Order } from "@/types";
+import Loader from "@/components/Loader";
+import Error from "@/components/Error";
 
 const columns: ColumnDef<Order>[] = [
   {
@@ -21,7 +24,7 @@ const columns: ColumnDef<Order>[] = [
     },
   },
   {
-    accessorKey: "customername",
+    accessorKey: "name",
     header: ({ column }) => {
       return (
         <div
@@ -35,7 +38,7 @@ const columns: ColumnDef<Order>[] = [
     },
   },
   {
-    accessorKey: "orderid",
+    accessorKey: "orderId",
     header: ({ column }) => {
       return (
         <div
@@ -49,7 +52,7 @@ const columns: ColumnDef<Order>[] = [
     },
   },
   {
-    accessorKey: "orderstatus",
+    accessorKey: "orderStatus",
     header: ({ column }) => {
       return (
         <div
@@ -63,7 +66,7 @@ const columns: ColumnDef<Order>[] = [
     },
   },
   {
-    accessorKey: "paymentstatus",
+    accessorKey: "paymentStatus",
     header: ({ column }) => {
       return (
         <div
@@ -101,193 +104,36 @@ const columns: ColumnDef<Order>[] = [
   },*/
 ];
 
-interface Order {
-  date: string;
-  customername: string;
-  orderid: string;
-  orderstatus: string;
-  paymentstatus: string;
-}
-
-const mockOrders: Order[] = [
-  {
-    date: "2024-04-01",
-    customername: "John Doe",
-    orderid: "ORD1234",
-    orderstatus: "Pending",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-02",
-    customername: "Alice Johnson",
-    orderid: "ORD5678",
-    orderstatus: "Shipped",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-03",
-    customername: "Bob Smith",
-    orderid: "ORD9012",
-    orderstatus: "Delivered",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-04",
-    customername: "Emily Brown",
-    orderid: "ORD3456",
-    orderstatus: "Pending",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-05",
-    customername: "Sophia Martinez",
-    orderid: "ORD7890",
-    orderstatus: "Shipped",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-06",
-    customername: "Michael Wilson",
-    orderid: "ORD2345",
-    orderstatus: "Delivered",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-07",
-    customername: "Emma Lee",
-    orderid: "ORD6789",
-    orderstatus: "Pending",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-08",
-    customername: "Daniel Garcia",
-    orderid: "ORD0123",
-    orderstatus: "Shipped",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-09",
-    customername: "Olivia Lopez",
-    orderid: "ORD4567",
-    orderstatus: "Delivered",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-10",
-    customername: "Liam Moore",
-    orderid: "ORD8901",
-    orderstatus: "Pending",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-11",
-    customername: "Ava Hernandez",
-    orderid: "ORD2345",
-    orderstatus: "Shipped",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-12",
-    customername: "Noah Clark",
-    orderid: "ORD6789",
-    orderstatus: "Delivered",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-13",
-    customername: "Isabella Lewis",
-    orderid: "ORD0123",
-    orderstatus: "Pending",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-14",
-    customername: "James Young",
-    orderid: "ORD4567",
-    orderstatus: "Shipped",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-15",
-    customername: "Mia Rodriguez",
-    orderid: "ORD8901",
-    orderstatus: "Delivered",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-16",
-    customername: "William Scott",
-    orderid: "ORD2345",
-    orderstatus: "Pending",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-17",
-    customername: "Charlotte Hall",
-    orderid: "ORD6789",
-    orderstatus: "Shipped",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-18",
-    customername: "Ethan Allen",
-    orderid: "ORD0123",
-    orderstatus: "Delivered",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-19",
-    customername: "Harper King",
-    orderid: "ORD4567",
-    orderstatus: "Pending",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-20",
-    customername: "Amelia Hill",
-    orderid: "ORD8901",
-    orderstatus: "Shipped",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-12",
-    customername: "Noah Clark",
-    orderid: "ORD6789",
-    orderstatus: "Delivered",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-13",
-    customername: "Isabella Lewis",
-    orderid: "ORD0123",
-    orderstatus: "Pending",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-06",
-    customername: "Michael Wilson",
-    orderid: "ORD2345",
-    orderstatus: "Delivered",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-07",
-    customername: "Emma Lee",
-    orderid: "ORD6789",
-    orderstatus: "Pending",
-    paymentstatus: "Unpaid",
-  },
-  {
-    date: "2024-04-02",
-    customername: "Alice Johnson",
-    orderid: "ORD5678",
-    orderstatus: "Shipped",
-    paymentstatus: "Unpaid",
-  },
-];
-
 const OrderScreen: NextPage = () => {
+  const {
+    data: orders,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["orders"],
+    queryFn: getAllOrdersFromCompany,
+  });
+
+  const handleDateSelect = () => {};
+
+  const filteredOrders = orders?.filter((order) => {
+    return (
+      order.orderStatus === "Placed" ||
+      order.orderStatus === "Processed" ||
+      (order.orderStatus === "Delivered" && order.paymentStatus === "Unpaid")
+    );
+  });
+
+  if (isLoading) {
+    return <Loader />;
+  }
+  if (error) {
+    <Error error={error} />;
+  }
+  if (!orders) {
+    return <p>No orders available</p>;
+  }
+
   return (
     <div className="container mx-auto py-10">
       <div className="flex items-center justify-between space-y-2 mb-5">
@@ -295,29 +141,13 @@ const OrderScreen: NextPage = () => {
           Here is an overview of all the orders to your company
         </h2>
       </div>
-      <OrderTable columns={columns} data={mockOrders} />
-      {/*
-      <Table className="border mt-4">
-        <TableCaption>A list of orderitems</TableCaption>
-        <TableHeader>
-          <TableRow className="bg-red-500">
-            <TableHead>In Stock</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Quantity</TableHead>
-            <TableHead>Total Productprice</TableHead>
-            <TableHead>Unit Price</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell>STOCK</TableCell>
-            <TableCell>ITEM</TableCell>
-            <TableCell>10</TableCell>
-            <TableCell>€150.00</TableCell>
-            <TableCell>€15.00</TableCell>
-          </TableRow>
-        </TableBody>
-            </Table>*/}
+      <OrderTable
+        columns={columns}
+        data={orders}
+        sortingValue={"date"}
+        decSorting={true}
+        datePicker={true}
+      />
     </div>
   );
 };

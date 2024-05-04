@@ -1,18 +1,30 @@
-import Link from "next/link";
-import { CircleUser, Menu, Package2, Search } from "lucide-react";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
-import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { CompanyDetails } from "./cards/companyDetails";
+import { PersonalDetails } from "./cards/personalDetails";
+import { Contact } from "./cards/contact";
+import { Address } from "./cards/address";
+
+/*
+DR_DETAILS_PROFIEL
+Van een bedrijf als klant wordt volgende info getoond op zijn profiel
+•	Logo
+•	Naam (uniek)
+•	Sector
+•	Adres
+•	Contactgegevens
+•	Klant sinds
+•	Gegevens van de klantaccount
+Van een bedrijf als leverancier wordt volgende info getoond op zijn profiel
+•	Logo
+•	Naam (uniek)
+•	Sector
+•	Adres
+•	Betalingsmogelijkheden en -info
+•	Contactgegevens
+•	BTW nummer 
+•	Gegevens van de leveranciersaccount
+*/
 
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
@@ -26,90 +38,25 @@ export default function Profile() {
         <div className="mx-auto grid w-full max-w-6xl gap-2">
           <h1 className="text-3xl font-semibold">Profile</h1>
         </div>
-        <div className="mx-auto grid w-full max-w-6xl items-start gap-6">
-          <form className="grid gap-4">
-            <Card>
-              <CardHeader>
-                <CardTitle>Company Details</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Label htmlFor="companyName">Company Name</Label>
-                <Input
-                  id="companyName"
-                  placeholder="Company Name"
-                  disabled={!isEditing}
-                />
+        <div className="mx-auto flex flex-col w-full max-w-6xl gap-6">
+          <form className="flex flex-col gap-6">
 
-                <Label htmlFor="sector">Sector</Label>
-                <Input id="sector" placeholder="Sector" disabled={!isEditing} />
-
-                <Label htmlFor="vatNumber">VAT Number</Label>
-                <Input
-                  id="vatNumber"
-                  placeholder="VAT Number"
-                  disabled={!isEditing}
-                />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Address</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Label htmlFor="street">Street</Label>
-                <Input id="street" placeholder="Street" disabled={!isEditing} />
-                <Label htmlFor="number">House Number</Label>
-                <Input
-                  id="number"
-                  placeholder="House Number"
-                  disabled={!isEditing}
-                />
-                <Label htmlFor="city">City</Label>
-                <Input id="city" placeholder="City" disabled={!isEditing} />
-                <Label htmlFor="postal">Postal Code</Label>
-                <Input
-                  id="postal"
-                  placeholder="Postal Code"
-                  disabled={!isEditing}
-                />
-                <Label htmlFor="country">Country</Label>
-                <Input
-                  id="country"
-                  placeholder="Country"
-                  disabled={!isEditing}
-                />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Contact</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Label htmlFor="phone">Phone</Label>
-                <Input id="phone" placeholder="Phone" disabled={!isEditing} />
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" placeholder="Email" disabled={!isEditing} />
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader>
-                <CardTitle>Payment</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Label htmlFor="bank">Bank Account</Label>
-                <Input
-                  id="bank"
-                  placeholder="Bank Account"
-                  disabled={!isEditing}
-                />
-                <Label htmlFor="payments">Payment Options</Label>
-                <Input
-                  id="payments"
-                  placeholder="Payment options"
-                  disabled={!isEditing}
-                />
-              </CardContent>
-            </Card>
+            <div className="flex flex-row justify-center gap-6 items-center">
+              <CompanyDetails isEditing={isEditing}/>
+              <div className="w-1/3">
+                <Contact isEditing={isEditing}/>
+              </div>
+            </div>
+            <div className="flex justify-center">
+              <div className="max-w-xl">
+                <Address isEditing={isEditing}/>
+              </div>
+            </div>
+            <div className="flex flex-row justify-center gap-6">
+              <div className="w-1/2">
+                <PersonalDetails isEditing={isEditing}/>
+              </div>
+            </div>
           </form>
           <Button variant={"destructive"} className="" onClick={handleEdit}>
             {isEditing ? "Save" : "Edit"}
