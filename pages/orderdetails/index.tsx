@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 import { useQuery } from "@tanstack/react-query";
+import { Label } from "@radix-ui/react-dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   ResizableHandle,
@@ -11,10 +12,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 
 import { OrderTable } from "../orders/ordertable";
-import { Button } from "@/components/ui/button";
 import { useRouter } from "next/router";
-import Loader from "@/components/Loader";
-import Error from "@/components/Error";
 import { useContext } from "react";
 import CompaniesContext from "@/context/companiesContext";
 import { Company } from "@/types";
@@ -27,28 +25,70 @@ import { Order } from "@/types";
 
 import { handleDownloadInvoice } from "./invoice";
 
-// Router
-const useOrderDetailsRouter = () => {
-  const router = useRouter();
-  const { orderId, companyId } = router.query;
+const labelFields = [
+  "Customer Name",
+  "Customer Email",
+  "Order ID",
+  "Street",
+  "Address Nr",
+  "City",
+  "Postalcode",
+  "Country",
+  "Orderstatus",
+  "Paymentstatus",
+  "Last Payment Update",
+];
 
-  const handleReturn = () => {
-    router.push("/orders");
-  };
+interface Customer {
+  customername: string;
+  customeremail: string;
+  orderid: string;
+  street: string;
+  addressnr: string;
+  city: string;
+  postalcode: string;
+  country: string;
+  orderstatus: string;
+  paymentstatus: string;
+  lastpaymentupdate: string;
+}
 
-  return { orderId, companyId, handleReturn };
-};
+const mockCustomers: Customer[] = [
+  {
+    customername: "John Doe",
+    customeremail: "john@example.com",
+    orderid: "ORD123456",
+    street: "Main Street",
+    addressnr: "123",
+    city: "New York",
+    postalcode: "10001",
+    country: "USA",
+    orderstatus: "Pending",
+    paymentstatus: "Unpaid",
+    lastpaymentupdate: "2024-04-12",
+  },
+  {
+    customername: "Alice Smith",
+    customeremail: "alice@example.com",
+    orderid: "ORD789012",
+    street: "Elm Street",
+    addressnr: "456",
+    city: "Los Angeles",
+    postalcode: "90001",
+    country: "USA",
+    orderstatus: "Shipped",
+    paymentstatus: "Paid",
+    lastpaymentupdate: "2024-04-13",
+  },
+];
 
-// Queries
-const useOrderDetailsQueries = (orderId: string | string[], companyId: string | string[]) => {
-  const {
-    data: company_data,
-    isLoading: isCompanyLoading,
-    isError: isCompanyError,
-  } = useQuery<Company>({
-    queryKey: ["company", companyId],
-    queryFn: () => getCompanyById(companyId as string),
-  });
+interface OrderItem {
+  instock: string;
+  name: string;
+  quantity: number;
+  totalproductprice: number;
+  unitprice: number;
+}
 
   const {
     data: order_data,
@@ -190,29 +230,13 @@ const OrderDetails: NextPage = () => {
     isOrderItemsError,
   } = useOrderDetailsQueries(orderId as string, companyId as string);
 
-  const columns = useOrderDetailsColumns(order_data);
+  const companyId = "1";
+  const companies = useContext(CompaniesContext) as Company[];
+  const company = companies.find((company) => company.id === Number(companyId));
 
-  if (
-    isCompanyLoading ||
-    isOrderItemsLoading ||
-    isCurrentCompanyLoading ||
-    isOrderLoading
-  ) {
-    return <Loader />;
-  }
-
-  if (
-    isCompanyError ||
-    isOrderItemsError ||
-    isCurrentCompanyError ||
-    isOrderError
-  ) {
-    return <div>Error occurred while fetching data.</div>;
-  }
-
-  if (!company_data || !orderItems_data || !current_company_data || !order_data) {
-    return <div>Data not available.</div>;
-  }
+  const handleReturn = () => {
+    router.push("/orders");
+  };
 
   return (
     <div style={{ height: "90.75vh" }}>
@@ -226,15 +250,7 @@ const OrderDetails: NextPage = () => {
           </Button>
           <Button
             className="bg-[rgb(239,70,60)] m-4"
-            onClick={() =>
-              handleDownloadInvoice(
-                company_data,
-                current_company_data,
-                orderItems_data,
-                order_data,
-                orderId as string
-              )
-            }
+            onClick={handleDownloadInvoice}
           >
             DOWNLOAD INVOICE
           </Button>
@@ -251,7 +267,7 @@ const OrderDetails: NextPage = () => {
           <div className="flex h-full items-start justify-center">
             <OrderTable
               columns={columns}
-              data={orderItems_data}
+              data={mockOrderItems}
               sortingValue={"name"}
               decSorting={false}
               datePicker={false}
