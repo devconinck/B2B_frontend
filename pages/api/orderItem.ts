@@ -7,7 +7,7 @@ const baseUrl = `/api/orders`;
 export const getOrderItems = async (orderId: string): Promise<OrderItem[]> => {
   try {
     const response = await axios.get(`${baseUrl}/${orderId}/items`);
-    return response.data.items || [];
+    return response.data || [];
   } catch (error) {
     console.error('Error fetching order items:', error);
     return [];
