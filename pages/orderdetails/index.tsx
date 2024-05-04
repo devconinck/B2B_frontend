@@ -85,7 +85,7 @@ const mockCustomers: Customer[] = [
 
 const columns: ColumnDef<OrderItem>[] = [
   {
-    accessorKey: "instock",
+    accessorKey: "inStock",
     header: ({ column }) => {
       return (
         <div
@@ -127,7 +127,8 @@ const columns: ColumnDef<OrderItem>[] = [
     },
   },
   {
-    accessorKey: "totalproductprice",
+    accessorFn: (row) => row.unitPrice * row.quantity, // Calculate total product price
+    id: 'totalProductPrice',
     header: ({ column }) => {
       return (
         <div
@@ -141,7 +142,7 @@ const columns: ColumnDef<OrderItem>[] = [
     },
   },
   {
-    accessorKey: "unitprice",
+    accessorKey: "unitPrice",
     header: ({ column }) => {
       return (
         <div
@@ -159,7 +160,7 @@ const columns: ColumnDef<OrderItem>[] = [
 const OrderDetails: NextPage = () => {
   const router = useRouter();
   const { orderId, companyId } = router.query;
-  
+
   // TODO: GEBRUIK DE CONTEXT
   const { data: company_data, isLoading: isCompanyLoading, isError: isCompanyError } = useQuery<Company>({
     queryKey: ["company", companyId],
