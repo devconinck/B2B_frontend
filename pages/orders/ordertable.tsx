@@ -64,7 +64,10 @@ export const OrderTable = <TData, TValue>({
 
   const handleRowClick = (rowData: any) => {
     console.log("test" + rowData);
-    router.push("/orderdetails", rowData);
+    router.push({
+      pathname: "/orderdetails",
+      query: { orderId: rowData.original.orderId, companyId: rowData.original.companyId },
+    });
   };
 
   const table = useReactTable({

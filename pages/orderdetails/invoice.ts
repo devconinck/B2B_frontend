@@ -1,33 +1,13 @@
 import jsPDFInvoiceTemplate, { OutputType } from "jspdf-invoice-template-nodejs";
-import { useQuery } from "@tanstack/react-query";
-import { getOrderItems } from "../api/orderItem";
-import { getCompanyById } from "../api/companies";
 import { OrderItem, Company } from "@/types";
 
-export const handleDownloadInvoice = async (orderId: string) => {
-  const {
-    data: orderItems
-  } = useQuery<OrderItem[]>({
-    queryKey: ["orderItems", orderId],
-    queryFn: () => getOrderItems(orderId),
-  });
-
-  if (!orderItems) {
+export const handleDownloadInvoice = (company: Company | undefined, orderItems: OrderItem[] | undefined, orderId: string) => {
+  if (!company || !orderItems) {
     return;
   }
 
-  // TODO
-  const companyId = "1";
-
-  const {
-    data: company
-  } = useQuery<Company>({
-    queryKey: ["company", companyId],
-    queryFn: () => getCompanyById(companyId),
-  });
-
-  const props = {
-    outputType: OutputType.Save,
+  const pdfObject = jsPDFInvoiceTemplate({
+    outputType: "save",
     returnJsPDFDocObject: true,
     fileName: "Invoice",
     orientationLandscape: false,
@@ -43,10 +23,10 @@ export const handleDownloadInvoice = async (orderId: string) => {
       },
     },
     business: {
-      name: company?.name,
-      address: company?.address,
-      phone: company?.contact.phoneNumber,
-      email: company?.contact.email,
+      name: company.name,
+      address: company.address,
+      phone: company.contact?.phoneNumber || "/",
+      email: company.contact?.email || "/",
     },
     contact: {
       label: "Invoice issued for:",
@@ -95,9 +75,7 @@ export const handleDownloadInvoice = async (orderId: string) => {
             0
           ),
           col3: "ALL",
-          style: {
-            fontSize: 14,
-          },
+          style: { fontSize: 14 },
         },
       ],
     },
@@ -106,7 +84,7 @@ export const handleDownloadInvoice = async (orderId: string) => {
     },
     pageEnable: true,
     pageLabel: "Page ",
-  };
+  });
 
-  const pdfObject = jsPDFInvoiceTemplate(props);
+  console.log("PDF created", pdfObject);
 };

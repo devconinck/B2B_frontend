@@ -20,6 +20,8 @@ import { useContext } from "react";
 import CompaniesContext from "@/context/companiesContext";
 import { Company } from "@/types";
 import CustomerDetails from "./customerDetails";
+import { getOrderItems } from "../api/orderItem";
+import { getCompanyById } from "../api/companies";
 
 import { handleDownloadInvoice } from "./invoice";
 
@@ -290,12 +292,21 @@ const mockOrderItems: OrderItem[] = [
   },
 ];
 
+
 const OrderDetails: NextPage = () => {
   const router = useRouter();
+  const { orderId, companyId } = router.query;
+  console.log("Orderid" + orderId, "COMPANY" + companyId)
 
-  const companyId = "1";
-  const companies = useContext(CompaniesContext) as Company[];
-  const company = companies.find((company) => company.id === Number(companyId));
+  const company_data = useQuery<Company>({
+    queryKey: ["company", companyId],
+    queryFn: () => getCompanyById(companyId as string),
+  });
+
+  const orderItems_data = useQuery<OrderItem[]>({
+    queryKey: ["orderItems", orderId],
+    queryFn: () => getOrderItems(orderId as string),
+  });
 
   const handleReturn = () => {
     router.push("/orders");
@@ -313,7 +324,7 @@ const OrderDetails: NextPage = () => {
           </Button>
           <Button
             className="bg-[rgb(239,70,60)] m-4"
-            onClick={handleDownloadInvoice}
+            onClick={handleDownloadInvoice(company_data, orderItems_data, orderId)}
           >
             DOWNLOAD INVOICE
           </Button>
