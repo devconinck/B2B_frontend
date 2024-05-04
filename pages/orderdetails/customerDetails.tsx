@@ -20,9 +20,8 @@ const labelFields = [
 
 export const CustomerDetails = () => {
   const router = useRouter();
-  const { rowData } = router.query;
-  console.log(rowData);
-  const companyId = "1";
+  const { companyId } = router.query;
+
   const companies = useContext(CompaniesContext) as Company[];
   const company = companies.find((company) => company.id === Number(companyId));
 

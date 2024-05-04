@@ -63,10 +63,9 @@ export const OrderTable = <TData, TValue>({
   const router = useRouter();
 
   const handleRowClick = (rowData: any) => {
-    console.log("test" + rowData);
     router.push({
       pathname: "/orderdetails",
-      query: { orderId: rowData.original.orderId, companyId: rowData.original.companyId },
+      query: { orderId: rowData.original.orderId, companyId: rowData.id },
     });
   };
 

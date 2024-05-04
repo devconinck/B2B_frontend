@@ -11,7 +11,10 @@ export const getCompanyById = async (companyId: string): Promise<Company> => {
     setAuthToken(
       token_temp
     );
-    return await axios.get(`${baseUrl}/${companyId}`).then((res) => res.data.items[0]);
+    console.log("TETSET")
+    const test = await axios.get(`${baseUrl}/${companyId}`).then((res) => res.data.items[0])
+    console.log("TEST" + test)
+    return test;
   } catch (error) {
     throw error;
   }

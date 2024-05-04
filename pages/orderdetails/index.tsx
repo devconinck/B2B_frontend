@@ -296,17 +296,24 @@ const mockOrderItems: OrderItem[] = [
 const OrderDetails: NextPage = () => {
   const router = useRouter();
   const { orderId, companyId } = router.query;
-  console.log("Orderid" + orderId, "COMPANY" + companyId)
 
-  const company_data = useQuery<Company>({
+  const {data : company_data } = useQuery<Company>({
     queryKey: ["company", companyId],
-    queryFn: () => getCompanyById(companyId as string),
+    queryFn: () => {
+      console.log("TESTETSDFSFSE")
+      return getCompanyById(companyId as string)},
   });
 
+  /*
   const orderItems_data = useQuery<OrderItem[]>({
     queryKey: ["orderItems", orderId],
     queryFn: () => getOrderItems(orderId as string),
   });
+  */
+
+  console.log(company_data)
+  //console.log(orderItems_data)
+  const orderItems_data = {}
 
   const handleReturn = () => {
     router.push("/orders");

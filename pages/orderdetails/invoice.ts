@@ -1,7 +1,7 @@
 import jsPDFInvoiceTemplate, { OutputType } from "jspdf-invoice-template-nodejs";
 import { OrderItem, Company } from "@/types";
 
-export const handleDownloadInvoice = (company: Company | undefined, orderItems: OrderItem[] | undefined, orderId: string) => {
+export const handleDownloadInvoice = (company: Company, orderItems: OrderItem[], orderId: string) => {
   if (!company || !orderItems) {
     return;
   }
