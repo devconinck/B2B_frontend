@@ -159,8 +159,7 @@ const columns: ColumnDef<OrderItem>[] = [
 const OrderDetails: NextPage = () => {
   const router = useRouter();
   const { orderId, companyId } = router.query;
-
-
+  
   // TODO: GEBRUIK DE CONTEXT
   const { data: company_data, isLoading: isCompanyLoading, isError: isCompanyError } = useQuery<Company>({
     queryKey: ["company", companyId],
