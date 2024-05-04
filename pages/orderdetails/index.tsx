@@ -1,6 +1,5 @@
 import { NextPage } from "next";
-import { useQuery } from "@tanstack/react-query";
-import { Label } from "@radix-ui/react-dropdown-menu";
+import { useQuery, isReady } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import {
   ResizableHandle,
@@ -22,6 +21,7 @@ import { Company } from "@/types";
 import CustomerDetails from "./customerDetails";
 import { getOrderItems } from "../api/orderItem";
 import { getCompanyById } from "../api/companies";
+import { OrderItem } from "@/types";
 
 import { handleDownloadInvoice } from "./invoice";
 
@@ -82,13 +82,6 @@ const mockCustomers: Customer[] = [
   },
 ];
 
-interface OrderItem {
-  instock: string;
-  name: string;
-  quantity: number;
-  totalproductprice: number;
-  unitprice: number;
-}
 
 const columns: ColumnDef<OrderItem>[] = [
   {
@@ -163,157 +156,33 @@ const columns: ColumnDef<OrderItem>[] = [
   },
 ];
 
-const mockOrderItems: OrderItem[] = [
-  {
-    instock: "In Stock",
-    name: "Product A",
-    quantity: 10,
-    totalproductprice: 150.99,
-    unitprice: 15.99,
-  },
-  {
-    instock: "Order",
-    name: "Product B",
-    quantity: 5,
-    totalproductprice: 79.95,
-    unitprice: 15.99,
-  },
-  {
-    instock: "In Stock",
-    name: "Product C",
-    quantity: 8,
-    totalproductprice: 99.92,
-    unitprice: 12.49,
-  },
-  {
-    instock: "In Stock",
-    name: "Product D",
-    quantity: 3,
-    totalproductprice: 59.97,
-    unitprice: 19.99,
-  },
-  {
-    instock: "Order",
-    name: "Product E",
-    quantity: 7,
-    totalproductprice: 111.93,
-    unitprice: 15.99,
-  },
-  {
-    instock: "In Stock",
-    name: "Product F",
-    quantity: 6,
-    totalproductprice: 74.94,
-    unitprice: 12.49,
-  },
-  {
-    instock: "In Stock",
-    name: "Product G",
-    quantity: 2,
-    totalproductprice: 39.98,
-    unitprice: 19.99,
-  },
-  {
-    instock: "Order",
-    name: "Product H",
-    quantity: 9,
-    totalproductprice: 143.91,
-    unitprice: 15.99,
-  },
-  {
-    instock: "In Stock",
-    name: "Product I",
-    quantity: 4,
-    totalproductprice: 49.96,
-    unitprice: 12.49,
-  },
-  {
-    instock: "In Stock",
-    name: "Product J",
-    quantity: 1,
-    totalproductprice: 19.99,
-    unitprice: 19.99,
-  },
-  {
-    instock: "Order",
-    name: "Product K",
-    quantity: 3,
-    totalproductprice: 59.97,
-    unitprice: 19.99,
-  },
-  {
-    instock: "In Stock",
-    name: "Product L",
-    quantity: 5,
-    totalproductprice: 62.45,
-    unitprice: 12.49,
-  },
-  {
-    instock: "In Stock",
-    name: "Product M",
-    quantity: 2,
-    totalproductprice: 39.98,
-    unitprice: 19.99,
-  },
-  {
-    instock: "Order",
-    name: "Product N",
-    quantity: 8,
-    totalproductprice: 127.92,
-    unitprice: 15.99,
-  },
-  {
-    instock: "In Stock",
-    name: "Product O",
-    quantity: 6,
-    totalproductprice: 74.94,
-    unitprice: 12.49,
-  },
-  {
-    instock: "In Stock",
-    name: "Product P",
-    quantity: 1,
-    totalproductprice: 19.99,
-    unitprice: 19.99,
-  },
-  {
-    instock: "Order",
-    name: "Product Q",
-    quantity: 4,
-    totalproductprice: 63.96,
-    unitprice: 15.99,
-  },
-  {
-    instock: "In Stock",
-    name: "Product R",
-    quantity: 3,
-    totalproductprice: 59.97,
-    unitprice: 19.99,
-  },
-];
-
-
 const OrderDetails: NextPage = () => {
   const router = useRouter();
   const { orderId, companyId } = router.query;
 
-  const {data : company_data } = useQuery<Company>({
+
+  // TODO: GEBRUIK DE CONTEXT
+  const { data: company_data, isLoading: isCompanyLoading, isError: isCompanyError } = useQuery<Company>({
     queryKey: ["company", companyId],
-    queryFn: () => {
-      console.log("TESTETSDFSFSE")
-      return getCompanyById(companyId as string)},
+    queryFn: () => getCompanyById(companyId as string),
   });
 
-  /*
-  const orderItems_data = useQuery<OrderItem[]>({
+  const { data: orderItems_data, isLoading: isOrderItemsLoading, isError: isOrderItemsError } = useQuery<OrderItem[]>({
     queryKey: ["orderItems", orderId],
     queryFn: () => getOrderItems(orderId as string),
   });
-  */
 
-  console.log(company_data)
-  //console.log(orderItems_data)
-  const orderItems_data = {}
+  if (isCompanyLoading || isOrderItemsLoading) {
+    return <Loader />;
+  }
+
+  if (isCompanyError || isOrderItemsError) {
+    return <div>Error occurred while fetching data.</div>;
+  }
+
+  if (!company_data || !orderItems_data) {
+    return <div>No data available.</div>;
+  }
 
   const handleReturn = () => {
     router.push("/orders");
@@ -331,7 +200,7 @@ const OrderDetails: NextPage = () => {
           </Button>
           <Button
             className="bg-[rgb(239,70,60)] m-4"
-            onClick={handleDownloadInvoice(company_data, orderItems_data, orderId)}
+            onClick={ () => handleDownloadInvoice(company_data, orderItems_data, orderId as string)}
           >
             DOWNLOAD INVOICE
           </Button>
@@ -348,7 +217,7 @@ const OrderDetails: NextPage = () => {
           <div className="flex h-full items-start justify-center">
             <OrderTable
               columns={columns}
-              data={mockOrderItems}
+              data={orderItems_data}
               sortingValue={"name"}
               decSorting={false}
               datePicker={false}

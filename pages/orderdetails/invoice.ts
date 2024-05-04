@@ -2,9 +2,6 @@ import jsPDFInvoiceTemplate, { OutputType } from "jspdf-invoice-template-nodejs"
 import { OrderItem, Company } from "@/types";
 
 export const handleDownloadInvoice = (company: Company, orderItems: OrderItem[], orderId: string) => {
-  if (!company || !orderItems) {
-    return;
-  }
 
   const pdfObject = jsPDFInvoiceTemplate({
     outputType: "save",
