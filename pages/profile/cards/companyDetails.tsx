@@ -5,11 +5,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { EditableProfile } from "@/types";
 import Image from "next/image";
-import { CustomTextInput, CustomSelect } from "../index";
+import { CustomTextInput, CustomSelect } from "../customInputs";
 
 
 const sectors = [

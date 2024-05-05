@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { EditableProfile } from "@/types";
-import { CustomTextInput } from "..";
+import { CustomTextInput } from "../customInputs";
 
 export const Contact: React.FC<EditableProfile> = ({isEditing}: EditableProfile) => {
   return (
@@ -17,8 +17,8 @@ export const Contact: React.FC<EditableProfile> = ({isEditing}: EditableProfile)
           <CardTitle>Contact</CardTitle>
         </CardHeader>
         <CardContent>
-          <CustomTextInput name="phone" label="Phone" disabled={!isEditing} />
-          <CustomTextInput name="email" label="Email" disabled={!isEditing} />
+          <CustomTextInput name="phone" label="Phone"/>
+          <CustomTextInput name="email" label="Email"/>
         </CardContent>
       </Card>
     </div>

@@ -4,19 +4,9 @@ import { CompanyDetails } from "./cards/companyDetails";
 import { PersonalDetails } from "./cards/personalDetails";
 import { Contact } from "./cards/contact";
 import { Address } from "./cards/address";
-import { Formik, Field, Form, ErrorMessage, FieldArray, useField } from 'formik';
-import * as Yup from 'yup';
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { Formik, Form } from 'formik';
+import { ProfileValidation } from "./profile_InitValues_Validation";
+import { InitialValues } from "./profile_InitValues_Validation";
 
 /*
 DR_DETAILS_PROFIEL
@@ -28,7 +18,7 @@ Van een bedrijf als klant wordt volgende info getoond op zijn profiel
 •	Contactgegevens
 •	Klant sinds
 •	Gegevens van de klantaccount
-Van een bedrijf als leverancier wordt volgende info getoond op zijn profiel
+Van een bedrijf als leverancier wordt volgende info getoond op zijn profiel TODO
 •	Logo
 •	Naam (uniek)
 •	Sector
@@ -39,41 +29,6 @@ Van een bedrijf als leverancier wordt volgende info getoond op zijn profiel
 •	Gegevens van de leveranciersaccount
 */
 
-export const CustomTextInput = ({ label, ...props }: any) => {
-  const [field, meta] = useField(props);
-  return (
-    <div>
-        <Label htmlFor={props.id || props.name}>{label}</Label>
-        <Input {...field} {...props} />
-        {meta.touched && meta.error ? (
-        <ErrorMessage name={props.name}></ErrorMessage> // prop component toevoegen voor opmaak van errormessage https://formik.org/docs/api/errormessage
-        ) : null}
-    </div>
-  );
-};
-
-export const CustomSelect = ({ label, placeholder, options, ...props }: any) => {
-  const [field, meta] = useField(props);
-  return (
-    <div>
-      <Label htmlFor={props.id || props.name}>{label}</Label>
-      <Select {...props}>
-        <SelectTrigger>
-          <SelectValue placeholder={placeholder} />
-        </SelectTrigger>
-        <SelectContent>
-          {options.map((option: any) => (
-            <SelectItem key={option.id} value={option.value}>{option.name}</SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      {meta.touched && meta.error ? (
-        <ErrorMessage name={props.name}></ErrorMessage>
-      ) : null}
-    </div>
-  );
-};
-
 export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
 
@@ -81,15 +36,7 @@ export default function Profile() {
     setIsEditing(!isEditing);
   };
 
-  // TODO juiste data van ingelogde company?
-  const initialValues = {
-    companyName: "Company Name",
-    sector: "Sector",
-    phone: "+32476795263",
-    email: "Charles.leclerc@icloud.com",
-  }
-
-  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms)); // moet met de db spreken
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms)); // TODO moet met de db spreken
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -99,39 +46,27 @@ export default function Profile() {
         </div>
         <div className="mx-auto flex flex-col w-full max-w-6xl gap-6">
           <Formik 
-            initialValues={initialValues}
-            validationSchema={Yup.object().shape({
-              companyName: Yup.string().min(2, "Too short!").max(50, "Too long!").required("Required"),
-              sector: Yup.string().required("Required"),
-              phone: Yup.string().matches(/^\+[1-9]\d{1,14}$/, {
-                message: "Invalid phone number",
-                excludeEmptyString: true
-              }),
-              email: Yup.string().email("Invalid email").required("Required"),
-            })}
+            initialValues={InitialValues()}
+            validationSchema={ProfileValidation}
             onSubmit={async (values) => {
               await sleep(350);
               alert(JSON.stringify(values, null, 2)) // values, replacer, spacer
             }}
           >
             {({ isSubmitting }) => (
-              <Form className="flex flex-col gap-6">
+              <Form className="flex flex-col gap-6 items-center">
 
                 <div className="flex flex-row justify-center gap-6 items-center">
                   <CompanyDetails isEditing={isEditing}/>
-                  <div className="w-1/3">
+                  <div className="w-80">
                     <Contact isEditing={isEditing}/>
                   </div>
                 </div>
-                <div className="flex justify-center">
-                  <div className="max-w-xl">
+                <div className="max-w-xl">
                     <Address isEditing={isEditing}/>
-                  </div>
                 </div>
-                <div className="flex flex-row justify-center gap-6">
-                  <div className="w-1/2">
-                    <PersonalDetails isEditing={isEditing}/>
-                  </div>
+                <div className="w-1/2">
+                  <PersonalDetails isEditing={isEditing}/>
                 </div>
                 <Button type={!isEditing ? "submit" : "button"} disabled={isSubmitting} variant={"destructive"} className="w-full" onClick={handleEdit}>
                   {isEditing ? "Save" : "Edit"}

@@ -5,33 +5,22 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { EditableProfile } from "@/types";
+import { CustomTextInput } from "../customInputs";
 
 export const PersonalDetails: React.FC<EditableProfile>  = ({isEditing}: EditableProfile) => {
   return (
     <div>
-      <Card className="">
+      <Card>
         <CardHeader>
           <CardTitle>Personal Details</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-6">
+        <CardContent className="flex flex-row gap-6">
 
-          <div className="max-w-40">
-            <Label htmlFor="customerSince">Customer since</Label>
-            <Input id="constomerSince" placeholder="02/09/2021" disabled={!isEditing} />
+          <div className="w-2/3">
+            <CustomTextInput name="useremail" label="User Email" disabled={!isEditing}/>
           </div>
-
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input id="email" placeholder="Charles.leclerc@icloud.com" disabled={!isEditing} />
-          </div>
-
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" placeholder="Test123!" disabled={!isEditing} />
-          </div>
+          <CustomTextInput name="customersince" label="Customer Since" disabled={!isEditing}/>
 
         </CardContent>
       </Card>
