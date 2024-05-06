@@ -1,7 +1,6 @@
 import { ErrorMessage, useField } from "formik";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -32,7 +31,7 @@ export const CustomSelect = ({ label, placeholder, options, ...props }: any) => 
     <div>
       <Label htmlFor={props.name}>{label}</Label>
       <Select {...props} defaultValue={options.value}
-        onValueChange={(value) => {setValue(value)}}
+        onValueChange={(value: any) => {setValue(value)}}
       >
         <SelectTrigger>
           <SelectValue placeholder={placeholder}/>
@@ -70,7 +69,7 @@ export const CustomCheckboxenInput = ({ label, placeholder, options, ...props }:
                             />
       ))}
       <Select {...props} defaultValue={options.value}
-        onValueChange={(value) => {setValue(value)}}
+        onValueChange={(value: any) => {setValue(value)}}
       >
         <SelectTrigger>
           <SelectValue placeholder={placeholder}/>
