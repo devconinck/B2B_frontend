@@ -6,9 +6,47 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { EditableProfile } from "@/types";
+import { CustomCheckboxenInput, CustomTextInput } from "../customInputs";
+
+/*
+Van een bedrijf als leverancier wordt volgende info getoond op zijn profiel TODO
+•	Logo
+•	Naam (uniek)
+•	Sector
+•	Adres
+•	Betalingsmogelijkheden en -info
+•	Contactgegevens
+•	BTW nummer 
+•	Gegevens van de leveranciersaccount
+*/
+
+const items = [
+  {
+    id: "recents",
+    label: "Recents",
+  },
+  {
+    id: "home",
+    label: "Home",
+  },
+  {
+    id: "applications",
+    label: "Applications",
+  },
+  {
+    id: "desktop",
+    label: "Desktop",
+  },
+  {
+    id: "downloads",
+    label: "Downloads",
+  },
+  {
+    id: "documents",
+    label: "Documents",
+  },
+] as const
 
 export const Address: React.FC<EditableProfile> = ({isEditing}: EditableProfile) => {
   return (
@@ -18,18 +56,9 @@ export const Address: React.FC<EditableProfile> = ({isEditing}: EditableProfile)
           <CardTitle>Payment</CardTitle>
         </CardHeader>
         <CardContent>
-          <Label htmlFor="bank">Bank Account</Label>
-          <Input
-            id="bank"
-            placeholder="Bank Account"
-            disabled={!isEditing}
-          />
-          <Label htmlFor="payments">Payment Options</Label>
-          <Input
-            id="payments"
-            placeholder="Payment options"
-            disabled={!isEditing}
-          />
+          <CustomTextInput name="vatnumber" label="VAT Number" disabled={!isEditing}/>
+          <CustomTextInput name="paymentoptions" label="Payment Options" disabled={!isEditing}/>
+          <CustomCheckboxenInput name="paymentoptions" label="Payment Options" disabled={!isEditing} options={items}/>
         </CardContent>
       </Card>
     </div>

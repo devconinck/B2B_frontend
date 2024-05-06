@@ -12,10 +12,7 @@ export const ProfileValidation = Yup.object().shape({
     .notOneOf(["Sector"], "Please select a valid sector")
     .required("Required"),
   phone: Yup.string()
-    .matches(/^\+[1-9]\d{1,14}$/, {
-      message: "Invalid phone number",
-      excludeEmptyString: true
-    })
+    // TODO some validation?
     .required("Required"),
   email: Yup.string()
     .email("Invalid email")
@@ -26,7 +23,7 @@ export const ProfileValidation = Yup.object().shape({
   street: Yup.string().required("Required"),
   number: Yup.string().required("Required"),
   useremail: Yup.string().email("Invalid user email").required("Required"),
-  customersince: Yup.date().required("Required")
+  customersince: Yup.date().required("Required"),
 });
 
 

@@ -17,8 +17,8 @@ export const Contact: React.FC<EditableProfile> = ({isEditing}: EditableProfile)
           <CardTitle>Contact</CardTitle>
         </CardHeader>
         <CardContent>
-          <CustomTextInput name="phone" label="Phone"/>
-          <CustomTextInput name="email" label="Email"/>
+          <CustomTextInput name="phone" label="Phone" disabled={!isEditing}/>
+          <CustomTextInput name="email" label="Email" disabled={!isEditing}/>
         </CardContent>
       </Card>
     </div>

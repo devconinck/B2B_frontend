@@ -1,6 +1,7 @@
 import { ErrorMessage, useField } from "formik";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -30,6 +31,44 @@ export const CustomSelect = ({ label, placeholder, options, ...props }: any) => 
   return (
     <div>
       <Label htmlFor={props.name}>{label}</Label>
+      <Select {...props} defaultValue={options.value}
+        onValueChange={(value) => {setValue(value)}}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder={placeholder}/>
+        </SelectTrigger>
+        <SelectContent>
+          {options.map((option: any) => (
+            <SelectItem key={option.id} value={option.value}>{option.name}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      {meta.touched && meta.error ? (
+        <ErrorMessage name={props.name}></ErrorMessage>
+      ) : null}
+    </div>
+  );
+};
+
+export const CustomCheckboxenInput = ({ label, placeholder, options, ...props }: any) => {
+  const [field, meta, helpers] = useField(props);
+  const {setValue} = helpers;
+  return (
+    <div>
+      <Label htmlFor={props.name}>{label}</Label>
+      {options.map((item: any) => (
+        <Checkbox {...field} {...props} key={item.id} checked={field.value?.includes(item.id)}
+                              onCheckedChange={(checked: boolean) => {
+                                return checked
+                                  ? field.onChange([...field.value, item.id])
+                                  : field.onChange(
+                                      field.value?.filter(
+                                        (value: string) => value !== item.id
+                                      )
+                                    )
+                              }}
+                            />
+      ))}
       <Select {...props} defaultValue={options.value}
         onValueChange={(value) => {setValue(value)}}
       >
