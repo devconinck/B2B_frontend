@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { useQuery, isReady } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import {
   ResizableHandle,
@@ -127,7 +127,7 @@ const columns: ColumnDef<OrderItem>[] = [
     },
   },
   {
-    accessorFn: (row) => row.unitPrice * row.quantity, // Calculate total product price
+    accessorFn: (row) => (row.UNITPRICE || 0) * (row.QUANTITY || 0), // Calculate total product price
     id: 'totalProductPrice',
     header: ({ column }) => {
       return (
@@ -167,21 +167,26 @@ const OrderDetails: NextPage = () => {
     queryFn: () => getCompanyById(companyId as string),
   });
 
+  const { data: current_company_data, isLoading: isCurrentCompanyLoading, isError: isCurrentCompanyError } = useQuery<Company>({
+    queryKey: ["company", "current"],
+    queryFn: () => getCompanyById("current"),
+  });
+
   const { data: orderItems_data, isLoading: isOrderItemsLoading, isError: isOrderItemsError } = useQuery<OrderItem[]>({
     queryKey: ["orderItems", orderId],
     queryFn: () => getOrderItems(orderId as string),
   });
 
-  if (isCompanyLoading || isOrderItemsLoading) {
+  if (isCompanyLoading || isOrderItemsLoading || isCurrentCompanyLoading) {
     return <Loader />;
   }
 
-  if (isCompanyError || isOrderItemsError) {
+  if (isCompanyError || isOrderItemsError || isCurrentCompanyError) {
     return <div>Error occurred while fetching data.</div>;
   }
 
-  if (!company_data || !orderItems_data) {
-    return <div>No data available.</div>;
+  if (!company_data || !orderItems_data || !current_company_data) {
+    return <div>Data not available.</div>;
   }
 
   const handleReturn = () => {
@@ -200,7 +205,7 @@ const OrderDetails: NextPage = () => {
           </Button>
           <Button
             className="bg-[rgb(239,70,60)] m-4"
-            onClick={ () => handleDownloadInvoice(company_data, orderItems_data, orderId as string)}
+            onClick={ () => handleDownloadInvoice(company_data, current_company_data, orderItems_data, orderId as string)}
           >
             DOWNLOAD INVOICE
           </Button>
