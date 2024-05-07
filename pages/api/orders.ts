@@ -15,3 +15,15 @@ export const getAllOrdersFromCompany = async (): Promise<Order[]> => {
     throw error;
   }
 };
+
+export const getOrderById = async (orderId: string): Promise<Order> => {
+  try {
+    setAuthToken(
+      token_temp
+    );
+    return await axios.get(`${baseUrl}/all`).then((res) => res.data[0]);
+  } catch (error) {
+    throw error;
+  }
+};
+

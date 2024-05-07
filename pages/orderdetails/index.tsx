@@ -22,6 +22,8 @@ import CustomerDetails from "./customerDetails";
 import { getOrderItems } from "../api/orderItem";
 import { getCompanyById } from "../api/companies";
 import { OrderItem } from "@/types";
+import { getOrderById } from "../api/orders";
+import { Order } from "@/types";
 
 import { handleDownloadInvoice } from "./invoice";
 
@@ -162,9 +164,15 @@ const OrderDetails: NextPage = () => {
   const { orderId, companyId } = router.query;
 
   // TODO: GEBRUIK DE CONTEXT
+  // KAN HEEL DEZE BLOK BETER
   const { data: company_data, isLoading: isCompanyLoading, isError: isCompanyError } = useQuery<Company>({
     queryKey: ["company", companyId],
     queryFn: () => getCompanyById(companyId as string),
+  });
+
+  const { data: order_data, isLoading: isOrderLoading, isError: isOrderError } = useQuery<Order>({
+    queryKey: ["order", orderId],
+    queryFn: () => getOrderById(orderId as string),
   });
 
   const { data: current_company_data, isLoading: isCurrentCompanyLoading, isError: isCurrentCompanyError } = useQuery<Company>({
@@ -177,15 +185,15 @@ const OrderDetails: NextPage = () => {
     queryFn: () => getOrderItems(orderId as string),
   });
 
-  if (isCompanyLoading || isOrderItemsLoading || isCurrentCompanyLoading) {
+  if (isCompanyLoading || isOrderItemsLoading || isCurrentCompanyLoading || isOrderLoading) {
     return <Loader />;
   }
 
-  if (isCompanyError || isOrderItemsError || isCurrentCompanyError) {
+  if (isCompanyError || isOrderItemsError || isCurrentCompanyError || isOrderError) {
     return <div>Error occurred while fetching data.</div>;
   }
 
-  if (!company_data || !orderItems_data || !current_company_data) {
+  if (!company_data || !orderItems_data || !current_company_data || !order_data) {
     return <div>Data not available.</div>;
   }
 
@@ -205,7 +213,7 @@ const OrderDetails: NextPage = () => {
           </Button>
           <Button
             className="bg-[rgb(239,70,60)] m-4"
-            onClick={ () => handleDownloadInvoice(company_data, current_company_data, orderItems_data, orderId as string)}
+            onClick={ () => handleDownloadInvoice(company_data, current_company_data, orderItems_data, order_data, orderId as string)}
           >
             DOWNLOAD INVOICE
           </Button>
