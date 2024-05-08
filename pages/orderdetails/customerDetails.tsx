@@ -1,17 +1,45 @@
 import { useRouter } from "next/router";
+import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import CompaniesContext from "@/context/companiesContext";
+import { getOrder } from "../api/orders";
 import { Company } from "@/types";
 import { Button } from "@/components/ui/button";
 import { handleDownloadInvoice } from "./invoice";
 import Image from "next/image";
 import { Mail, Phone, Package, CreditCard } from "lucide-react";
+import Loader from "@/components/Loader";
+import Error from "@/components/Error";
 
 export const CustomerDetails = () => {
+  let name, fromCompanyId, fromCompany, orderStatus, paymentStatus;
   const router = useRouter();
   const { companyId, orderId } = router.query;
   const companies = useContext(CompaniesContext) as Company[];
   const company = companies.find((company) => company.id === Number(companyId));
+
+  const {
+    data: info,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["info"],
+    queryFn: () => getOrder(orderId),
+  });
+
+  if (info) {
+    ({ name, fromCompanyId, orderStatus, paymentStatus } = info[0]);
+    fromCompany = companies.find(
+      (company) => company.id === Number(fromCompanyId)
+    );
+  }
+
+  if (isLoading) {
+    return <Loader />;
+  }
+  if (error) {
+    <Error error={error} />;
+  }
 
   const handleReturn = () => {
     router.push("/orders");
@@ -51,41 +79,39 @@ export const CustomerDetails = () => {
               </div>
             </div>
             <div className="text-center  md:text-left">
-              <h1 className="text-2xl md:text-3xl font-bold">
-                {company?.name}
-              </h1>
+              <h1 className="text-2xl md:text-3xl font-bold">{name}</h1>
               <p className="mt-2">
-                {company?.address.street}, {company?.address.city},{" "}
-                {company?.address.zipcode}, {company?.address.country}
+                {fromCompany?.address.street}, {fromCompany?.address.city},{" "}
+                {fromCompany?.address.zipcode}, {fromCompany?.address.country}
               </p>
-              <p className="mt-2">{company?.vatNumber}</p>
+              <p className="mt-2">{fromCompany?.vatNumber}</p>
             </div>
             <div className="text-center md:text-right space-y-3">
               <p>
                 <a
-                  href={`mailto:${company?.contact.email}`}
+                  href={`mailto:${fromCompany?.contact.email}`}
                   className="flex items-center justify-center md:justify-start space-x-2 hover:text-red-500"
                 >
                   <Mail className="" />
-                  <span className=" ">{company?.contact.email}</span>
+                  <span className=" ">{fromCompany?.contact.email}</span>
                 </a>
               </p>
               <p>
                 <a
-                  href={`tel:${company?.contact.phoneNumber}`}
+                  href={`tel:${fromCompany?.contact.phoneNumber}`}
                   className="flex items-center justify-center md:justify-start space-x-2 hover:text-red-500"
                 >
                   <Phone />
-                  <span className="">{company?.contact.phoneNumber}</span>
+                  <span className="">{fromCompany?.contact.phoneNumber}</span>
                 </a>
               </p>
               <p className="flex items-center justify-center md:justify-start space-x-2">
                 <Package />
-                <span className="">Orderstatus</span>
+                <span className="">{orderStatus}</span>
               </p>
               <p className="flex items-center justify-center md:justify-start space-x-2">
                 <CreditCard />
-                <span className="">Paymentstatus</span>
+                <span className="">{paymentStatus}</span>
               </p>
             </div>
           </div>

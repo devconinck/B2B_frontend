@@ -4,7 +4,7 @@ import { setAuthToken } from "./index";
 import token_temp from "@/TOKEN";
 const baseUrl = `/api/orders`;
 
-export const getOrderItems = async (orderId: string): Promise<OrderItem[]> => {
+export const getOrderItems = async (orderId: any): Promise<OrderItem[]> => {
   try {
     setAuthToken(token_temp)
     const response = await axios.get(`${baseUrl}/${orderId}/items`);

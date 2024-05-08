@@ -15,7 +15,7 @@ export const getCompanyById = async (companyId: string): Promise<Company> => {
   } catch (error) {
     throw error;
   }
-}
+};
 
 export const getAllCompanies = async (): Promise<Company[]> => {
   try {
