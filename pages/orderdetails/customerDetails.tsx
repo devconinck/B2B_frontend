@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { handleDownloadInvoice } from "./invoice";
 import Image from "next/image";
 import { Mail, Phone, Package, CreditCard } from "lucide-react";
-import Loader from "@/components/Loader";
+import { LoaderPersonaldetails } from "@/components/LoaderPersonaldetails";
 import Error from "@/components/Error";
 
 export const CustomerDetails = () => {
@@ -27,18 +27,26 @@ export const CustomerDetails = () => {
     queryFn: () => getOrder(orderId),
   });
 
+  if (isLoading) {
+    return (
+      <div>
+        <LoaderPersonaldetails />
+      </div>
+    );
+  }
+  if (error) {
+    <Error error={error} />;
+  }
+  if (!info) {
+    console.log("test");
+    return <p>No personal information available</p>;
+  }
+
   if (info) {
     ({ name, fromCompanyId, orderStatus, paymentStatus } = info[0]);
     fromCompany = companies.find(
       (company) => company.id === Number(fromCompanyId)
     );
-  }
-
-  if (isLoading) {
-    return <Loader />;
-  }
-  if (error) {
-    <Error error={error} />;
   }
 
   const handleReturn = () => {

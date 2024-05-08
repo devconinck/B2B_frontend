@@ -5,7 +5,7 @@ import { ArrowUpDown } from "lucide-react";
 import { OrderTable } from "./ordertable";
 import { getAllOrdersFromCompany } from "../api/orders";
 import { Order } from "@/types";
-import Loader from "@/components/Loader";
+import { LoaderOrders } from "@/components/LoaderOrders";
 import Error from "@/components/Error";
 import Status from "@/components/Status";
 
@@ -134,7 +134,7 @@ const OrderScreen: NextPage = () => {
   });
 
   if (isLoading) {
-    return <Loader />;
+    return <LoaderOrders />;
   }
   if (error) {
     <Error error={error} />;

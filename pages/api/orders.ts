@@ -1,5 +1,4 @@
 import { axios, setAuthToken } from "./index";
-import Error, { ErrorProps } from "next/error";
 import { Order } from "@/types";
 import token_temp from '@/TOKEN'
 
