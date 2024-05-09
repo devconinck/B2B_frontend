@@ -27,179 +27,192 @@ import { Order } from "@/types";
 
 import { handleDownloadInvoice } from "./invoice";
 
-const labelFields = [
-  "Customer Name",
-  "Customer Email",
-  "Order ID",
-  "Street",
-  "Address Nr",
-  "City",
-  "Postalcode",
-  "Country",
-  "Orderstatus",
-  "Paymentstatus",
-  "Last Payment Update",
-];
-
-interface Customer {
-  customername: string;
-  customeremail: string;
-  orderid: string;
-  street: string;
-  addressnr: string;
-  city: string;
-  postalcode: string;
-  country: string;
-  orderstatus: string;
-  paymentstatus: string;
-  lastpaymentupdate: string;
-}
-
-const mockCustomers: Customer[] = [
-  {
-    customername: "John Doe",
-    customeremail: "john@example.com",
-    orderid: "ORD123456",
-    street: "Main Street",
-    addressnr: "123",
-    city: "New York",
-    postalcode: "10001",
-    country: "USA",
-    orderstatus: "Pending",
-    paymentstatus: "Unpaid",
-    lastpaymentupdate: "2024-04-12",
-  },
-  {
-    customername: "Alice Smith",
-    customeremail: "alice@example.com",
-    orderid: "ORD789012",
-    street: "Elm Street",
-    addressnr: "456",
-    city: "Los Angeles",
-    postalcode: "90001",
-    country: "USA",
-    orderstatus: "Shipped",
-    paymentstatus: "Paid",
-    lastpaymentupdate: "2024-04-13",
-  },
-];
-
-
-const columns: ColumnDef<OrderItem>[] = [
-  {
-    accessorKey: "inStock",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <p className="mr-2">In Stock</p>
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <p className="mr-2">Name</p>
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "quantity",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <p className="mr-2">Quantity</p>
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-  },
-  {
-    accessorFn: (row) => (row.UNITPRICE || 0) * (row.QUANTITY || 0), // Calculate total product price
-    id: 'totalProductPrice',
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <p className="mr-2">Total Productprice</p>
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "unitPrice",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <p className="mr-2">Unit Price</p>
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-  },
-];
-
-const OrderDetails: NextPage = () => {
+// Router
+const useOrderDetailsRouter = () => {
   const router = useRouter();
   const { orderId, companyId } = router.query;
 
-  // TODO: GEBRUIK DE CONTEXT
-  // KAN HEEL DEZE BLOK BETER
-  const { data: company_data, isLoading: isCompanyLoading, isError: isCompanyError } = useQuery<Company>({
+  const handleReturn = () => {
+    router.push("/orders");
+  };
+
+  return { orderId, companyId, handleReturn };
+};
+
+// Queries
+const useOrderDetailsQueries = (orderId: string | string[], companyId: string | string[]) => {
+  const {
+    data: company_data,
+    isLoading: isCompanyLoading,
+    isError: isCompanyError,
+  } = useQuery<Company>({
     queryKey: ["company", companyId],
     queryFn: () => getCompanyById(companyId as string),
   });
 
-  const { data: order_data, isLoading: isOrderLoading, isError: isOrderError } = useQuery<Order>({
+  const {
+    data: order_data,
+    isLoading: isOrderLoading,
+    isError: isOrderError,
+  } = useQuery<Order>({
     queryKey: ["order", orderId],
     queryFn: () => getOrderById(orderId as string),
   });
 
-  const { data: current_company_data, isLoading: isCurrentCompanyLoading, isError: isCurrentCompanyError } = useQuery<Company>({
+  const {
+    data: current_company_data,
+    isLoading: isCurrentCompanyLoading,
+    isError: isCurrentCompanyError,
+  } = useQuery<Company>({
     queryKey: ["company", "current"],
     queryFn: () => getCompanyById("current"),
   });
 
-  const { data: orderItems_data, isLoading: isOrderItemsLoading, isError: isOrderItemsError } = useQuery<OrderItem[]>({
+  const {
+    data: orderItems_data,
+    isLoading: isOrderItemsLoading,
+    isError: isOrderItemsError,
+  } = useQuery<OrderItem[]>({
     queryKey: ["orderItems", orderId],
     queryFn: () => getOrderItems(orderId as string),
   });
 
-  if (isCompanyLoading || isOrderItemsLoading || isCurrentCompanyLoading || isOrderLoading) {
+  return {
+    company_data,
+    isCompanyLoading,
+    isCompanyError,
+    order_data,
+    isOrderLoading,
+    isOrderError,
+    current_company_data,
+    isCurrentCompanyLoading,
+    isCurrentCompanyError,
+    orderItems_data,
+    isOrderItemsLoading,
+    isOrderItemsError,
+  };
+};
+
+// Columns
+const useOrderDetailsColumns = (order_data: Order | undefined) => {
+  const columns: ColumnDef<OrderItem>[] = [
+    {
+      accessorKey: "inStock",
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <p className="mr-2">In Stock</p>
+            <ArrowUpDown className="h-4 w-4" />
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <p className="mr-2">Name</p>
+            <ArrowUpDown className="h-4 w-4" />
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "quantity",
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <p className="mr-2">Quantity</p>
+            <ArrowUpDown className="h-4 w-4" />
+          </div>
+        );
+      },
+    },
+    {
+      accessorFn: (row) => `${(row.unitPrice || 0) * (row.quantity || 0)} ${order_data?.currency}`,
+      id: 'totalProductPrice',
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <p className="mr-2">Total Productprice</p>
+            <ArrowUpDown className="h-4 w-4" />
+          </div>
+        );
+      },
+    },
+    {
+      accessorFn: (row) => `${row.unitPrice} ${order_data?.currency}`,
+      id: 'unitPrice',
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <p className="mr-2">Unit Price</p>
+            <ArrowUpDown className="h-4 w-4" />
+          </div>
+        );
+      },
+    },
+  ];
+
+  return columns;
+};
+
+const OrderDetails: NextPage = () => {
+  const { orderId, companyId, handleReturn } = useOrderDetailsRouter();
+  const {
+    company_data,
+    isCompanyLoading,
+    isCompanyError,
+    order_data,
+    isOrderLoading,
+    isOrderError,
+    current_company_data,
+    isCurrentCompanyLoading,
+    isCurrentCompanyError,
+    orderItems_data,
+    isOrderItemsLoading,
+    isOrderItemsError,
+  } = useOrderDetailsQueries(orderId as string, companyId as string);
+
+  const columns = useOrderDetailsColumns(order_data);
+
+  if (
+    isCompanyLoading ||
+    isOrderItemsLoading ||
+    isCurrentCompanyLoading ||
+    isOrderLoading
+  ) {
     return <Loader />;
   }
 
-  if (isCompanyError || isOrderItemsError || isCurrentCompanyError || isOrderError) {
+  if (
+    isCompanyError ||
+    isOrderItemsError ||
+    isCurrentCompanyError ||
+    isOrderError
+  ) {
     return <div>Error occurred while fetching data.</div>;
   }
 
   if (!company_data || !orderItems_data || !current_company_data || !order_data) {
     return <div>Data not available.</div>;
   }
-
-  const handleReturn = () => {
-    router.push("/orders");
-  };
 
   return (
     <div style={{ height: "90.75vh" }}>
@@ -213,7 +226,15 @@ const OrderDetails: NextPage = () => {
           </Button>
           <Button
             className="bg-[rgb(239,70,60)] m-4"
-            onClick={ () => handleDownloadInvoice(company_data, current_company_data, orderItems_data, order_data, orderId as string)}
+            onClick={() =>
+              handleDownloadInvoice(
+                company_data,
+                current_company_data,
+                orderItems_data,
+                order_data,
+                orderId as string
+              )
+            }
           >
             DOWNLOAD INVOICE
           </Button>
