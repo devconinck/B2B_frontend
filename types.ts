@@ -83,3 +83,18 @@ export type Order = {
   orderStatus: string;
   paymentStatus: string;
 };
+
+export enum OrderStatus {
+  PLACED = 'Placed',
+  PROCESSED = 'Processed',
+  SHIPPED = 'Shipped',
+  OUT_FOR_DELIVERY = 'Out for Delivery',
+  DELIVERED = 'Delivered',
+  COMPLETED = 'Completed',
+}
+
+export enum PaymentStatus {
+  UNPROCESSED = 'Unprocessed',
+  INVOICE_SENT = 'Invoice Sent',
+  PAID = 'Paid',
+}

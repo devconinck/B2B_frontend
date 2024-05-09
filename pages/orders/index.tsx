@@ -7,6 +7,7 @@ import { getAllOrdersFromCompany } from "../api/orders";
 import { Order } from "@/types";
 import Loader from "@/components/Loader";
 import Error from "@/components/Error";
+import Status from "@/components/Status";
 
 const columns: ColumnDef<Order>[] = [
   {
@@ -64,6 +65,10 @@ const columns: ColumnDef<Order>[] = [
         </div>
       );
     },
+    cell: ({ row }) => {
+      const status = row.original.orderStatus;
+      return <Status value={status} />;
+    },
   },
   {
     accessorKey: "paymentStatus",
@@ -77,6 +82,10 @@ const columns: ColumnDef<Order>[] = [
           <ArrowUpDown className="h-4 w-4" />
         </div>
       );
+    },
+    cell: ({ row }) => {
+      const status = row.original.paymentStatus;
+      return <Status value={status} />;
     },
   },
   /*{
