@@ -1,9 +1,12 @@
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import CompaniesContext from "@/context/companiesContext";
-import { Company } from "@/types";
+import { Company, Order } from "@/types";
 import { Label } from "@radix-ui/react-dropdown-menu";
 import { Input } from "@/components/ui/input";
+import Status from "@/components/Status";
+import { useQuery } from "@tanstack/react-query";
+import { getOrderById } from "../api/orders";
 
 const labelFields = [
   "Name",
@@ -16,44 +19,52 @@ const labelFields = [
   "Country",
   "Orderstatus",
   "Paymentstatus",
+  "VAT",
 ];
 
 export const CustomerDetails = () => {
   const router = useRouter();
-  const { companyId } = router.query;
-
+  const { companyId, orderId } = router.query;
   const companies = useContext(CompaniesContext) as Company[];
   const company = companies.find((company) => company.id === Number(companyId));
+
+  const { data: order_data } = useQuery<Order>({
+    queryKey: ["order", orderId],
+    queryFn: () => getOrderById(orderId as string),
+  });
 
   const data = [
     company?.name,
     company?.contact?.email,
-    47381,
+    order_data?.id,
     company?.address?.street,
     company?.address?.number,
     company?.address?.city,
     company?.address?.zipcode,
     company?.address?.country,
-    "SHIPPED",
-    "INVOICE_SENT",
+    order_data?.orderStatus,
+    order_data?.paymentStatus,
+    company?.vatNumber,
   ];
+
+  console.log(data)
 
   return (
     <div className="grid grid-cols-2 gap-4 mx-5 mb-5">
       {labelFields.map((label, index) => {
+        if (label === "Orderstatus" || label === "Paymentstatus") {
+          return (
+            <div key={index} className="grid w-full max-w-sm items-center gap-1.5">
+              <Label>{label}</Label>
+              <Status value={data[index]} />
+            </div>
+          );
+        }
+
         return (
-          <div
-            key={index}
-            className="grid w-full max-w-sm items-center gap-1.5"
-          >
+          <div key={index} className="grid w-full max-w-sm items-center gap-1.5">
             <Label>{label}</Label>
-            <Input
-              type="text"
-              id={label}
-              disabled={true}
-              placeholder={label}
-              value={data[index]}
-            />
+            <Input type="text" id={label} disabled={true} placeholder={label} value={data[index]} />
           </div>
         );
       })}
