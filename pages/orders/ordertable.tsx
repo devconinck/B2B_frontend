@@ -153,7 +153,11 @@ export const OrderTable = <TData, TValue>({
                 <TableRow
                   key={row.id}
                   className="hover:cursor-pointer"
-                  onClick={() => handleRowClick(row?.getValue("orderId"))}
+                  onClick={() =>
+                    window.location.pathname === "/orders"
+                      ? handleRowClick(row?.getValue("orderId"))
+                      : null
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
