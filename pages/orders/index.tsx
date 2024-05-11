@@ -8,6 +8,7 @@ import { Order } from "@/types";
 import { LoaderOrders } from "@/components/LoaderOrders";
 import Error from "@/components/Error";
 import Status from "@/components/Status";
+import PrivateRoute from "@/components/PrivateRoute";
 
 const columns: ColumnDef<Order>[] = [
   {
@@ -144,20 +145,22 @@ const OrderScreen: NextPage = () => {
   }
 
   return (
-    <div className="container mx-auto py-10">
-      <div className="flex items-center justify-between space-y-2 mb-5">
-        <h2 className="text-2xl font-bold tracking-tight">
-          Here is an overview of all the orders to your company
-        </h2>
+    <PrivateRoute>
+      <div className="container mx-auto py-10">
+        <div className="flex items-center justify-between space-y-2 mb-5">
+          <h2 className="text-2xl font-bold tracking-tight">
+            Here is an overview of all the orders to your company
+          </h2>
+        </div>
+        <OrderTable
+          columns={columns}
+          data={orders}
+          sortingValue={"date"}
+          decSorting={true}
+          datePicker={true}
+        />
       </div>
-      <OrderTable
-        columns={columns}
-        data={orders}
-        sortingValue={"date"}
-        decSorting={true}
-        datePicker={true}
-      />
-    </div>
+    </PrivateRoute>
   );
 };
 

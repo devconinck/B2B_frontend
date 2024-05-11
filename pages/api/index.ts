@@ -11,3 +11,13 @@ export const setAuthToken = (token: string) => {
     axios.defaults.headers["Authorization"] = `Bearer ${token}`;
   } else delete axios.defaults.headers.common["Authorization"];
 };
+
+export const post = async (url: string, arg: any): Promise<any> => {
+  try {
+    const { data } = await axios.post(url, arg);
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

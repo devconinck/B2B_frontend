@@ -20,6 +20,13 @@ export type Company = {
   sector: string;
 };
 
+export type User = {
+  id: number;
+  email: string;
+  role: Role;
+  companyId: number;
+};
+
 export type Account = {
   id: number;
   balance: number;
@@ -86,16 +93,16 @@ export type Order = {
 };
 
 export enum OrderStatus {
-  PLACED = 'Placed',
-  PROCESSED = 'Processed',
-  SHIPPED = 'Shipped',
-  OUT_FOR_DELIVERY = 'Out for Delivery',
-  DELIVERED = 'Delivered',
-  COMPLETED = 'Completed',
+  PLACED = "Placed",
+  PROCESSED = "Processed",
+  SHIPPED = "Shipped",
+  OUT_FOR_DELIVERY = "Out for Delivery",
+  DELIVERED = "Delivered",
+  COMPLETED = "Completed",
 }
 
 export enum PaymentStatus {
-  UNPROCESSED = 'Unprocessed',
-  INVOICE_SENT = 'Invoice Sent',
-  PAID = 'Paid',
+  UNPROCESSED = "Unprocessed",
+  INVOICE_SENT = "Invoice Sent",
+  PAID = "Paid",
 }

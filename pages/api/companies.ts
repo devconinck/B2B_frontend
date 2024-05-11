@@ -8,10 +8,9 @@ const baseUrl = `/api/company`;
 
 export const getCompanyById = async (companyId: string): Promise<Company> => {
   try {
-    setAuthToken(
-      token_temp
-    );
-    return await axios.get(`${baseUrl}/${companyId}`).then((res) => res.data[0]);
+    return await axios
+      .get(`${baseUrl}/${companyId}`)
+      .then((res) => res.data[0]);
   } catch (error) {
     throw error;
   }
@@ -19,9 +18,6 @@ export const getCompanyById = async (companyId: string): Promise<Company> => {
 
 export const getAllCompanies = async (): Promise<Company[]> => {
   try {
-    setAuthToken(
-      token_temp
-    );
     return await axios.get(baseUrl).then((res) => res.data.items);
   } catch (error) {
     throw error;
