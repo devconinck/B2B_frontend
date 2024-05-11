@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import CompaniesContext from "@/context/companiesContext";
-import { getOrder } from "../api/orders";
+import { getOrderById } from "../api/orders";
 import { Company } from "@/types";
 import { Button } from "@/components/ui/button";
 import { handleDownloadInvoice } from "./invoice";
@@ -14,7 +14,8 @@ import Error from "@/components/Error";
 export const CustomerDetails = () => {
   let name, fromCompanyId, fromCompany, orderStatus, paymentStatus;
   const router = useRouter();
-  const { companyId, orderId } = router.query;
+  const { orderId } = router.query;
+  const companyId = "1";
   const companies = useContext(CompaniesContext) as Company[];
   const company = companies.find((company) => company.id === Number(companyId));
 
@@ -24,7 +25,7 @@ export const CustomerDetails = () => {
     error,
   } = useQuery({
     queryKey: ["info"],
-    queryFn: () => getOrder(orderId),
+    queryFn: () => getOrderById(orderId),
   });
 
   if (isLoading) {
@@ -38,12 +39,9 @@ export const CustomerDetails = () => {
     <Error error={error} />;
   }
   if (!info) {
-    console.log("test");
     return <p>No personal information available</p>;
-  }
-
-  if (info) {
-    ({ name, fromCompanyId, orderStatus, paymentStatus } = info[0]);
+  } else {
+    ({ name, fromCompanyId, orderStatus, paymentStatus } = info);
     fromCompany = companies.find(
       (company) => company.id === Number(fromCompanyId)
     );
@@ -52,8 +50,6 @@ export const CustomerDetails = () => {
   const handleReturn = () => {
     router.push("/orders");
   };
-
-  console.log(data)
 
   return (
     <div className="flex flex-col min-h-[25dvh]">

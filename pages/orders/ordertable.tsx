@@ -152,7 +152,7 @@ export const OrderTable = <TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="border-black hover:cursor-pointer"
+                  className="hover:cursor-pointer"
                   onClick={() => handleRowClick(row?.getValue("orderId"))}
                 >
                   {row.getVisibleCells().map((cell) => (
