@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { format } from "date-fns";
+import { format, isAfter, isBefore } from "date-fns";
 
 import { useRouter } from "next/router";
 
@@ -15,7 +15,6 @@ import {
 import {
   ColumnDef,
   SortingState,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -53,13 +52,10 @@ export const OrderTable = <TData, TValue>({
   datePicker,
 }: DataTableProps<TData, TValue>) => {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [searchValue, setSearchValue] = useState("");
   const [dateFromValue, setDateFromValue] = useState("");
   const [dateToValue, setDateToValue] = useState("");
-  const [selectedDateRange, setSelectedDateRange] = useState<
-    DateRange | undefined
-  >(undefined);
+  const [dataTable, setDataTable] = useState(data);
   const router = useRouter();
 
   const handleRowClick = (orderId: any) => {
@@ -70,17 +66,15 @@ export const OrderTable = <TData, TValue>({
   };
 
   const table = useReactTable({
-    data,
+    data: dataTable,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
-      columnFilters,
     },
   });
 
@@ -94,26 +88,36 @@ export const OrderTable = <TData, TValue>({
 
   useEffect(() => {
     table.setGlobalFilter(searchValue);
-  }, [searchValue]);
+  }, [table, searchValue]);
 
   const handleDateSelect = (dateRange: DateRange | undefined) => {
-    setSelectedDateRange(dateRange);
-    if (dateRange) {
-      const filterValue = {
-        from: dateRange?.from ? format(dateRange.from, "yyyy-MM-dd") : null,
-        to: dateRange?.to ? format(dateRange.to, "yyyy-MM-dd") : null,
-      };
-      setDateFromValue(JSON.stringify(filterValue.from));
-      setDateToValue(JSON.stringify(filterValue.to));
-      console.log(selectedDateRange);
+    if (dateRange?.from && dateRange?.to) {
+      setDateFromValue(format(dateRange?.from, "yyyy-MM-dd"));
+      setDateToValue(format(dateRange?.to, "yyyy-MM-dd"));
     } else {
-      table.getColumn("date")?.setFilterValue("");
+      setDateFromValue("");
+      setDateToValue("");
     }
   };
 
   useEffect(() => {
-    //table.getColumn("date")?.setFilterValue(selectedDateRange);
-  }, [selectedDateRange]);
+    const origineel = data;
+    if (dateFromValue && dateToValue) {
+      const newData: any[] = [];
+      data.forEach((o) => {
+        if (
+          (isBefore(o.date, dateToValue) && isAfter(o.date, dateFromValue)) ||
+          o.date === dateFromValue ||
+          o.date === dateToValue
+        ) {
+          newData.push(o);
+        }
+      });
+      setDataTable(newData);
+    } else {
+      setDataTable(origineel);
+    }
+  }, [dateFromValue, dateToValue, data, dataTable]);
 
   return (
     <div>
@@ -153,7 +157,11 @@ export const OrderTable = <TData, TValue>({
                 <TableRow
                   key={row.id}
                   className="hover:cursor-pointer"
-                  onClick={() => handleRowClick(row?.getValue("orderId"))}
+                  onClick={() =>
+                    window.location.pathname === "/orders"
+                      ? handleRowClick(row?.getValue("orderId"))
+                      : null
+                  }
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
