@@ -123,8 +123,6 @@ const OrderScreen: NextPage = () => {
     queryFn: getAllOrdersFromCompany,
   });
 
-  const handleDateSelect = () => {};
-
   const filteredOrders = orders?.filter((order) => {
     return (
       order.orderStatus === "Placed" ||
