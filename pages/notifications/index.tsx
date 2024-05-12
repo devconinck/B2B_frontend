@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { NextPage } from "next";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
+import PrivateRoute from "@/components/PrivateRoute";
 
 const mockData = [
   {
@@ -55,63 +56,65 @@ const Notifications: NextPage = () => {
   };
 
   return (
-    <main className="flex justify-center w-full h-screen">
-      <div className="container max-w-3xl px-4 md:px-0 py-8">
-        <h1 className="text-3xl font-semibold text-center mb-6">
-          Notifications
-        </h1>
-        <Card>
-          <CardHeader className="pb-6">
-            <div className="space-y-1.5 flex flex-col sm:flex-row lg:flex-row justify-between">
-              <CardDescription className="">
-                You have {mockData.length} unread messages.
-              </CardDescription>
-              <Button className="underline" variant={"ghost"}>
-                Mark all as read
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent className="p-0">
-            {mockData.map((notification) => (
-              <div
-                className="border-b border-t border-gray-200 dark:border-gray-800 last:border-0"
-                key={notification.id}
-              >
-                <div className="p-4 grid gap-2">
-                  <div className="grid gap-1.5">
-                    <p className="text-sm font-medium">
-                      {notification.message}
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {notification.time}
-                    </p>
-                    {openNotification === notification.id && (
-                      <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                        {notification.details}
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex items-center space-x-4">
-                    <Button
-                      className="font-medium translate-y-0.5"
-                      variant={"default"}
-                      onClick={() => handleOpenNotification(notification.id)}
-                    >
-                      {openNotification === notification.id
-                        ? "Hide details"
-                        : "Show details"}
-                    </Button>
-                    <Button className="underline" variant={"ghost"}>
-                      Mark as read
-                    </Button>
+    <PrivateRoute>
+      <main className="flex justify-center w-full h-screen">
+        <div className="container max-w-3xl px-4 md:px-0 py-8">
+          <h1 className="text-3xl font-semibold text-center mb-6">
+            Notifications
+          </h1>
+          <Card>
+            <CardHeader className="pb-6">
+              <div className="space-y-1.5 flex flex-col sm:flex-row lg:flex-row justify-between">
+                <CardDescription className="">
+                  You have {mockData.length} unread messages.
+                </CardDescription>
+                <Button className="underline" variant={"ghost"}>
+                  Mark all as read
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              {mockData.map((notification) => (
+                <div
+                  className="border-b border-t border-gray-200 dark:border-gray-800 last:border-0"
+                  key={notification.id}
+                >
+                  <div className="p-4 grid gap-2">
+                    <div className="grid gap-1.5">
+                      <p className="text-sm font-medium">
+                        {notification.message}
+                      </p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {notification.time}
+                      </p>
+                      {openNotification === notification.id && (
+                        <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+                          {notification.details}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <Button
+                        className="font-medium translate-y-0.5"
+                        variant={"default"}
+                        onClick={() => handleOpenNotification(notification.id)}
+                      >
+                        {openNotification === notification.id
+                          ? "Hide details"
+                          : "Show details"}
+                      </Button>
+                      <Button className="underline" variant={"ghost"}>
+                        Mark as read
+                      </Button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
-    </main>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+    </PrivateRoute>
   );
 };
 

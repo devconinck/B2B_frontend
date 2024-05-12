@@ -20,6 +20,13 @@ export type Company = {
   sector: string;
 };
 
+export type User = {
+  id: number;
+  email: string;
+  role: Role;
+  companyId: number;
+};
+
 export type Account = {
   id: number;
   balance: number;
@@ -56,19 +63,19 @@ export type Product = {
 
 export type OrderItem = {
   ID: bigint;
-  INSTOCK?: string | null;
-  NAME?: string | null;
-  ORDERID?: number | null;
-  ORDERITEMID?: number | null;
-  QUANTITY?: number | null;
-  SYNCID?: number | null;
-  TOTAL?: number | null;
-  UNITOFMEASUREID?: string | null;
-  UNITPRICE?: number | null;
-  FROMORDER_ID?: bigint | null;
-  PRODUCT_ID?: bigint | null;
-  order_table?: OrderTable | null;
-  product?: Product | null;
+  inStock: string | null;
+  name: string | null;
+  ORDERID: number | null;
+  ORDERITEMID: number | null;
+  quantity: number | null;
+  SYNCID: number | null;
+  total: number | null;
+  UNITOFMEASUREID: string | null;
+  unitPrice: number | null;
+  FROMORDER_ID: bigint | null;
+  PRODUCT_ID: bigint | null;
+  order_table: OrderTable | null;
+  product: Product | null;
 };
 
 export type Role = "admin" | "user";
@@ -82,19 +89,20 @@ export type Order = {
   orderId: string | null;
   orderStatus: string;
   paymentStatus: string;
+  fromCompanyId: string;
 };
 
 export enum OrderStatus {
-  PLACED = 'Placed',
-  PROCESSED = 'Processed',
-  SHIPPED = 'Shipped',
-  OUT_FOR_DELIVERY = 'Out for Delivery',
-  DELIVERED = 'Delivered',
-  COMPLETED = 'Completed',
+  PLACED = "Placed",
+  PROCESSED = "Processed",
+  SHIPPED = "Shipped",
+  OUT_FOR_DELIVERY = "Out for Delivery",
+  DELIVERED = "Delivered",
+  COMPLETED = "Completed",
 }
 
 export enum PaymentStatus {
-  UNPROCESSED = 'Unprocessed',
-  INVOICE_SENT = 'Invoice Sent',
-  PAID = 'Paid',
+  UNPROCESSED = "Unprocessed",
+  INVOICE_SENT = "Invoice Sent",
+  PAID = "Paid",
 }

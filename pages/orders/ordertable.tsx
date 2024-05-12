@@ -62,10 +62,10 @@ export const OrderTable = <TData, TValue>({
   >(undefined);
   const router = useRouter();
 
-  const handleRowClick = (rowData: any) => {
+  const handleRowClick = (orderId: any) => {
     router.push({
       pathname: "/orderdetails",
-      query: { orderId: rowData.original.orderId, companyId: rowData.id },
+      query: { orderId },
     });
   };
 
@@ -152,8 +152,8 @@ export const OrderTable = <TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  className="border-black hover:cursor-pointer"
-                  onClick={() => handleRowClick(row)}
+                  className="hover:cursor-pointer"
+                  onClick={() => handleRowClick(row?.getValue("orderId"))}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

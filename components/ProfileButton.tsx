@@ -11,16 +11,20 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
+import { useAuth, AuthContextValue } from "@/context/authContext";
+import { useRouter } from "next/router";
+import { useCallback } from "react";
 
 export function ProfileButton() {
-  /*   const { user, logout } = useAuth() as AuthContextValue;
+  const { user, logout } = useAuth() as AuthContextValue;
   const router = useRouter();
+
   const handleLogout = useCallback(async () => {
     logout();
 
     router.push("/");
   }, [logout, router]);
- */
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -49,9 +53,7 @@ export function ProfileButton() {
           </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem /* onClick={handleLogout} */>
-          Log out
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

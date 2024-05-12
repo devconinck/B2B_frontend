@@ -17,10 +17,13 @@ import Loader from "./Loader";
 import Error from "./Error";
 import CompaniesContext from "@/context/companiesContext";
 import { Company } from "@/types";
+import { useAuth, AuthContextValue } from "@/context/authContext";
 
 const Header = () => {
   const companies: Company[] = useContext(CompaniesContext) as Company[];
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const { isAuthed } = useAuth() as AuthContextValue;
 
   const [search, setSearch] = useState("");
   const [numResults, setNumResults] = useState(5);
@@ -108,6 +111,7 @@ const Header = () => {
                     type="search"
                     placeholder="Search companies..."
                     className="w-full appearance-none bg-background pl-8 shadow-none "
+                    value={search}
                     onChange={handleSearch}
                   />
                   {search && (
@@ -116,7 +120,9 @@ const Header = () => {
                         <Link
                           key={companies.indexOf(company)}
                           href={`/companies/${company.id}`}
-                          onClick={() => setSearch("")}
+                          onClick={() => {
+                            setSearch("");
+                          }}
                         >
                           {company.name}
                         </Link>
@@ -140,7 +146,13 @@ const Header = () => {
           <div className="mr-2 flex items-center hidden md:block">
             <NotificationButton />
             <ModeToggle />
-            <ProfileButton />
+            {isAuthed ? (
+              <ProfileButton />
+            ) : (
+              <Link href="/login">
+                <Button variant={"ghost"}>Login</Button>
+              </Link>
+            )}
           </div>
         </div>
       </Container>
