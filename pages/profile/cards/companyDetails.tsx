@@ -56,16 +56,6 @@ export const CompanyDetails: React.FC<EditableProfile>  = ({isEditing}: Editable
 
           <CustomSelect name="sector" label="Sector" placeholder="Select a sector" options={sectors} disabled={!isEditing}/>
 
-            {/*
-
-            <Label htmlFor="vatNumber">VAT Number</Label>
-            <Input
-              id="vatNumber"
-              placeholder="VAT Number"
-              disabled={!isEditing}
-            />
-            */}
-
         </CardContent>
       </Card>
     </div>

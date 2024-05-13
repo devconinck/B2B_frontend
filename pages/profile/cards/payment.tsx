@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { EditableProfile } from "@/types";
-import { CustomCheckboxenInput, CustomTextInput } from "../customInputs";
+import { CustomCheckbox, CustomTextInput } from "../customInputs";
 
 /*
 Van een bedrijf als leverancier wordt volgende info getoond op zijn profiel TODO
@@ -22,33 +22,15 @@ Van een bedrijf als leverancier wordt volgende info getoond op zijn profiel TODO
 */
 
 const items = [
-  {
-    id: "recents",
-    label: "Recents",
-  },
-  {
-    id: "home",
-    label: "Home",
-  },
-  {
-    id: "applications",
-    label: "Applications",
-  },
-  {
-    id: "desktop",
-    label: "Desktop",
-  },
-  {
-    id: "downloads",
-    label: "Downloads",
-  },
-  {
-    id: "documents",
-    label: "Documents",
-  },
-] as const
+  { id: 1, name: "Stripe", value: "stripe" },
+  { id: 2, name: "Bitcoin", value: "bitcoin" },
+  { id: 3, name: "Credit Card", value: "creditcard" },
+  { id: 4, name: "Debitcard", value: "debitcard" },
+  { id: 5, name: "Bank Transfer", value: "banktransfer" },
+  { id: 6, name: "Paypal", value: "paypal" },
+];
 
-export const Address: React.FC<EditableProfile> = ({isEditing}: EditableProfile) => {
+export const Payment: React.FC<EditableProfile> = ({isEditing}: EditableProfile) => {
   return (
     <div>
       <Card>
@@ -56,9 +38,10 @@ export const Address: React.FC<EditableProfile> = ({isEditing}: EditableProfile)
           <CardTitle>Payment</CardTitle>
         </CardHeader>
         <CardContent>
-          <CustomTextInput name="vatnumber" label="VAT Number" disabled={!isEditing}/>
-          <CustomTextInput name="paymentoptions" label="Payment Options" disabled={!isEditing}/>
-          <CustomCheckboxenInput name="paymentoptions" label="Payment Options" disabled={!isEditing} options={items}/>
+          <div className="mb-4">
+            <CustomTextInput name="vatnumber" label="VAT Number" disabled={!isEditing}/>
+          </div>
+          <CustomCheckbox options={items} label="Payment Options" name="paymentOptions" disabled={!isEditing}/>
         </CardContent>
       </Card>
     </div>

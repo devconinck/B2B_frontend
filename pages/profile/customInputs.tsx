@@ -1,4 +1,4 @@
-import { ErrorMessage, useField } from "formik";
+import { ErrorMessage, Field, Formik, FormikConsumer, FormikContext, useField, useFormik, useFormikContext } from "formik";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,6 +10,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { any, z } from "zod"
+ 
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { toast } from "@/components/ui/use-toast"
+import { CheckedState } from "@radix-ui/react-checkbox";
+import { useState } from "react";
 
 export const CustomTextInput = ({ label, ...props }: any) => {
   const [field, meta] = useField(props);
@@ -49,40 +67,51 @@ export const CustomSelect = ({ label, placeholder, options, ...props }: any) => 
   );
 };
 
-export const CustomCheckboxenInput = ({ label, placeholder, options, ...props }: any) => {
-  const [field, meta, helpers] = useField(props);
-  const {setValue} = helpers;
+export const CustomCheckbox = ({ options, label, disabled, ...props }: any) => {
+
+  const [field, meta, helpers] = useField(props); 
+
+  const handleCheck = (checked: CheckedState, option: any) => {
+    if (checked) {
+      // If checked, add the option value to the field value array
+      helpers.setValue([...field.value, option.value]);
+    } else {
+      // If unchecked, filter out the option value from the field value array
+      helpers.setValue(field.value.filter((value: any) => value !== option.value));
+    }
+  };
+
   return (
     <div>
-      <Label htmlFor={props.name}>{label}</Label>
-      {options.map((item: any) => (
-        <Checkbox {...field} {...props} key={item.id} checked={field.value?.includes(item.id)}
-                              onCheckedChange={(checked: boolean) => {
-                                return checked
-                                  ? field.onChange([...field.value, item.id])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value: string) => value !== item.id
-                                      )
-                                    )
-                              }}
-                            />
-      ))}
-      <Select {...props} defaultValue={options.value}
-        onValueChange={(value: any) => {setValue(value)}}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder={placeholder}/>
-        </SelectTrigger>
-        <SelectContent>
-          {options.map((option: any) => (
-            <SelectItem key={option.id} value={option.value}>{option.name}</SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      {meta.touched && meta.error ? (
-        <ErrorMessage name={props.name}></ErrorMessage>
-      ) : null}
+        <Label>{label}</Label>
+        {options.map((option: any) => (
+          <div key={option.id}>
+            <Checkbox {...props} {...field}
+              id={option.id}
+              name={option.name} 
+              disabled={disabled} 
+              checked={field.value.includes(option.value)} 
+              onCheckedChange={(checked) => handleCheck(checked, option)}
+            />
+            <Label className="mx-2">{option.name}</Label>
+          </div>
+        ))}
+        {meta.touched && meta.error ? (
+          <ErrorMessage name={props.name}></ErrorMessage>
+        ) : null}
     </div>
   );
 };
+
+ 
+function onSubmit(data: any) {
+  toast({
+    title: "You submitted the following values:",
+    description: (
+      <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+        <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+      </pre>
+    ),
+  })
+}
+ 

@@ -24,6 +24,7 @@ export const ProfileValidation = Yup.object().shape({
   number: Yup.string().required("Required"),
   useremail: Yup.string().email("Invalid user email").required("Required"),
   customersince: Yup.date().required("Required"),
+  paymentOptions: Yup.array().min(1, "At least one option is required").required("Required"),
 });
 
 
@@ -44,5 +45,7 @@ export const InitialValues = () => {
     number: company?.address.number ?? "",
     useremail: "Goatifi@gmail.com",
     customersince: new Date().toDateString(),
+    vatnumber: company?.vatNumber ?? "",
+    paymentOptions: [],
   }
 }

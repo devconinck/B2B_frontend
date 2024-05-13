@@ -4,9 +4,11 @@ import { CompanyDetails } from "./cards/companyDetails";
 import { PersonalDetails } from "./cards/personalDetails";
 import { Contact } from "./cards/contact";
 import { Address } from "./cards/address";
-import { Formik, Form } from 'formik';
+import { Formik, Form } from "formik";
 import { ProfileValidation } from "./profile_InitValues_Validation";
 import { InitialValues } from "./profile_InitValues_Validation";
+import { Payment } from "./cards/payment";
+import { toast } from "@/components/ui/use-toast";
 
 /*
 DR_DETAILS_PROFIEL
@@ -36,7 +38,9 @@ export default function Profile() {
     setIsEditing(!isEditing);
   };
 
-  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms)); // TODO moet met de db spreken
+  const handleSubmit = async (data: any) => {
+    
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -48,12 +52,12 @@ export default function Profile() {
           <Formik 
             initialValues={InitialValues()}
             validationSchema={ProfileValidation}
-            onSubmit={async (values) => {
-              await sleep(350);
-              alert(JSON.stringify(values, null, 2)) // values, replacer, spacer
+            onSubmit={async (values: any) => {
+              await handleSubmit(values);
+              //alert(JSON.stringify(values, null, 2)) // values, replacer, spacer
             }}
           >
-            {({ isSubmitting }) => (
+            {({ isSubmitting }: any) => (
               <Form className="flex flex-col gap-6 items-center">
 
                 <div className="flex flex-row justify-center gap-6 items-center">
@@ -64,6 +68,9 @@ export default function Profile() {
                 </div>
                 <div className="max-w-xl">
                     <Address isEditing={isEditing}/>
+                </div>
+                <div className="w-1/2">
+                  <Payment isEditing={isEditing}/>
                 </div>
                 <div className="w-1/2">
                   <PersonalDetails isEditing={isEditing}/>
