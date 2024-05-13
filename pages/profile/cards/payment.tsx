@@ -6,11 +6,31 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { EditableProfile } from "@/types";
+import { CustomCheckbox, CustomTextInput } from "../customInputs";
 
-export const Address: React.FC<EditableProfile> = ({isEditing}: EditableProfile) => {
+/*
+Van een bedrijf als leverancier wordt volgende info getoond op zijn profiel TODO
+•	Logo
+•	Naam (uniek)
+•	Sector
+•	Adres
+•	Betalingsmogelijkheden en -info
+•	Contactgegevens
+•	BTW nummer 
+•	Gegevens van de leveranciersaccount
+*/
+
+const items = [
+  { id: 1, name: "Stripe", value: "stripe" },
+  { id: 2, name: "Bitcoin", value: "bitcoin" },
+  { id: 3, name: "Credit Card", value: "creditcard" },
+  { id: 4, name: "Debitcard", value: "debitcard" },
+  { id: 5, name: "Bank Transfer", value: "banktransfer" },
+  { id: 6, name: "Paypal", value: "paypal" },
+];
+
+export const Payment: React.FC<EditableProfile> = ({isEditing}: EditableProfile) => {
   return (
     <div>
       <Card>
@@ -18,18 +38,10 @@ export const Address: React.FC<EditableProfile> = ({isEditing}: EditableProfile)
           <CardTitle>Payment</CardTitle>
         </CardHeader>
         <CardContent>
-          <Label htmlFor="bank">Bank Account</Label>
-          <Input
-            id="bank"
-            placeholder="Bank Account"
-            disabled={!isEditing}
-          />
-          <Label htmlFor="payments">Payment Options</Label>
-          <Input
-            id="payments"
-            placeholder="Payment options"
-            disabled={!isEditing}
-          />
+          <div className="mb-4">
+            <CustomTextInput name="vatnumber" label="VAT Number" disabled={!isEditing}/>
+          </div>
+          <CustomCheckbox options={items} label="Payment Options" name="paymentOptions" disabled={!isEditing}/>
         </CardContent>
       </Card>
     </div>

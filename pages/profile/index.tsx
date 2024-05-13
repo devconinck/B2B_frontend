@@ -4,7 +4,10 @@ import { CompanyDetails } from "./cards/companyDetails";
 import { PersonalDetails } from "./cards/personalDetails";
 import { Contact } from "./cards/contact";
 import { Address } from "./cards/address";
-import PrivateRoute from "@/components/PrivateRoute";
+import { Formik, Form } from "formik";
+import { ProfileValidation } from "./profile_InitValues_Validation";
+import { InitialValues } from "./profile_InitValues_Validation";
+import { Payment } from "./cards/payment";
 
 /*
 DR_DETAILS_PROFIEL
@@ -16,7 +19,7 @@ Van een bedrijf als klant wordt volgende info getoond op zijn profiel
 •	Contactgegevens
 •	Klant sinds
 •	Gegevens van de klantaccount
-Van een bedrijf als leverancier wordt volgende info getoond op zijn profiel
+Van een bedrijf als leverancier wordt volgende info getoond op zijn profiel TODO
 •	Logo
 •	Naam (uniek)
 •	Sector
@@ -33,38 +36,56 @@ export default function Profile() {
   const handleEdit = () => {
     setIsEditing(!isEditing);
   };
+
+  const handleSubmit = async (data: any) => {
+    //await postProfileUpdateRequest(data);
+    alert("Route needs to be created to make a profile update request");
+  }
+
   return (
-    <PrivateRoute>
-      <div className="flex min-h-screen w-full flex-col">
-        <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
-          <div className="mx-auto grid w-full max-w-6xl gap-2">
-            <h1 className="text-3xl font-semibold">Profile</h1>
-          </div>
-          <div className="mx-auto flex flex-col w-full max-w-6xl gap-6">
-            <form className="flex flex-col gap-6">
-              <div className="flex flex-row justify-center gap-6 items-center">
-                <CompanyDetails isEditing={isEditing} />
-                <div className="w-1/3">
-                  <Contact isEditing={isEditing} />
+    <div className="flex min-h-screen w-full flex-col">
+      <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
+        <div className="mx-auto grid w-full max-w-6xl gap-2">
+          <h1 className="text-3xl font-semibold">Profile</h1>
+        </div>
+        <div className="mx-auto flex flex-col w-full max-w-6xl gap-6">
+          <Formik 
+            initialValues={InitialValues()}
+            validationSchema={ProfileValidation}
+            onSubmit={async (values: any) => {
+              await handleSubmit(values);
+            }}
+          >
+            {({ isSubmitting, isValid }: any) => (
+              <Form className="flex flex-col gap-6 items-center">
+
+                <div className="flex flex-row justify-center gap-6 items-center">
+                  <CompanyDetails isEditing={isEditing}/>
+                  <div className="w-80">
+                    <Contact isEditing={isEditing}/>
+                  </div>
                 </div>
-              </div>
-              <div className="flex justify-center">
                 <div className="max-w-xl">
-                  <Address isEditing={isEditing} />
+                    <Address isEditing={isEditing}/>
                 </div>
-              </div>
-              <div className="flex flex-row justify-center gap-6">
                 <div className="w-1/2">
-                  <PersonalDetails isEditing={isEditing} />
+                  <Payment isEditing={isEditing}/>
                 </div>
-              </div>
-            </form>
-            <Button variant={"destructive"} className="" onClick={handleEdit}>
-              {isEditing ? "Save" : "Edit"}
-            </Button>
-          </div>
-        </main>
-      </div>
-    </PrivateRoute>
+                <div className="w-1/2">
+                  <PersonalDetails isEditing={isEditing}/>
+                </div>
+                <Button type={(!isEditing && isValid) ? "submit" : "button"} 
+                  disabled={!isValid || isSubmitting} variant={"destructive"} className="w-full" onClick={handleEdit}>
+                  {isEditing ? "Save" : "Edit"}
+                </Button>
+
+              </Form>
+            )}
+
+          </Formik>
+        </div>
+      </main>
+    </div>
   );
 }
+
