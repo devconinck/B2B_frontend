@@ -73,20 +73,18 @@ export const CustomCheckbox = ({ options, label, disabled, ...props }: any) => {
 
   const handleCheck = (checked: CheckedState, option: any) => {
     if (checked) {
-      // If checked, add the option value to the field value array
       helpers.setValue([...field.value, option.value]);
     } else {
-      // If unchecked, filter out the option value from the field value array
       helpers.setValue(field.value.filter((value: any) => value !== option.value));
     }
   };
 
   return (
-    <div>
+    <div {...props} {...field}>
         <Label>{label}</Label>
         {options.map((option: any) => (
           <div key={option.id}>
-            <Checkbox {...props} {...field}
+            <Checkbox
               id={option.id}
               name={option.name} 
               disabled={disabled} 

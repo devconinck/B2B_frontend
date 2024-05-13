@@ -8,7 +8,6 @@ import { Formik, Form } from "formik";
 import { ProfileValidation } from "./profile_InitValues_Validation";
 import { InitialValues } from "./profile_InitValues_Validation";
 import { Payment } from "./cards/payment";
-import { toast } from "@/components/ui/use-toast";
 
 /*
 DR_DETAILS_PROFIEL
@@ -39,7 +38,8 @@ export default function Profile() {
   };
 
   const handleSubmit = async (data: any) => {
-    
+    //await postProfileUpdateRequest(data);
+    alert("Route needs to be created to make a profile update request");
   }
 
   return (
@@ -54,10 +54,9 @@ export default function Profile() {
             validationSchema={ProfileValidation}
             onSubmit={async (values: any) => {
               await handleSubmit(values);
-              //alert(JSON.stringify(values, null, 2)) // values, replacer, spacer
             }}
           >
-            {({ isSubmitting }: any) => (
+            {({ isSubmitting, isValid }: any) => (
               <Form className="flex flex-col gap-6 items-center">
 
                 <div className="flex flex-row justify-center gap-6 items-center">
@@ -75,7 +74,8 @@ export default function Profile() {
                 <div className="w-1/2">
                   <PersonalDetails isEditing={isEditing}/>
                 </div>
-                <Button type={!isEditing ? "submit" : "button"} disabled={isSubmitting} variant={"destructive"} className="w-full" onClick={handleEdit}>
+                <Button type={(!isEditing && isValid) ? "submit" : "button"} 
+                  disabled={!isValid || isSubmitting} variant={"destructive"} className="w-full" onClick={handleEdit}>
                   {isEditing ? "Save" : "Edit"}
                 </Button>
 
