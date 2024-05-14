@@ -1,107 +1,120 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { useRouter } from "next/router";
-import { OrderItem } from "@/types";
-
+import { Order, OrderItem } from "@/types";
 import { OrderTable } from "../orders/ordertable";
 import { getOrderItems } from "../api/orderItem";
 import { useQuery } from "@tanstack/react-query";
 import { LoaderOrderitems } from "@/components/LoaderOrderitems";
 import Error from "@/components/Error";
-
-const columns: ColumnDef<OrderItem>[] = [
-  {
-    accessorKey: "inStock",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <p className="mr-2">In Stock</p>
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <p className="mr-2">Name</p>
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "quantity",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <p className="mr-2">Quantity</p>
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "total",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <p className="mr-2">Total Productprice</p>
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "unitPrice",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <p className="mr-2">Unit Price</p>
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-  },
-];
+import { getOrderById } from "../api/orders";
 
 const OrderItems = () => {
   const router = useRouter();
   const { orderId } = router.query;
-
   console.log(orderId);
+
+  const {
+    data: order,
+    isLoading: isOrderLoading,
+    error: OrderError,
+  } = useQuery<Order>({
+    queryKey: ["order", orderId],
+    queryFn: () => getOrderById(orderId as string),
+  });
+
   const {
     data: orderItems,
-    isLoading,
-    error,
+    isLoading: isOrderItemLoading,
+    error: OrderItemError,
   } = useQuery({
     queryKey: ["orderItems"],
     queryFn: () => getOrderItems(orderId),
   });
 
-  if (isLoading) {
+  const columns: ColumnDef<OrderItem>[] = [
+    {
+      accessorKey: "inStock",
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <p className="mr-2">In Stock</p>
+            <ArrowUpDown className="h-4 w-4" />
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <p className="mr-2">Name</p>
+            <ArrowUpDown className="h-4 w-4" />
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "quantity",
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <p className="mr-2">Quantity</p>
+            <ArrowUpDown className="h-4 w-4" />
+          </div>
+        );
+      },
+    },
+    {
+      accessorFn: (row) => `${(row.unitPrice || 0) * (row.quantity || 0)} ${order?.currency}`,
+      id: 'totalProductPrice',
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <p className="mr-2">Total Productprice</p>
+            <ArrowUpDown className="h-4 w-4" />
+          </div>
+        );
+      },
+    },
+    {
+      accessorFn: (row) => `${row.unitPrice} ${order?.currency}`,
+      id: 'unitPrice',
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <p className="mr-2">Unit Price</p>
+            <ArrowUpDown className="h-4 w-4" />
+          </div>
+        );
+      },
+    },
+  ];
+
+  if (isOrderItemLoading || isOrderLoading) {
     return <LoaderOrderitems />;
   }
-  if (error) {
-    <Error error={error} />;
+
+  if (OrderItemError || OrderError) {
+    return <Error error={OrderItemError || OrderError} />;
   }
+
   if (!orderItems) {
     return <p>No orderitems available</p>;
   }

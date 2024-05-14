@@ -88,7 +88,8 @@ export const CustomerDetails = () => {
                 {fromCompany?.address.street}, {fromCompany?.address.city},{" "}
                 {fromCompany?.address.zipcode}, {fromCompany?.address.country}
               </p>
-              <p className="mt-2">{fromCompany?.vatNumber}</p>
+              <p className="mt-2">Bank Account Number: {fromCompany?.bankAccountNr}</p>
+              <p className="mt-2">VAT: {fromCompany?.vatNumber}</p>
             </div>
             <div className="text-center md:text-right space-y-3">
               <p>
