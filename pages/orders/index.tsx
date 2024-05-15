@@ -11,99 +11,100 @@ import Status from "@/components/Status";
 import PrivateRoute from "@/components/PrivateRoute";
 import { Payment } from "./payment";
 
-const columns: ColumnDef<Order>[] = [];
-columns.push(
-  {
-    accessorKey: "date",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <p className="mr-2">Date</p>
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <p className="mr-2">Customer Name</p>
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "orderId",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <p className="mr-2">Order ID</p>
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "orderStatus",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <p className="mr-2">Orderstatus</p>
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-    cell: ({ row }) => {
-      const status = row.original.orderStatus;
-      return <Status value={status} />;
-    },
-  },
-  {
-    accessorKey: "paymentStatus",
-    header: ({ column }) => {
-      return (
-        <div
-          className="flex items-center"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          <p className="mr-2">Paymentstatus</p>
-          <ArrowUpDown className="h-4 w-4" />
-        </div>
-      );
-    },
-    cell: ({ row }) => {
-      const status = row.original.paymentStatus;
-      return <Status value={status} />;
-    },
-  }
-);
-if (localStorage.getItem("role") === "CUSTOMER") {
-  console.log("test");
-  columns.push({
-    accessorKey: "Payment",
-    cell: ({ row }) => {
-      const status = row.original.paymentStatus;
-      return <Payment value={status} />;
-    },
-  });
-}
-
 const OrderScreen: NextPage = () => {
+  const role = localStorage.getItem("role");
+  const columns: ColumnDef<Order>[] = [];
+  columns.push(
+    {
+      accessorKey: "date",
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <p className="mr-2">Date</p>
+            <ArrowUpDown className="h-4 w-4" />
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "name",
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <p className="mr-2">Customer Name</p>
+            <ArrowUpDown className="h-4 w-4" />
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "orderId",
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <p className="mr-2">Order ID</p>
+            <ArrowUpDown className="h-4 w-4" />
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "orderStatus",
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <p className="mr-2">Orderstatus</p>
+            <ArrowUpDown className="h-4 w-4" />
+          </div>
+        );
+      },
+      cell: ({ row }) => {
+        const status = row.original.orderStatus;
+        return <Status value={status} />;
+      },
+    },
+    {
+      accessorKey: "paymentStatus",
+      header: ({ column }) => {
+        return (
+          <div
+            className="flex items-center"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <p className="mr-2">Paymentstatus</p>
+            <ArrowUpDown className="h-4 w-4" />
+          </div>
+        );
+      },
+      cell: ({ row }) => {
+        const status = row.original.paymentStatus;
+        return <Status value={status} />;
+      },
+    }
+  );
+  if (localStorage.getItem("role") === "CUSTOMER") {
+    console.log("test");
+    columns.push({
+      accessorKey: "Payment",
+      cell: ({ row }) => {
+        const status = row.original.paymentStatus;
+        return <Payment value={status} />;
+      },
+    });
+  }
+
   const {
     data: orders,
     isLoading,
@@ -137,9 +138,7 @@ const OrderScreen: NextPage = () => {
         <div className="flex items-center justify-between space-y-2 mb-5">
           <h2 className="text-2xl font-bold tracking-tight">
             Here is an overview of all{" "}
-            {localStorage.getItem("role") === "SUPPLIER"
-              ? "the orders to your company"
-              : "your orders"}
+            {role === "SUPPLIER" ? "the orders to your company" : "your orders"}
           </h2>
         </div>
         <OrderTable
