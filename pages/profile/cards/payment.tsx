@@ -22,12 +22,12 @@ Van een bedrijf als leverancier wordt volgende info getoond op zijn profiel TODO
 */
 
 const items = [
-  { id: 1, name: "Stripe", value: "stripe" },
-  { id: 2, name: "Bitcoin", value: "bitcoin" },
-  { id: 3, name: "Credit Card", value: "creditcard" },
-  { id: 4, name: "Debitcard", value: "debitcard" },
-  { id: 5, name: "Bank Transfer", value: "banktransfer" },
-  { id: 6, name: "Paypal", value: "paypal" },
+  { id: 1, name: "Stripe", value: "STRIPE" },
+  { id: 2, name: "Bitcoin", value: "BITCOIN" },
+  { id: 3, name: "Credit Card", value: "CREDIT_CARD" },
+  { id: 4, name: "Debitcard", value: "DEBIT_CARD" },
+  { id: 5, name: "Bank Transfer", value: "BANK_TRANSFER" },
+  { id: 6, name: "Paypal", value: "PAYPAL" },
 ];
 
 export const Payment: React.FC<EditableProfile> = ({isEditing}: EditableProfile) => {

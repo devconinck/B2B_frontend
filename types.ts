@@ -18,6 +18,7 @@ export type Company = {
   };
   customerStart: string;
   sector: string;
+  paymentOptions: string[];
 };
 
 export type User = {

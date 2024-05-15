@@ -2,6 +2,10 @@ import { useContext } from "react";
 import * as Yup from "yup";
 import { Company } from "@/types";
 import CompaniesContext from "@/context/companiesContext";
+import { JwtPayload, jwtDecode } from 'jwt-decode';
+import { useState, useEffect } from "react";
+import { getCompanyById } from "../api/companies";
+import { JsonWebKey } from "crypto";
 
 export const ProfileValidation = Yup.object().shape({
   companyName: Yup.string()
@@ -31,8 +35,40 @@ export const ProfileValidation = Yup.object().shape({
 
 // TODO juiste data van ingelogd bedrijf en user
 export const InitialValues = () => {
-  const companies = useContext(CompaniesContext) as Company[];
-  const company = companies.find((company) => company.id === Number(1));
+  const [company, setCompany] = useState<Company | null>(null);
+  const companies: Company[] = useContext(CompaniesContext);
+
+  useEffect(() => {
+    const fetchCompany = async () => {
+      try {
+        const token = localStorage.getItem('jwtToken');
+        if (!token) {
+          throw new Error('No JWT token found');
+        }
+
+        const decodedToken: any = jwtDecode(token);
+        if (!decodedToken || !decodedToken.companyId) {
+          throw new Error('Invalid token or companyId not found in token');
+        }
+
+        const companyId = decodedToken.companyId;
+        const userCompany = null //companies.find((company: Company) => company.id === companyId);
+
+        if (userCompany) {
+          setCompany(userCompany);
+        } else {
+          const fetchedCompany = await getCompanyById(companyId);
+          setCompany(fetchedCompany);
+        }
+      } catch (error) {
+        console.error('Error fetching company data:', error);
+      }
+    };
+
+    fetchCompany();
+  }, [companies]);
+
+  console.log(company?.sector);
 
   return {
     companyName: company?.name ?? "",
@@ -45,8 +81,8 @@ export const InitialValues = () => {
     street: company?.address.street ?? "",
     number: company?.address.number ?? "",
     useremail: "Goatifi@gmail.com",
-    customersince: new Date().toDateString(),
+    customersince: company?.customerStart,
     vatnumber: company?.vatNumber ?? "",
-    paymentOptions: ["bitcoin"],
-  }
-}
+    paymentOptions: company?.paymentOptions ?? [],
+  };
+};

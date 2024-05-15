@@ -45,14 +45,15 @@ export const CustomTextInput = ({ label, ...props }: any) => {
 export const CustomSelect = ({ label, placeholder, options, ...props }: any) => {
   const [field, meta, helpers] = useField(props);
   const {setValue} = helpers;
+
   return (
     <div>
       <Label htmlFor={props.name}>{label}</Label>
-      <Select {...props} defaultValue={options.value}
+      <Select {...props} value={field.value}
         onValueChange={(value: any) => {setValue(value)}}
       >
         <SelectTrigger>
-          <SelectValue placeholder={placeholder}/>
+          <SelectValue {...field}/>
         </SelectTrigger>
         <SelectContent>
           {options.map((option: any) => (
