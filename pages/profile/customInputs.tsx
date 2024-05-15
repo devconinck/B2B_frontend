@@ -81,7 +81,7 @@ export const CustomCheckbox = ({ options, label, disabled, ...props }: any) => {
   };
 
   return (
-    <div {...props} {...field}>
+    <div {...props}>
         <Label>{label}</Label>
         {options.map((option: any) => (
           <div key={option.id}>

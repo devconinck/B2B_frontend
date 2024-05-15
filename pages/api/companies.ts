@@ -2,7 +2,6 @@ import { axios } from "./index";
 import Error, { ErrorProps } from "next/error";
 import { Company, Product } from "@/types";
 import { setAuthToken } from "./index";
-import token_temp from "@/TOKEN";
 
 const baseUrl = `/api/company`;
 
@@ -31,6 +30,14 @@ export const getAllProductsForCompany = async (
     return await axios
       .get(`${baseUrl}/${companyId}/products`)
       .then((res) => res.data.items);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postProfileUpdateRequest = async (data: any) => {
+  try {
+    await axios.post(`${baseUrl}/update`, data);
   } catch (error) {
     throw error;
   }

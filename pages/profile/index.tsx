@@ -8,6 +8,7 @@ import { Formik, Form } from "formik";
 import { ProfileValidation } from "./profile_InitValues_Validation";
 import { InitialValues } from "./profile_InitValues_Validation";
 import { Payment } from "./cards/payment";
+import { postProfileUpdateRequest } from "../api/companies";
 
 /*
 DR_DETAILS_PROFIEL
@@ -38,7 +39,7 @@ export default function Profile() {
   };
 
   const handleSubmit = async (data: any) => {
-    //await postProfileUpdateRequest(data);
+    await postProfileUpdateRequest(data);
     alert(`Route needs to be created to make a profile update request\n${JSON.stringify(data, null, " ")}`);
   };
 
