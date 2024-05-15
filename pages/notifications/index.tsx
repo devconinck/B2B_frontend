@@ -9,52 +9,39 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { NextPage } from "next";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PrivateRoute from "@/components/PrivateRoute";
 import { getNotifications } from "../api/notifications";
-
-const mockData = [
-  {
-    id: 1,
-    message: "Payment request from Company 6",
-    time: "2 hours ago",
-    details: "Additional information here",
-  },
-  {
-    id: 2,
-    message: "Payment received from Company 9",
-    time: "10 min ago",
-    details: "Additional information here",
-  },
-  {
-    id: 3,
-    message: "Payment request from Company 3",
-    time: "1 day ago",
-    details: "Additional information here",
-  },
-  {
-    id: 4,
-    message: "Payment received from Company 8",
-    time: "1 hour ago",
-    details: "Additional information here",
-  },
-  {
-    id: 5,
-    message: "Order with id 1234 can be shipped",
-    time: "3 days ago",
-    details: "All products are in stock",
-  },
-];
+import { NotificationStatus, NotificationType, Notification } from "@/types";
 
 const Notifications: NextPage = () => {
-  const [openNotification, setOpenNotification] = useState(0);
+  const [openNotification, setOpenNotification] = useState<string | null>(null);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
-  const handleOpenNotification = (id: number) => {
-    if (openNotification === id) {
-      return setOpenNotification(0);
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const fetchedNotifications = await getNotifications();
+        setNotifications(fetchedNotifications);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
+  const handleOpenNotification = (orderId: string | null) => {
+    if (openNotification === orderId) {
+      setOpenNotification(null);
+    } else {
+      setOpenNotification(orderId);
     }
-    setOpenNotification(id);
   };
+
+  const unreadNotifications = notifications.filter(
+    (notification) => notification.notificationStatus !== NotificationStatus.READ
+  );
 
   return (
     <PrivateRoute>
@@ -67,7 +54,7 @@ const Notifications: NextPage = () => {
             <CardHeader className="pb-6">
               <div className="space-y-1.5 flex flex-col sm:flex-row lg:flex-row justify-between">
                 <CardDescription className="">
-                  You have {mockData.length} unread messages.
+                  You have {unreadNotifications.length} unread messages.
                 </CardDescription>
                 <Button className="underline" variant={"ghost"}>
                   Mark all as read
@@ -75,22 +62,22 @@ const Notifications: NextPage = () => {
               </div>
             </CardHeader>
             <CardContent className="p-0">
-              {mockData.map((notification) => (
+              {notifications.map((notification) => (
                 <div
                   className="border-b border-t border-gray-200 dark:border-gray-800 last:border-0"
-                  key={notification.id}
+                  key={notification.orderId ?? ""}
                 >
                   <div className="p-4 grid gap-2">
                     <div className="grid gap-1.5">
-                      <p className="text-sm font-medium">
-                        {notification.message}
-                      </p>
+                      <p className="text-sm font-medium">{notification.text}</p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {notification.time}
+                        {notification.date}
                       </p>
-                      {openNotification === notification.id && (
+                      {openNotification === notification.orderId && (
                         <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                          {notification.details}
+                          Notification Type: {notification.notificationType}{" "}
+                          <br />
+                          Notification Status: {notification.notificationStatus}
                         </div>
                       )}
                     </div>
@@ -98,9 +85,9 @@ const Notifications: NextPage = () => {
                       <Button
                         className="font-medium translate-y-0.5"
                         variant={"default"}
-                        onClick={() => handleOpenNotification(notification.id)}
+                        onClick={() => handleOpenNotification(notification.orderId)}
                       >
-                        {openNotification === notification.id
+                        {openNotification === notification.orderId
                           ? "Hide details"
                           : "Show details"}
                       </Button>

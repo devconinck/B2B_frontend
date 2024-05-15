@@ -106,3 +106,23 @@ export enum PaymentStatus {
   INVOICE_SENT = "Invoice Sent",
   PAID = "Paid",
 }
+
+export type Notification = {
+  notificationType: NotificationType;
+  date: string;
+  text: string;
+  orderId: string;
+  notificationStatus: NotificationStatus;
+};
+
+export enum NotificationType {
+  PAYMENT_REQUEST = "Payment Request", // Only for the customer
+  PAYMENT_RECEIVED = "Payment Received", // Only for the supplier
+  ORDER_READY = "Order Ready" // Only for the supplier
+}
+
+export enum NotificationStatus {
+  READ = "Read",
+  UNREAD = "Unread",
+  NEW = "New"
+}
