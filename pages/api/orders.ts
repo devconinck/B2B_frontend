@@ -1,6 +1,5 @@
 import { axios, setAuthToken } from "./index";
 import { Order } from "@/types";
-import token_temp from "@/TOKEN";
 
 const baseUrl = `/api/orders`;
 

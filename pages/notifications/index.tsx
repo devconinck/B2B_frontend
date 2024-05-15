@@ -11,6 +11,7 @@ import { NextPage } from "next";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 import PrivateRoute from "@/components/PrivateRoute";
+import { getNotifications } from "../api/notifications";
 
 const mockData = [
   {

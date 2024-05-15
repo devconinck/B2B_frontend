@@ -2,7 +2,6 @@ import { axios } from "./index";
 import Error, { ErrorProps } from "next/error";
 import { Company, Product } from "@/types";
 import { setAuthToken } from "./index";
-import token_temp from "@/TOKEN";
 
 const baseUrl = `/api/company`;
 
