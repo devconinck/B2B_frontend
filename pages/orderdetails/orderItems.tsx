@@ -86,7 +86,6 @@ const OrderItems = () => {
   const router = useRouter();
   const { orderId } = router.query;
 
-  console.log(orderId);
   const {
     data: orderItems,
     isLoading,

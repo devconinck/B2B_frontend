@@ -53,6 +53,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       setUser(user);
 
       localStorage.setItem(JWT_TOKEN_KEY, token);
+      localStorage.setItem("role", user.role);
     },
     []
   );
@@ -89,6 +90,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     setUser(null);
 
     localStorage.removeItem(JWT_TOKEN_KEY);
+    localStorage.removeItem("role");
   }, []);
 
   const value = useMemo<AuthContextValue>(

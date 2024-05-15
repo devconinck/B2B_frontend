@@ -9,8 +9,10 @@ import { LoaderOrders } from "@/components/LoaderOrders";
 import Error from "@/components/Error";
 import Status from "@/components/Status";
 import PrivateRoute from "@/components/PrivateRoute";
+import { Payment } from "./payment";
 
-const columns: ColumnDef<Order>[] = [
+const columns: ColumnDef<Order>[] = [];
+columns.push(
   {
     accessorKey: "date",
     header: ({ column }) => {
@@ -88,31 +90,18 @@ const columns: ColumnDef<Order>[] = [
       const status = row.original.paymentStatus;
       return <Status value={status} />;
     },
-  },
-  /*{
-    id: "actions",
+  }
+);
+if (localStorage.getItem("role") === "CUSTOMER") {
+  console.log("test");
+  columns.push({
+    accessorKey: "Payment",
     cell: ({ row }) => {
-      const order = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4 border-black" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+      const status = row.original.paymentStatus;
+      return <Payment value={status} />;
     },
-  },*/
-];
+  });
+}
 
 const OrderScreen: NextPage = () => {
   const {
@@ -147,7 +136,10 @@ const OrderScreen: NextPage = () => {
       <div className="container mx-auto py-10">
         <div className="flex items-center justify-between space-y-2 mb-5">
           <h2 className="text-2xl font-bold tracking-tight">
-            Here is an overview of all the orders to your company
+            Here is an overview of all{" "}
+            {localStorage.getItem("role") === "SUPPLIER"
+              ? "the orders to your company"
+              : "your orders"}
           </h2>
         </div>
         <OrderTable

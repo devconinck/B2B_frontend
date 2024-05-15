@@ -158,6 +158,7 @@ export const OrderTable = <TData, TValue>({
                   key={row.id}
                   className="hover:cursor-pointer"
                   onClick={() =>
+                    localStorage.getItem("role") === "SUPPLIER" &&
                     window.location.pathname === "/orders"
                       ? handleRowClick(row?.getValue("orderId"))
                       : null
