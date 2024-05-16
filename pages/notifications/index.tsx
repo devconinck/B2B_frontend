@@ -5,43 +5,54 @@ import {
   CardContent,
   Card,
 } from "@/components/ui/card";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { NextPage } from "next";
-import { Separator } from "@/components/ui/separator";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import PrivateRoute from "@/components/PrivateRoute";
 import { getNotifications } from "../api/notifications";
-import { NotificationStatus, NotificationType, Notification } from "@/types";
+import { NotificationStatus, Notification } from "@/types";
+
+
+// TODO:
+// Warning: Each child in a list should have a unique "key" prop.
+// Date goed formatten
+// Status updaten new etc
+// Long polling
+// laatste 5 opvragen
+// Mark all as read
 
 const Notifications: NextPage = () => {
   const [openNotification, setOpenNotification] = useState<string | null>(null);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const fetchedNotifications = await getNotifications();
-        setNotifications(fetchedNotifications);
-      } catch (error) {
-        console.error("Error fetching notifications:", error);
-      }
-    };
+  const {
+    data: notifications,
+    isLoading,
+    error,
+  } = useQuery<Notification[], Error>({
+    queryKey: ["notifications"],
+    queryFn: () => getNotifications(),
+  });
 
-    fetchNotifications();
-  }, []);
-
-  const handleOpenNotification = (orderId: string | null) => {
-    if (openNotification === orderId) {
+  const handleOpenNotification = (notificationId: string | null) => {
+    if (openNotification === notificationId) {
       setOpenNotification(null);
     } else {
-      setOpenNotification(orderId);
+      setOpenNotification(notificationId);
     }
   };
 
-  const unreadNotifications = notifications.filter(
-    (notification) => notification.notificationStatus !== NotificationStatus.READ
-  );
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  const unreadNotifications = notifications?.filter(
+    (notification: Notification) => notification.NOTIFICATIONSTATUS !== NotificationStatus.READ
+  ) || [];
 
   return (
     <PrivateRoute>
@@ -62,22 +73,22 @@ const Notifications: NextPage = () => {
               </div>
             </CardHeader>
             <CardContent className="p-0">
-              {notifications.map((notification) => (
+              {notifications?.map((notification: Notification) => (
                 <div
+                  key={notification.ID}
                   className="border-b border-t border-gray-200 dark:border-gray-800 last:border-0"
-                  key={notification.orderId ?? ""}
                 >
                   <div className="p-4 grid gap-2">
                     <div className="grid gap-1.5">
-                      <p className="text-sm font-medium">{notification.text}</p>
+                      <p className="text-sm font-medium">{notification.TEXT}</p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {notification.date}
+                        {notification.DATE}
                       </p>
-                      {openNotification === notification.orderId && (
+                      {openNotification === notification.ID && (
                         <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                          Notification Type: {notification.notificationType}{" "}
+                          Notification Type: {notification.NOTIFICATIONTYPE}{" "}
                           <br />
-                          Notification Status: {notification.notificationStatus}
+                          Notification Status: {notification.NOTIFICATIONSTATUS}
                         </div>
                       )}
                     </div>
@@ -85,9 +96,9 @@ const Notifications: NextPage = () => {
                       <Button
                         className="font-medium translate-y-0.5"
                         variant={"default"}
-                        onClick={() => handleOpenNotification(notification.orderId)}
+                        onClick={() => handleOpenNotification(notification.ID)}
                       >
-                        {openNotification === notification.orderId
+                        {openNotification === notification.ID
                           ? "Hide details"
                           : "Show details"}
                       </Button>

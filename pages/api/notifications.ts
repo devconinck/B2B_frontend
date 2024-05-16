@@ -1,7 +1,8 @@
 import { axios } from "./index";
 import { Notification } from "@/types";
 
-const baseUrl = `/notifications/`;
+const baseUrl = `/api/notifications`;
+
 
 export const getNotifications = async (
     page?: number,
@@ -15,8 +16,9 @@ export const getNotifications = async (
             pageAmount,
           },
         })
-        .then((res) => res.data.items);
+        .then((res) => res.data);
     } catch (error) {
       throw error;
     }
   };
+
