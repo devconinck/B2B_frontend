@@ -95,7 +95,6 @@ const OrderScreen: NextPage = () => {
     }
   );
   if (localStorage.getItem("role") === "CUSTOMER") {
-    console.log("test");
     columns.push({
       accessorKey: "Payment",
       cell: ({ row }) => {
@@ -111,16 +110,17 @@ const OrderScreen: NextPage = () => {
     error,
   } = useQuery({
     queryKey: ["orders"],
-    queryFn: getAllOrdersFromCompany,
+    queryFn: ({ page, pageAmount }) =>
+      getAllOrdersFromCompany(page, pageAmount),
   });
 
-  const filteredOrders = orders?.filter((order) => {
+  /*const filteredOrders = orders?.filter((order) => {
     return (
       order.orderStatus === "Placed" ||
       order.orderStatus === "Processed" ||
       (order.orderStatus === "Delivered" && order.paymentStatus === "Unpaid")
     );
-  });
+  });*/
 
   if (isLoading) {
     return <LoaderOrders />;

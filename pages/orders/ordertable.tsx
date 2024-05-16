@@ -58,10 +58,10 @@ export const OrderTable = <TData, TValue>({
   const [dataTable, setDataTable] = useState(data);
   const router = useRouter();
 
-  const handleRowClick = (orderId: any) => {
+  const handleRowClick = (orderId: any, currency: any) => {
     router.push({
       pathname: "/orderdetails",
-      query: { orderId },
+      query: { orderId, currency },
     });
   };
 
@@ -160,7 +160,10 @@ export const OrderTable = <TData, TValue>({
                   onClick={() =>
                     localStorage.getItem("role") === "SUPPLIER" &&
                     window.location.pathname === "/orders"
-                      ? handleRowClick(row?.getValue("orderId"))
+                      ? handleRowClick(
+                          row?.getValue("orderId"),
+                          dataTable[0]?.currency
+                        )
                       : null
                   }
                 >

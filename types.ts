@@ -90,6 +90,7 @@ export type Order = {
   orderStatus: string;
   paymentStatus: string;
   fromCompanyId: string;
+  currency: String;
 };
 
 export enum OrderStatus {
