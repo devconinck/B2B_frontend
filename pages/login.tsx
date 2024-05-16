@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { NextPage } from "next";
 import { FormProvider, useForm } from "react-hook-form";
+import Error from "@/components/Error";
 
 import { useRouter } from "next/router";
 import { z } from "zod";
@@ -27,7 +28,8 @@ const formSchema = z.object({
 });
 
 export const Login: NextPage = () => {
-  const { login } = useAuth() as {
+  const { error, login } = useAuth() as {
+    error: any;
     login: (email: string, password: string) => Promise<boolean>;
   };
   const methods = useForm();
@@ -66,6 +68,7 @@ export const Login: NextPage = () => {
             <p className="text-balance text-muted-foreground">
               Enter your email below to login to your account
             </p>
+            <Error error={error} />
           </div>
           <Form {...form}>
             <form
