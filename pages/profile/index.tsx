@@ -8,6 +8,7 @@ import { Formik, Form } from "formik";
 import { ProfileValidation } from "./profile_InitValues_Validation";
 import { InitialValues } from "./profile_InitValues_Validation";
 import { Payment } from "./cards/payment";
+import { postProfileUpdateRequest } from "../api/companies";
 
 /*
 DR_DETAILS_PROFIEL
@@ -38,9 +39,9 @@ export default function Profile() {
   };
 
   const handleSubmit = async (data: any) => {
-    //await postProfileUpdateRequest(data);
-    alert("Route needs to be created to make a profile update request");
-  }
+    await postProfileUpdateRequest(data);
+    alert(`Route needs to be created to make a profile update request\n${JSON.stringify(data, null, " ")}`);
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -50,6 +51,7 @@ export default function Profile() {
         </div>
         <div className="mx-auto flex flex-col w-full max-w-6xl gap-6">
           <Formik 
+            enableReinitialize
             initialValues={InitialValues()}
             validationSchema={ProfileValidation}
             onSubmit={async (values: any) => {
