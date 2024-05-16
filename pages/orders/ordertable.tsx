@@ -58,8 +58,13 @@ export const OrderTable = <TData, TValue>({
   const [dataTable, setDataTable] = useState(data);
   const router = useRouter();
 
-  const handleRowClick = (orderId: any, currency: any) => {
-    router.push({
+  const handleRowClick = async (orderId: any, currency: any) => {
+    //weet niet of dit de beste manier is
+    if (dateFromValue !== "" || dateToValue !== "") {
+      setDateFromValue("");
+      setDateToValue("");
+    }
+    await router.push({
       pathname: "/orderdetails",
       query: { orderId, currency },
     });
@@ -157,15 +162,15 @@ export const OrderTable = <TData, TValue>({
                 <TableRow
                   key={row.id}
                   className="hover:cursor-pointer"
-                  onClick={() =>
+                  onClick={() => {
                     localStorage.getItem("role") === "SUPPLIER" &&
                     window.location.pathname === "/orders"
                       ? handleRowClick(
                           row?.getValue("orderId"),
                           dataTable[0]?.currency
                         )
-                      : null
-                  }
+                      : null;
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
