@@ -53,7 +53,7 @@ export default function ChatBot() {
         <>
           <div className="fixed md:bottom-8 md:end-24 bottom-24 w-full end-0 px-2 md:w-80">
             <Card className="float-right z-10 border-0 w-full shadow-md">
-              <CardHeader className="p-0 rounded-t-xl text-white text-left bg-primary">
+              <CardHeader className="p-0 rounded-t-xl text-white text-left bg-primary  dark:bg-slate-100 dark:text-black">
                 <div className="flex justify-between items-center px-2">
                   <h1 className="m-2">DelBot</h1>
                   <X className="cursor-pointer" onClick={handleClickBot}></X>
@@ -107,7 +107,7 @@ export default function ChatBot() {
       <div className="fixed md:bottom-8 md:end-8 bottom-8 end-5  z-10">
         <BotMessageSquare
           size={50}
-          className="p-3 hover:cursor-pointer rounded-full shadow-lg bg-primary"
+          className="p-3 hover:cursor-pointer rounded-full shadow-lg bg-primary dark:bg-slate-600"
           color="white"
           onClick={handleClickBot}
         ></BotMessageSquare>
