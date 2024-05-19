@@ -2,10 +2,9 @@ import { useContext } from "react";
 import * as Yup from "yup";
 import { Company } from "@/types";
 import CompaniesContext from "@/context/companiesContext";
-import { JwtPayload, jwtDecode } from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { useState, useEffect } from "react";
 import { getCompanyById } from "../api/companies";
-import { JsonWebKey } from "crypto";
 
 export const ProfileValidation = Yup.object().shape({
   companyName: Yup.string()
@@ -16,9 +15,8 @@ export const ProfileValidation = Yup.object().shape({
     .notOneOf(["Sector"], "Please select a valid sector")
     .required("The sector is required"),
   phone: Yup.string()
-    // TODO some validation?
-    .min(10, "Must be exactly 10 digits")
-    .max(10, "Must be exactly 10 digits")
+    .min(9, "Must be at least 9 digits")
+    .max(10, "Must be less then 11 digits")
     .required("The phone number is required"),
   email: Yup.string()
     .email("Invalid email")
@@ -35,11 +33,10 @@ export const ProfileValidation = Yup.object().shape({
 });
 
 
-// TODO juiste data van ingelogd bedrijf (ok) en user (todo)
+// TODO ? correct aant ophalen hier?
 export const InitialValues = () => {
   const [company, setCompany] = useState<Company | null>(null);
   const companies: Company[] = useContext(CompaniesContext);
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
   const [userEmail, setUserEmail] = useState(null);
 
   useEffect(() => {

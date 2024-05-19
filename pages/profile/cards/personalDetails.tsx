@@ -1,11 +1,9 @@
 import {
   Card,
   CardContent,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { EditableProfile } from "@/types";
 import { CustomTextInput } from "../customInputs";
 import { Mail, CalendarDays, Check, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";

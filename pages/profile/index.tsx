@@ -9,34 +9,12 @@ import { postProfileUpdateRequest } from "../api/companies";
 import { useToast } from "@/components/ui/use-toast";
 import { ErrorDisplay } from "./errorDisplay";
 
-/*
-DR_DETAILS_PROFIEL
-Van een bedrijf als klant wordt volgende info getoond op zijn profiel
-•	Logo
-•	Naam (uniek)
-•	Sector
-•	Adres
-•	Contactgegevens
-•	Klant sinds
-•	Gegevens van de klantaccount
-Van een bedrijf als leverancier wordt volgende info getoond op zijn profiel TODO
-•	Logo
-•	Naam (uniek)
-•	Sector
-•	Adres
-•	Betalingsmogelijkheden en -info
-•	Contactgegevens
-•	BTW nummer 
-•	Gegevens van de leveranciersaccount
-*/
-
 export default function Profile() {
 
   const { toast } = useToast()
 
   const handleSubmit = async (data: any) => {
     try {
-      //throw Error();
       await postProfileUpdateRequest(data);
       toast({
         variant: "default",
