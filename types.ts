@@ -16,7 +16,7 @@ export type Company = {
     email: string;
     phoneNumber: string;
   };
-  customerStart: string;
+  customerStart: Date;
   sector: string;
   paymentOptions: string[];
 };

@@ -11,32 +11,36 @@ export const ProfileValidation = Yup.object().shape({
   companyName: Yup.string()
     .min(2, "Too short!")
     .max(50, "Too long!")
-    .required("Required"),
+    .required("The company name is required"),
   sector: Yup.string()
     .notOneOf(["Sector"], "Please select a valid sector")
-    .required("Required"),
+    .required("The sector is required"),
   phone: Yup.string()
     // TODO some validation?
-    .required("Required"),
+    .min(10, "Must be exactly 10 digits")
+    .max(10, "Must be exactly 10 digits")
+    .required("The phone number is required"),
   email: Yup.string()
     .email("Invalid email")
-    .required("Required"),
-  country: Yup.string().required("Required"),
-  city: Yup.string().required("Required"),
-  postal: Yup.string().required("Required"),
-  street: Yup.string().required("Required"),
-  number: Yup.string().required("Required"),
-  useremail: Yup.string().email("Invalid user email").required("Required"),
-  customersince: Yup.date().required("Required"),
-  vatnumber: Yup.string().required("Required"),
-  paymentOptions: Yup.array().min(1, "At least one option is required").required("Required"),
+    .required("The email is required"),
+  country: Yup.string().required("The country is required"),
+  city: Yup.string().required("The city is required"),
+  postal: Yup.string().required("The postal code is required"),
+  street: Yup.string().required("The address street is required"),
+  number: Yup.string().required("The address number is required"),
+  useremail: Yup.string().email("Invalid user email").required("The user email is required"),
+  customersince: Yup.date().required("The customer since date is required"),
+  vatnumber: Yup.string().required("The vatnumber is required"),
+  paymentOptions: Yup.array().min(1, "At least one option is required").required("At least one option is required"),
 });
 
 
-// TODO juiste data van ingelogd bedrijf en user
+// TODO juiste data van ingelogd bedrijf (ok) en user (todo)
 export const InitialValues = () => {
   const [company, setCompany] = useState<Company | null>(null);
   const companies: Company[] = useContext(CompaniesContext);
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const [userEmail, setUserEmail] = useState(null);
 
   useEffect(() => {
     const fetchCompany = async () => {
@@ -47,12 +51,13 @@ export const InitialValues = () => {
         }
 
         const decodedToken: any = jwtDecode(token);
+        setUserEmail(decodedToken.email);
         if (!decodedToken || !decodedToken.companyId) {
           throw new Error('Invalid token or companyId not found in token');
         }
 
         const companyId = decodedToken.companyId;
-        const userCompany = null //companies.find((company: Company) => company.id === companyId);
+        const userCompany = companies.find((company: Company) => company.id === companyId);
 
         if (userCompany) {
           setCompany(userCompany);
@@ -68,7 +73,11 @@ export const InitialValues = () => {
     fetchCompany();
   }, [companies]);
 
-  console.log(company?.sector);
+  const formatDate = (date: Date | undefined) => {
+    if (!date) return "";
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(date).toLocaleDateString('en-US', options);
+  };
 
   return {
     companyName: company?.name ?? "",
@@ -80,9 +89,11 @@ export const InitialValues = () => {
     postal: company?.address.zipcode ?? "",
     street: company?.address.street ?? "",
     number: company?.address.number ?? "",
-    useremail: "Goatifi@gmail.com",
-    customersince: company?.customerStart,
+    useremail: userEmail ?? "",
+    customersince: formatDate(company?.customerStart),
     vatnumber: company?.vatNumber ?? "",
+    oldvatnumber: company?.vatNumber ?? "",
+    bankaccountnr: company?.bankAccountNr ?? "",
     paymentOptions: company?.paymentOptions ?? [],
   };
 };

@@ -49,8 +49,6 @@ const CompanyPage: NextPage = () => {
     return <p>Company not found</p>;
   }
 
-  console.log(products);
-
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <header className="bg-gray-100 dark:bg-slate-600 py-8 md:py-12 lg:py-16">

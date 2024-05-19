@@ -8,7 +8,9 @@ import {
 import { EditableProfile } from "@/types";
 import Image from "next/image";
 import { CustomTextInput, CustomSelect } from "../customInputs";
-
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Pencil, Check, Contact, Home, Phone, Mail } from "lucide-react";
 
 const sectors = [
   { id: 1, value: "Agriculture", name: "Agriculture" },
@@ -38,32 +40,78 @@ const sectors = [
   { id: 25, value: "Engineering", name: "Engineering" }
 ];
 
+export const CompanyDetails: React.FC<any>  = () => {
 
+  const [isEditing, setIsEditing] = useState(false);
 
+  const handleEdit = () => {
+    setIsEditing(!isEditing);
+  }
 
-
-
-export const CompanyDetails: React.FC<EditableProfile>  = ({isEditing}: EditableProfile) => {
   return (
     <div>
-      <Card>
-        <CardHeader>
-          <CardTitle>Company Details</CardTitle>
+      <Card className="w-full">
+        <CardHeader className="flex flex-row items-center justify-between w-full p-4 pb-0">
+          <CardTitle className="flex-grow">Company Details</CardTitle>
+          <Button type="button" variant={"outline"} size={"icon"} onClick={handleEdit}>
+            {isEditing ? <Check /> : <Pencil />}
+          </Button>
         </CardHeader>
-        <CardContent className="flex flex-col gap-6">
-          <div className="flex flex-row content-between items-end">
+        <CardContent className="px-4 pb-4">
+          <div className="flex items-center w-full">
             <Image
               src="/random.png"
               width={150}
               height={150}
-              className=""
+              className="rounded-full m-4"
               alt="delaware logo"
             />
-            <CustomTextInput name="companyName" label="Company Name" disabled={!isEditing}/>
+            <div className="w-full">
+              <CustomTextInput name="companyName" label="Company Name" disabled={!isEditing}/>
+              <CustomSelect name="sector" label="Sector" options={sectors} disabled={!isEditing}/>
+            </div>
+          </div>
+          
+          <hr className="my-2 border-gray-300" />
+          
+          <div>
+            <div className="flex flex-row space-x-2 pb-3">
+              <Contact />
+              <h2 className="font-semibold">Contact</h2>
+            </div>
+            <div className="flex space-x-4 pb-4">
+              <div className="flex flex-row space-x-2 items-center w-full">
+                <Phone />
+                <CustomTextInput name="phone" disabled={!isEditing} classname={"flex-grow"}/>
+              </div>
+              <div className="flex flex-row space-x-2 items-center w-full">
+                <Mail />
+                <CustomTextInput name="email" disabled={!isEditing} classname={"flex-grow"}/>
+              </div>
+            </div>
           </div>
 
-          <CustomSelect name="sector" label="Sector" options={sectors} disabled={!isEditing}/>
+          <hr className="my-2 border-gray-300" />
 
+          <div>
+            <div className="flex flex-row space-x-2">
+              <Home />
+              <h2 className="font-semibold">Address</h2>
+            </div>
+            <div className="flex flex-row gap-6">
+              <CustomTextInput name="country" label="Country" disabled={!isEditing} />
+              <CustomTextInput name="city" label="City" disabled={!isEditing} />
+              <CustomTextInput name="postal" label="Postal Code" disabled={!isEditing} />
+            </div>
+            <div className="flex flex-row gap-6">
+              <div className="w-full">
+                <CustomTextInput name="street" label="Street" disabled={!isEditing} />
+              </div>
+              <div className="w-44">
+                <CustomTextInput name="number" label="House Number" disabled={!isEditing} />
+              </div>
+            </div>
+          </div>
         </CardContent>
       </Card>
     </div>

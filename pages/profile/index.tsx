@@ -1,14 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { CompanyDetails } from "./cards/companyDetails";
 import { PersonalDetails } from "./cards/personalDetails";
-import { Contact } from "./cards/contact";
-import { Address } from "./cards/address";
-import { Formik, Form } from "formik";
+import { Formik, Form, ErrorMessage } from "formik";
 import { ProfileValidation } from "./profile_InitValues_Validation";
 import { InitialValues } from "./profile_InitValues_Validation";
 import { Payment } from "./cards/payment";
 import { postProfileUpdateRequest } from "../api/companies";
+import { useToast } from "@/components/ui/use-toast";
+import { ErrorDisplay } from "./errorDisplay";
 
 /*
 DR_DETAILS_PROFIEL
@@ -32,15 +31,28 @@ Van een bedrijf als leverancier wordt volgende info getoond op zijn profiel TODO
 */
 
 export default function Profile() {
-  const [isEditing, setIsEditing] = useState(false);
 
-  const handleEdit = () => {
-    setIsEditing(!isEditing);
-  };
+  const { toast } = useToast()
 
   const handleSubmit = async (data: any) => {
-    await postProfileUpdateRequest(data);
-    alert(`Route needs to be created to make a profile update request\n${JSON.stringify(data, null, " ")}`);
+    try {
+      //throw Error();
+      await postProfileUpdateRequest(data);
+      toast({
+        variant: "default",
+        title: "Success!",
+        description: "Update request has been received",
+        duration: 5000,
+        className: "bg-green-500 text-white",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: `There was a problem with your request. Please try again later. ${error}`,
+        duration: 5000,
+      });
+    }
   };
 
   return (
@@ -49,7 +61,7 @@ export default function Profile() {
         <div className="mx-auto grid w-full max-w-6xl gap-2">
           <h1 className="text-3xl font-semibold">Profile</h1>
         </div>
-        <div className="mx-auto flex flex-col w-full max-w-6xl gap-6">
+        <div className="items-center mx-auto max-w-6xl">
           <Formik 
             enableReinitialize
             initialValues={InitialValues()}
@@ -59,28 +71,14 @@ export default function Profile() {
             }}
           >
             {({ isSubmitting, isValid }: any) => (
-              <Form className="flex flex-col gap-6 items-center">
-
-                <div className="flex flex-row justify-center gap-6 items-center">
-                  <CompanyDetails isEditing={isEditing}/>
-                  <div className="w-80">
-                    <Contact isEditing={isEditing}/>
-                  </div>
-                </div>
-                <div className="max-w-xl">
-                    <Address isEditing={isEditing}/>
-                </div>
-                <div className="w-1/2">
-                  <Payment isEditing={isEditing}/>
-                </div>
-                <div className="w-1/2">
-                  <PersonalDetails isEditing={isEditing}/>
-                </div>
-                <Button type={(!isEditing && isValid) ? "submit" : "button"} 
-                  disabled={!isValid || isSubmitting} variant={"destructive"} className="w-full" onClick={handleEdit}>
-                  {isEditing ? "Save" : "Edit"}
+              <Form className="flex flex-col gap-6">
+                <ErrorDisplay />
+                <CompanyDetails />
+                <Payment />
+                <PersonalDetails />
+                <Button type="submit" disabled={!isValid || isSubmitting} variant={"destructive"} className="w-full">
+                  Submit
                 </Button>
-
               </Form>
             )}
 
