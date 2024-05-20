@@ -10,6 +10,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { ErrorDisplay } from "./errorDisplay";
 import PrivateRoute from "@/components/PrivateRoute";
 import { NextPage } from "next";
+import { useAuth } from "@/context/authContext";
+import { jwtDecode } from 'jwt-decode';
 
 const ProfileScreen: NextPage = () => {
   return (
@@ -21,6 +23,11 @@ const ProfileScreen: NextPage = () => {
 
 const Profile = () => {
 
+  const { token }: any = useAuth();
+  let decoded: any;
+  if(token) {
+    decoded = jwtDecode(token);
+  }
   const { toast } = useToast();
 
   const handleSubmit = async (data: any) => {
@@ -61,7 +68,7 @@ const Profile = () => {
               <Form className="flex flex-col gap-6">
                 <ErrorDisplay />
                 <CompanyDetails />
-                <Payment />
+                { decoded?.role === "SUPPLIER" ? <Payment /> : null}
                 <PersonalDetails />
                 <Button type="submit" disabled={!isValid || isSubmitting} variant={"destructive"} className="w-full">
                   Submit

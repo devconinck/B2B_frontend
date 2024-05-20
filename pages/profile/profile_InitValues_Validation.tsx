@@ -3,8 +3,6 @@ import * as Yup from "yup";
 import { Company } from "@/types";
 import CompaniesContext from "@/context/companiesContext";
 import { jwtDecode } from 'jwt-decode';
-import { useState, useEffect } from "react";
-import { getCompanyById } from "../api/companies";
 import { useAuth } from "@/context/authContext";
 
 export const ProfileValidation = Yup.object().shape({
@@ -35,7 +33,7 @@ export const ProfileValidation = Yup.object().shape({
 
 
 export const InitialValues = () => {
-  const { token, user }: any = useAuth();
+  const { token }: any = useAuth();
   let company: Company | undefined;
   let userEmail: string | undefined;
   const companies: Company[] = useContext(CompaniesContext);
@@ -44,8 +42,6 @@ export const InitialValues = () => {
     userEmail = decode.email;
     company = companies.find(comp => comp.id === decode?.companyId);
   }
-  console.log(token);
-  console.log(user);
 
   const formatDate = (date: Date | undefined) => {
     if (!date) return "";
