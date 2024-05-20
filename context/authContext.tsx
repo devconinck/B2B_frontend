@@ -42,6 +42,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     api.setAuthToken(token!!);
     setIsAuthed(Boolean(token));
     setReady(true);
+    console.log(user);
   }, [token, user]);
 
   const setSession = useCallback(

@@ -35,11 +35,17 @@ export const ProfileValidation = Yup.object().shape({
 
 
 export const InitialValues = () => {
-  const { token }: any = useAuth();
-  const decode: any = jwtDecode(token);
-  const userEmail = decode.email;
+  const { token, user }: any = useAuth();
+  let company: Company | undefined;
+  let userEmail: string | undefined;
   const companies: Company[] = useContext(CompaniesContext);
-  const company = companies.find(comp => comp.id === decode.companyId);
+  if (token) {
+    const decode: any = jwtDecode(token ? token : "d.d.d");
+    userEmail = decode.email;
+    company = companies.find(comp => comp.id === decode?.companyId);
+  }
+  console.log(token);
+  console.log(user);
 
   const formatDate = (date: Date | undefined) => {
     if (!date) return "";
