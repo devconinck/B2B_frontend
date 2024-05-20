@@ -5,6 +5,7 @@ import CompaniesContext from "@/context/companiesContext";
 import { jwtDecode } from 'jwt-decode';
 import { useState, useEffect } from "react";
 import { getCompanyById } from "../api/companies";
+import { useAuth } from "@/context/authContext";
 
 export const ProfileValidation = Yup.object().shape({
   companyName: Yup.string()
@@ -33,42 +34,12 @@ export const ProfileValidation = Yup.object().shape({
 });
 
 
-// TODO ? correct aant ophalen hier?
 export const InitialValues = () => {
-  const [company, setCompany] = useState<Company | null>(null);
+  const { token }: any = useAuth();
+  const decode: any = jwtDecode(token);
+  const userEmail = decode.email;
   const companies: Company[] = useContext(CompaniesContext);
-  const [userEmail, setUserEmail] = useState(null);
-
-  useEffect(() => {
-    const fetchCompany = async () => {
-      try {
-        const token = localStorage.getItem('jwtToken');
-        if (!token) {
-          throw new Error('No JWT token found');
-        }
-
-        const decodedToken: any = jwtDecode(token);
-        setUserEmail(decodedToken.email);
-        if (!decodedToken || !decodedToken.companyId) {
-          throw new Error('Invalid token or companyId not found in token');
-        }
-
-        const companyId = decodedToken.companyId;
-        const userCompany = companies.find((company: Company) => company.id === companyId);
-
-        if (userCompany) {
-          setCompany(userCompany);
-        } else {
-          const fetchedCompany = await getCompanyById(companyId);
-          setCompany(fetchedCompany);
-        }
-      } catch (error) {
-        console.error('Error fetching company data:', error);
-      }
-    };
-
-    fetchCompany();
-  }, [companies]);
+  const company = companies.find(comp => comp.id === decode.companyId);
 
   const formatDate = (date: Date | undefined) => {
     if (!date) return "";
