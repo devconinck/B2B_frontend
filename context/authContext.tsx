@@ -47,7 +47,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const setSession = useCallback(
     (
       token: string,
-      user: { id: number; email: string; role: Role; companyId: number }
+      user: { id: number, email: string, role: Role, companyId: number }
     ) => {
       setToken(token);
       setUser(user);

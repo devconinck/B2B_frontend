@@ -8,10 +8,20 @@ import { Payment } from "./cards/payment";
 import { postProfileUpdateRequest } from "../api/companies";
 import { useToast } from "@/components/ui/use-toast";
 import { ErrorDisplay } from "./errorDisplay";
+import PrivateRoute from "@/components/PrivateRoute";
+import { NextPage } from "next";
 
-export default function Profile() {
+const ProfileScreen: NextPage = () => {
+  return (
+    <PrivateRoute>
+      <Profile />
+    </PrivateRoute>
+  );
+};
 
-  const { toast } = useToast()
+const Profile = () => {
+
+  const { toast } = useToast();
 
   const handleSubmit = async (data: any) => {
     try {
@@ -40,8 +50,7 @@ export default function Profile() {
           <h1 className="text-3xl font-semibold">Profile</h1>
         </div>
         <div className="items-center mx-auto max-w-6xl">
-          <Formik 
-            enableReinitialize
+          <Formik             
             initialValues={InitialValues()}
             validationSchema={ProfileValidation}
             onSubmit={async (values: any) => {
@@ -59,7 +68,6 @@ export default function Profile() {
                 </Button>
               </Form>
             )}
-
           </Formik>
         </div>
       </main>
@@ -67,3 +75,5 @@ export default function Profile() {
   );
 }
 
+
+export default ProfileScreen;
