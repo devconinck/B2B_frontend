@@ -3,14 +3,17 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import QRCode from "qrcode";
 import { useState } from "react";
 import { updateOrder } from "../api/orders";
+import { useQueryClient } from "@tanstack/react-query";
 
 type PaymentProps = {
+  orderId: any;
   value: string;
 };
 
-export function Payment({ value }: PaymentProps) {
+export const Payment = ({ orderId, value }: PaymentProps) => {
   const [src, setSrc] = useState<String>("");
-  //const [scanned, setScanned] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const generateQrCode = async () => {
     try {
@@ -19,15 +22,15 @@ export function Payment({ value }: PaymentProps) {
         height: 350,
       });
       setSrc(response);
-      handleScanning();
+      if (process.env.NODE_ENV === "production") handlePaying();
     } catch (error) {
       throw error;
     }
   };
 
-  const handleScanning = () => {
-    console.log("test");
-    //const answer = updateOrder(, "PAID")
+  const handlePaying = () => {
+    updateOrder(orderId, { paymentStatus: 2 });
+    queryClient.invalidateQueries({ queryKey: ["orders"] });
   };
   return value === "INVOICE_SENT" ? (
     <Dialog>
@@ -42,7 +45,17 @@ export function Payment({ value }: PaymentProps) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <img src={src} />
+        {process.env.NODE_ENV === "development" && (
+          <div className="flex justify-center items-center">
+            <Button
+              className="w-1/4 bg-black text-white"
+              onClick={handlePaying}
+            >
+              Pay here
+            </Button>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   ) : null;
-}
+};

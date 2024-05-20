@@ -10,9 +10,10 @@ import Error from "@/components/Error";
 import Status from "@/components/Status";
 import PrivateRoute from "@/components/PrivateRoute";
 import { Payment } from "./payment";
+import { AuthContextValue, useAuth } from "@/context/authContext";
 
 const OrderScreen: NextPage = () => {
-  const role = localStorage.getItem("role");
+  const { role } = useAuth() as AuthContextValue;
   const columns: ColumnDef<Order>[] = [];
   columns.push(
     {
@@ -94,12 +95,13 @@ const OrderScreen: NextPage = () => {
       },
     }
   );
-  if (localStorage.getItem("role") === "CUSTOMER") {
+  if (role === "CUSTOMER") {
     columns.push({
       accessorKey: "Payment",
       cell: ({ row }) => {
         const status = row.original.paymentStatus;
-        return <Payment value={status} />;
+        const orderId = row.getValue("orderId");
+        return <Payment orderId={orderId} value={status} />;
       },
     });
   }

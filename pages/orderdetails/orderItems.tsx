@@ -8,7 +8,6 @@ import { getOrderItems } from "../api/orderItem";
 import { useQuery } from "@tanstack/react-query";
 import { LoaderOrderitems } from "@/components/LoaderOrderitems";
 import Error from "@/components/Error";
-import { Order } from "@/types";
 
 const OrderItems = () => {
   const router = useRouter();
@@ -123,6 +122,7 @@ const OrderItems = () => {
   };
 
   const columns = useOrderDetailsColumns(currency);
+
   return (
     <div className="container mx-auto py-0">
       <h2 className="text-2xl font-bold tracking-tight mt-10 mb-3 flex items-center justify-center">

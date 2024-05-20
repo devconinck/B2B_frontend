@@ -27,10 +27,10 @@ export const getOrderById = async (orderId: any): Promise<Order> => {
 
 export const updateOrder = async (
   orderId: any,
-  { arg: body }: any
+  paymentStatus: any
 ): Promise<Order> => {
   try {
-    const response = await axios.put(`${baseUrl}/${orderId}`, body);
+    const response = await axios.put(`${baseUrl}/${orderId}`, paymentStatus);
     return response.data;
   } catch (error) {
     throw error;

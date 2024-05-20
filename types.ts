@@ -78,7 +78,7 @@ export type OrderItem = {
   product: Product | null;
 };
 
-export type Role = "admin" | "user";
+export type Role = "SUPPLIER" | "CUSTOMER";
 
 export interface EditableProfile {
   isEditing: boolean;
