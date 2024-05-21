@@ -7,6 +7,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Input } from "./ui/input";
 import ChatMessage from "./ChatMessage";
 import { sendChatMessage } from "@/pages/api/chat";
+import Typing from "@/pages/chatbot/Typing";
 
 export default function ChatBot() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -25,20 +26,21 @@ export default function ChatBot() {
 
   async function sendQuestion(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setQuestion("");
+    setChats([
+      ...chats,
+      { type: "Q", timestamp: "", msg: question }])
     setIsLoading(true);
     setError(null); // Clear previous errors when a new request starts
-
     try {
       if (question === null || question === "" || question.length <= 0) {
         throw new Error("Gelieve iets in te vullen");
       }
       const answer = await sendChatMessage(question);
-      setChats([
-        ...chats,
+      setChats([...chats,
         { type: "Q", timestamp: "", msg: question },
         { type: "A", timestamp: "", msg: answer },
       ]);
-      setQuestion("");
     } catch (error) {
       // Capture the error message to display to the user
       setError(error);
@@ -53,7 +55,7 @@ export default function ChatBot() {
         <>
           <div className="fixed md:bottom-8 md:end-24 bottom-24 w-full end-0 px-2 md:w-80">
             <Card className="float-right z-10 border-0 w-full shadow-md">
-              <CardHeader className="p-0 rounded-t-xl text-white text-left bg-primary">
+              <CardHeader className="p-0 rounded-t-xl text-white text-left bg-primary  dark:bg-slate-100 dark:text-black">
                 <div className="flex justify-between items-center px-2">
                   <h1 className="m-2">DelBot</h1>
                   <X className="cursor-pointer" onClick={handleClickBot}></X>
@@ -63,6 +65,8 @@ export default function ChatBot() {
                 className="max-w-full p-0 overflow-y-scroll flex flex-col-reverse"
                 style={{ height: "400px" }}
               >
+                {isLoading && <Typing />}
+
                 {chats
                   .map((chat) => {
                     return (
@@ -107,7 +111,7 @@ export default function ChatBot() {
       <div className="fixed md:bottom-8 md:end-8 bottom-8 end-5  z-10">
         <BotMessageSquare
           size={50}
-          className="p-3 hover:cursor-pointer rounded-full shadow-lg bg-primary"
+          className="p-3 hover:cursor-pointer rounded-full shadow-lg bg-primary dark:bg-slate-600"
           color="white"
           onClick={handleClickBot}
         ></BotMessageSquare>

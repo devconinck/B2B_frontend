@@ -6,15 +6,15 @@ type StatusProps = {
 };
 
 const STATUS_COLORS = {
-  [OrderStatus.PLACED]: "bg-yellow-200",
-  [OrderStatus.PROCESSED]: "bg-blue-200",
-  [OrderStatus.SHIPPED]: "bg-green-200",
-  [OrderStatus.OUT_FOR_DELIVERY]: "bg-indigo-200",
-  [OrderStatus.DELIVERED]: "bg-purple-200",
-  [OrderStatus.COMPLETED]: "bg-gray-200",
-  [PaymentStatus.UNPROCESSED]: "bg-red-200",
-  [PaymentStatus.INVOICE_SENT]: "bg-orange-200",
-  [PaymentStatus.PAID]: "bg-green-200",
+  [OrderStatus.PLACED]: "bg-yellow-200 dark:text-gray-800",
+  [OrderStatus.PROCESSED]: "bg-blue-200 dark:text-gray-800",
+  [OrderStatus.SHIPPED]: "bg-green-200 dark:text-gray-800",
+  [OrderStatus.OUT_FOR_DELIVERY]: "bg-indigo-200 dark:text-gray-800",
+  [OrderStatus.DELIVERED]: "bg-purple-200 dark:text-gray-800",
+  [OrderStatus.COMPLETED]: "bg-gray-200 dark:text-gray-800",
+  [PaymentStatus.UNPROCESSED]: "bg-red-200 dark:text-gray-800",
+  [PaymentStatus.INVOICE_SENT]: "bg-orange-200 dark:text-gray-800",
+  [PaymentStatus.PAID]: "bg-green-200  dark:text-gray-800",
 };
 
 function isOrderStatus(value: string): value is OrderStatus {

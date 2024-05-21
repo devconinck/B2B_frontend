@@ -34,3 +34,11 @@ export const getAllProductsForCompany = async (
     throw error;
   }
 };
+
+export const postProfileUpdateRequest = async (data: any) => {
+  try {
+    await axios.post(`${baseUrl}/update`, data);
+  } catch (error) {
+    throw error;
+  }
+};

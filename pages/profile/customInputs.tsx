@@ -1,43 +1,26 @@
-import { ErrorMessage, Field, Formik, FormikConsumer, FormikContext, useField, useFormik, useFormikContext } from "formik";
+import { useField } from "formik";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { any, z } from "zod"
  
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { toast } from "@/components/ui/use-toast"
+import { Checkbox } from "@/components/ui/checkbox";
 import { CheckedState } from "@radix-ui/react-checkbox";
-import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { ShieldAlert } from 'lucide-react';
 
-export const CustomTextInput = ({ label, ...props }: any) => {
+export const CustomTextInput = ({ label, classname, ...props }: any) => {
   const [field, meta] = useField(props);
   return (
-    <div>
+    <div className={classname}>
         <Label htmlFor={props.name}>{label}</Label>
         <Input {...field} {...props}/>
-        {meta.touched && meta.error ? (
-        <ErrorMessage name={props.name}></ErrorMessage> // prop component toevoegen voor opmaak van errormessage https://formik.org/docs/api/errormessage
-        ) : null}
+        <ErrorField error={meta.error} message={meta.error?.toString()}/>
     </div>
   );
 };
@@ -45,14 +28,15 @@ export const CustomTextInput = ({ label, ...props }: any) => {
 export const CustomSelect = ({ label, placeholder, options, ...props }: any) => {
   const [field, meta, helpers] = useField(props);
   const {setValue} = helpers;
+
   return (
     <div>
       <Label htmlFor={props.name}>{label}</Label>
-      <Select {...props} defaultValue={options.value}
+      <Select {...props} value={field.value}
         onValueChange={(value: any) => {setValue(value)}}
       >
         <SelectTrigger>
-          <SelectValue placeholder={placeholder}/>
+          <SelectValue {...field}/>
         </SelectTrigger>
         <SelectContent>
           {options.map((option: any) => (
@@ -60,9 +44,7 @@ export const CustomSelect = ({ label, placeholder, options, ...props }: any) => 
           ))}
         </SelectContent>
       </Select>
-      {meta.touched && meta.error ? (
-        <ErrorMessage name={props.name}></ErrorMessage>
-      ) : null}
+      <ErrorField error={meta.error} message={meta.error?.toString()}/>
     </div>
   );
 };
@@ -80,7 +62,7 @@ export const CustomCheckbox = ({ options, label, disabled, ...props }: any) => {
   };
 
   return (
-    <div {...props} {...field}>
+    <div {...props}>
         <Label>{label}</Label>
         {options.map((option: any) => (
           <div key={option.id}>
@@ -94,22 +76,20 @@ export const CustomCheckbox = ({ options, label, disabled, ...props }: any) => {
             <Label className="mx-2">{option.name}</Label>
           </div>
         ))}
-        {meta.touched && meta.error ? (
-          <ErrorMessage name={props.name}></ErrorMessage>
-        ) : null}
+        <ErrorField error={meta.error} message={meta.error?.toString()}/>
     </div>
   );
 };
 
- 
-function onSubmit(data: any) {
-  toast({
-    title: "You submitted the following values:",
-    description: (
-      <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-        <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-      </pre>
-    ),
-  })
-}
+export const ErrorField = ({error, message}: any) => {
+  return (
+    <div>
+      {error ? 
+        <div className="text-white bg-red-600 rounded-md p-4 m-2 flex flex-row gap-4 absolute">
+          <ShieldAlert />
+          {message}
+        </div> : null}
+    </div>
+  );
+};
  

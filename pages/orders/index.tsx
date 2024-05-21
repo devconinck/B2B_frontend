@@ -115,6 +115,14 @@ const columns: ColumnDef<Order>[] = [
 ];
 
 const OrderScreen: NextPage = () => {
+  return (
+    <PrivateRoute>
+      <OrderContent />
+    </PrivateRoute>
+  );
+};
+
+const OrderContent = () => {
   const {
     data: orders,
     isLoading,
@@ -136,29 +144,27 @@ const OrderScreen: NextPage = () => {
     return <LoaderOrders />;
   }
   if (error) {
-    <Error error={error} />;
+    return <Error error={error} />;
   }
   if (!orders) {
     return <p>No orders available</p>;
   }
 
   return (
-    <PrivateRoute>
-      <div className="container mx-auto py-10">
-        <div className="flex items-center justify-between space-y-2 mb-5">
-          <h2 className="text-2xl font-bold tracking-tight">
-            Here is an overview of all the orders to your company
-          </h2>
-        </div>
-        <OrderTable
-          columns={columns}
-          data={orders}
-          sortingValue={"date"}
-          decSorting={true}
-          datePicker={true}
-        />
+    <div className="container mx-auto py-10">
+      <div className="flex items-center justify-between space-y-2 mb-5">
+        <h2 className="text-2xl font-bold tracking-tight">
+          Here is an overview of all the orders to your company
+        </h2>
       </div>
-    </PrivateRoute>
+      <OrderTable
+        columns={columns}
+        data={orders}
+        sortingValue={"date"}
+        decSorting={true}
+        datePicker={true}
+      />
+    </div>
   );
 };
 
