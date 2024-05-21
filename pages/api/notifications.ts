@@ -6,7 +6,8 @@ const baseUrl = `/api/notifications`;
 
 export const getNotifications = async (
     page?: number,
-    pageAmount?: number
+    pageAmount?: number,
+    status?: string,
   ): Promise<Notification[]> => {
     try {
       return await axios
@@ -14,6 +15,7 @@ export const getNotifications = async (
           params: {
             page,
             pageAmount,
+            status,
           },
         })
         .then((res) => res.data);
@@ -22,7 +24,14 @@ export const getNotifications = async (
     }
   };
 
-
+export const getUnreadNotificationsCount = async (): Promise<number> => {
+    try {
+      const response = await axios.get(`${baseUrl}/unread-count`);
+      return response.data.unreadNotificationCount;
+    } catch (error) {
+      throw error;
+    }
+  };
 
 export const markNotificationAsRead = async (
     notificationId: string
