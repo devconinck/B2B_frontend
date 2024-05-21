@@ -109,6 +109,7 @@ export enum PaymentStatus {
 }
 
 export type Notification = {
+  id: string,
   notificationType: NotificationType;
   date: string;
   text: string;

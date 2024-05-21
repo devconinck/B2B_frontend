@@ -22,3 +22,23 @@ export const getNotifications = async (
     }
   };
 
+
+
+export const markNotificationAsRead = async (
+    notificationId: string
+  ): Promise<void> => {
+    try {
+      await axios.put(`${baseUrl}/${notificationId}/read`);
+    } catch (error) {
+      throw error;
+    }
+  };
+  
+export const markAllNotificationsAsRead = async (): Promise<void> => {
+    try {
+      await axios.put(`${baseUrl}/read-all`);
+    } catch (error) {
+      throw error;
+    }
+  };
+

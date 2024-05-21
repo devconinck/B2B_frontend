@@ -1,16 +1,14 @@
 import {
-  CardTitle,
   CardDescription,
   CardHeader,
   CardContent,
   Card,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { NextPage } from "next";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import PrivateRoute from "@/components/PrivateRoute";
-import { getNotifications } from "../api/notifications";
+import { getNotifications, markAllNotificationsAsRead, markNotificationAsRead } from "../api/notifications";
 import { NotificationStatus, Notification } from "@/types";
 
 
@@ -20,9 +18,8 @@ import { NotificationStatus, Notification } from "@/types";
 // Status updaten new etc
 // Long polling
 // laatste 5 opvragen
-// Mark all as read
 
-const Notifications: NextPage = () => {
+const Notifications = () => {
   const [openNotification, setOpenNotification] = useState<string | null>(null);
 
   const {
@@ -32,14 +29,23 @@ const Notifications: NextPage = () => {
   } = useQuery<Notification[], Error>({
     queryKey: ["notifications"],
     queryFn: () => getNotifications(),
+    refetchInterval: 30 * 1000, // om de 30 seconden ophalen
   });
 
-  const handleOpenNotification = (notificationId: string | null) => {
-    if (openNotification === notificationId) {
+  const handleOpenNotification = (notificationid: string | null) => {
+    if (openNotification === notificationid) {
       setOpenNotification(null);
     } else {
-      setOpenNotification(notificationId);
+      setOpenNotification(notificationid);
     }
+  };
+
+  const handleMarkAsRead = (notificationid: string) => {
+    markNotificationAsRead(notificationid);
+  };
+
+  const handleMarkAllAsRead = () => {
+    markAllNotificationsAsRead()
   };
 
   if (isLoading) {
@@ -51,7 +57,7 @@ const Notifications: NextPage = () => {
   }
 
   const unreadNotifications = notifications?.filter(
-    (notification: Notification) => notification.NOTIFICATIONSTATUS !== NotificationStatus.READ
+    (notification: Notification) => notification.notificationStatus.toLocaleUpperCase() !== NotificationStatus.READ.toLocaleUpperCase()
   ) || [];
 
   return (
@@ -67,7 +73,11 @@ const Notifications: NextPage = () => {
                 <CardDescription className="">
                   You have {unreadNotifications.length} unread messages.
                 </CardDescription>
-                <Button className="underline" variant={"ghost"}>
+                <Button
+                  className="underline"
+                  variant={"ghost"}
+                  onClick={handleMarkAllAsRead}
+                >
                   Mark all as read
                 </Button>
               </div>
@@ -75,20 +85,20 @@ const Notifications: NextPage = () => {
             <CardContent className="p-0">
               {notifications?.map((notification: Notification) => (
                 <div
-                  key={notification.ID}
+                  key={notification.id}
                   className="border-b border-t border-gray-200 dark:border-gray-800 last:border-0"
                 >
                   <div className="p-4 grid gap-2">
                     <div className="grid gap-1.5">
-                      <p className="text-sm font-medium">{notification.TEXT}</p>
+                      <p className="text-sm font-medium">{notification.text}</p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {notification.DATE}
+                        {notification.date}
                       </p>
-                      {openNotification === notification.ID && (
+                      {openNotification === notification.id && (
                         <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
-                          Notification Type: {notification.NOTIFICATIONTYPE}{" "}
+                          Notification Type: {notification.notificationType}{" "}
                           <br />
-                          Notification Status: {notification.NOTIFICATIONSTATUS}
+                          Notification Status: {notification.notificationStatus}
                         </div>
                       )}
                     </div>
@@ -96,13 +106,17 @@ const Notifications: NextPage = () => {
                       <Button
                         className="font-medium translate-y-0.5"
                         variant={"default"}
-                        onClick={() => handleOpenNotification(notification.ID)}
+                        onClick={() => handleOpenNotification(notification.id)}
                       >
-                        {openNotification === notification.ID
+                        {openNotification === notification.id
                           ? "Hide details"
                           : "Show details"}
                       </Button>
-                      <Button className="underline" variant={"ghost"}>
+                      <Button
+                        className="underline"
+                        variant={"ghost"}
+                        onClick={() => handleMarkAsRead(notification.id)}
+                      >
                         Mark as read
                       </Button>
                     </div>
