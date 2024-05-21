@@ -79,7 +79,7 @@ export type OrderItem = {
   product: Product | null;
 };
 
-export type Role = "admin" | "user";
+export type Role = "SUPPLIER" | "CUSTOMER";
 
 export interface EditableProfile {
   isEditing: boolean;
@@ -91,6 +91,7 @@ export type Order = {
   orderStatus: string;
   paymentStatus: string;
   fromCompanyId: string;
+  currency: String;
 };
 
 export enum OrderStatus {

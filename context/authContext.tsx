@@ -18,6 +18,7 @@ const AuthContext = createContext();
 export interface AuthContextValue {
   token: string | null;
   user: User | null;
+  role: Role | null;
   error: Error | null;
   ready: boolean;
   loading: boolean;
@@ -37,6 +38,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
   const [isAuthed, setIsAuthed] = useState(false);
+  const [role, setRole] = useState(null);
 
   useEffect(() => {
     api.setAuthToken(token!!);
@@ -52,7 +54,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     ) => {
       setToken(token);
       setUser(user);
-
+      setRole(user.role);
       localStorage.setItem(JWT_TOKEN_KEY, token);
     },
     []
@@ -88,6 +90,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const logout = useCallback(() => {
     setToken(null);
     setUser(null);
+    setRole(null);
 
     localStorage.removeItem(JWT_TOKEN_KEY);
   }, []);
@@ -96,6 +99,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     () => ({
       token,
       user,
+      role,
       error: loginMutation.error as Error | null,
       ready,
       loading: loginMutation.isPending,
@@ -106,6 +110,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     [
       token,
       user,
+      role,
       loginMutation.error,
       ready,
       loginMutation.isPending,

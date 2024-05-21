@@ -36,6 +36,8 @@ import { Input } from "@/components/ui/input";
 import { DatePicker } from "./datepicker";
 import { DateRange } from "react-day-picker";
 
+import { AuthContextValue, useAuth } from "@/context/authContext";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -58,10 +60,16 @@ export const OrderTable = <TData, TValue>({
   const [dataTable, setDataTable] = useState(data);
   const router = useRouter();
 
-  const handleRowClick = (orderId: any) => {
-    router.push({
+  const { role } = useAuth() as AuthContextValue;
+
+  const handleRowClick = async (orderId: any, currency: any) => {
+    if (dateFromValue !== "" || dateToValue !== "") {
+      setDateFromValue("");
+      setDateToValue("");
+    }
+    await router.push({
       pathname: "/orderdetails",
-      query: { orderId },
+      query: { orderId, currency },
     });
   };
 
@@ -121,15 +129,20 @@ export const OrderTable = <TData, TValue>({
 
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex flex-col sm:flex-row items-center py-4">
         <Input
           type="search"
           placeholder={`Filter...`}
           value={searchValue}
           onChange={handleSearchChange}
-          className="max-w-sm mr-2"
+          className="w-full sm:max-w-sm sm:mr-2 mb-2 sm:mb-0"
         />
-        {datePicker ? <DatePicker onDateSelect={handleDateSelect} /> : null}
+        {datePicker ? (
+          <DatePicker
+            onDateSelect={handleDateSelect}
+            className="w-full sm:w-auto"
+          />
+        ) : null}
       </div>
       <div className="rounded-md border">
         <Table>
@@ -157,11 +170,15 @@ export const OrderTable = <TData, TValue>({
                 <TableRow
                   key={row.id}
                   className="hover:cursor-pointer"
-                  onClick={() =>
+                  onClick={() => {
+                    role === "SUPPLIER" &&
                     window.location.pathname === "/orders"
-                      ? handleRowClick(row?.getValue("orderId"))
-                      : null
-                  }
+                      ? handleRowClick(
+                          row?.getValue("orderId"),
+                          dataTable[0]?.currency
+                        )
+                      : null;
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -186,7 +203,7 @@ export const OrderTable = <TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-end space-x-2 py-4">
         <div className="flex items-center space-x-6 lg:space-x-8">
           <div className="flex-items-center space-x-2">
             <p className="text-sm font-medium">Rows per page</p>
@@ -208,8 +225,8 @@ export const OrderTable = <TData, TValue>({
               ))}
             </SelectContent>
           </Select>
-          <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
+          <div className="flex w-[100px] sm:w-auto items-center justify-center text-sm font-medium">
+            Page {table.getState().pagination.pageIndex + 1} /{" "}
             {table.getPageCount()}
           </div>
           <div className="flex items-center space-x-2">

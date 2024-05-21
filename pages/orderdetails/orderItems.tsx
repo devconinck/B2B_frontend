@@ -11,8 +11,7 @@ import { getOrderById } from "../api/orders";
 
 const OrderItems = () => {
   const router = useRouter();
-  const { orderId } = router.query;
-  console.log(orderId);
+  const { orderId, currency } = router.query;
 
   const {
     data: order,
@@ -118,6 +117,97 @@ const OrderItems = () => {
   if (!orderItems) {
     return <p>No orderitems available</p>;
   }
+
+  const useOrderDetailsColumns = (currency: any) => {
+    const columns: ColumnDef<OrderItem>[] = [
+      {
+        accessorKey: "inStock",
+        header: ({ column }) => {
+          return (
+            <div
+              className="flex items-center"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
+              <p className="mr-2">In Stock</p>
+              <ArrowUpDown className="h-4 w-4" />
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: "name",
+        header: ({ column }) => {
+          return (
+            <div
+              className="flex items-center"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
+              <p className="mr-2">Name</p>
+              <ArrowUpDown className="h-4 w-4" />
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: "quantity",
+        header: ({ column }) => {
+          return (
+            <div
+              className="flex items-center"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
+              <p className="mr-2">Quantity</p>
+              <ArrowUpDown className="h-4 w-4" />
+            </div>
+          );
+        },
+      },
+      {
+        accessorFn: (row) =>
+          `${(row.total || 0) * (row.quantity || 0)} ${currency}`,
+        id: "total",
+        header: ({ column }) => {
+          return (
+            <div
+              className="flex items-center"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
+              <p className="mr-2">Total Productprice</p>
+              <ArrowUpDown className="h-4 w-4" />
+            </div>
+          );
+        },
+      },
+      {
+        accessorFn: (row) => `${row.unitPrice} ${currency}`,
+        id: "unitPrice",
+        header: ({ column }) => {
+          return (
+            <div
+              className="flex items-center"
+              onClick={() =>
+                column.toggleSorting(column.getIsSorted() === "asc")
+              }
+            >
+              <p className="mr-2">Unit Price</p>
+              <ArrowUpDown className="h-4 w-4" />
+            </div>
+          );
+        },
+      },
+    ];
+    return columns;
+  };
+
+  const columns = useOrderDetailsColumns(currency);
 
   return (
     <div className="container mx-auto py-0">

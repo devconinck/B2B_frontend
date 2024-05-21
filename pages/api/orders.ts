@@ -3,9 +3,14 @@ import { Order } from "@/types";
 
 const baseUrl = `/api/orders`;
 
-export const getAllOrdersFromCompany = async (): Promise<Order[]> => {
+export const getAllOrdersFromCompany = async (
+  page?: number,
+  pageAmount?: number
+): Promise<Order[]> => {
   try {
-    return await axios.get(`${baseUrl}/all`).then((res) => res.data);
+    return await axios
+      .get(`${baseUrl}/all`, { params: { page, pageAmount } })
+      .then((res) => res.data);
   } catch (error) {
     throw error;
   }
@@ -14,6 +19,18 @@ export const getAllOrdersFromCompany = async (): Promise<Order[]> => {
 export const getOrderById = async (orderId: any): Promise<Order> => {
   try {
     return await axios.get(`${baseUrl}/${orderId}`).then((res) => res.data[0]);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateOrder = async (
+  orderId: any,
+  paymentStatus: any
+): Promise<Order> => {
+  try {
+    const response = await axios.put(`${baseUrl}/${orderId}`, paymentStatus);
+    return response.data;
   } catch (error) {
     throw error;
   }
