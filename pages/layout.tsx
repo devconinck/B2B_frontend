@@ -7,6 +7,7 @@ import Error from "@/components/Error";
 import CompaniesContext from "@/context/companiesContext";
 import ChatBot from "@/components/ChatBot";
 import { Toaster } from "@/components/ui/toaster"
+import NewNotifications from "./notifications/newNotifications";
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -38,6 +39,7 @@ export default function Layout({ children }: LayoutProps) {
         <div className="absolute bottom-0 right-0 radius-50">
           <ChatBot></ChatBot>
         </div>
+        <NewNotifications />
         <Toaster />
       </CompaniesContext.Provider>
     </>

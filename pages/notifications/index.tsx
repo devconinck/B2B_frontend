@@ -1,51 +1,47 @@
-import {
-  CardDescription,
-  CardHeader,
-  CardContent,
-  Card,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import PrivateRoute from "@/components/PrivateRoute";
-import { getNotifications, markAllNotificationsAsRead, markNotificationAsRead } from "../api/notifications";
+import { useRouter } from "next/router";
+import {
+  getNotifications,
+  markAllNotificationsAsRead,
+  markNotificationAsRead,
+} from "../api/notifications";
 import { NotificationStatus, Notification } from "@/types";
 
-
-// TODO:
-// Warning: Each child in a list should have a unique "key" prop.
-// Date goed formatten
-// Status updaten new etc
-// Long polling
-// laatste 5 opvragen
-
 const Notifications = () => {
-  const [openNotification, setOpenNotification] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [pageAmount, setPageAmount] = useState(10);
+  const [status, setStatus] = useState<NotificationStatus | undefined>(
+    undefined
+  );
+  const router = useRouter();
 
   const {
     data: notifications,
     isLoading,
     error,
   } = useQuery<Notification[], Error>({
-    queryKey: ["notifications"],
-    queryFn: () => getNotifications(),
-    refetchInterval: 30 * 1000, // om de 30 seconden ophalen
+    queryKey: ["notifications", page, pageAmount, status],
+    queryFn: () => getNotifications(page, pageAmount, status),
   });
 
-  const handleOpenNotification = (notificationid: string | null) => {
-    if (openNotification === notificationid) {
-      setOpenNotification(null);
-    } else {
-      setOpenNotification(notificationid);
+  const handleOpenNotification = (notificationId: string) => {
+    markNotificationAsRead(notificationId);
+    const orderId = notifications?.find(
+      (notification) => notification.id === notificationId
+    )?.orderId;
+    if (orderId) {
+      router.push(`/orderdetails?orderId=${orderId}`);
     }
   };
 
-  const handleMarkAsRead = (notificationid: string) => {
-    markNotificationAsRead(notificationid);
+  const handleMarkAllAsRead = () => {
+    markAllNotificationsAsRead();
   };
 
-  const handleMarkAllAsRead = () => {
-    markAllNotificationsAsRead()
+  const handleStatusChange = (newStatus: NotificationStatus | undefined) => {
+    setStatus(newStatus);
+    setPage(1);
   };
 
   if (isLoading) {
@@ -55,10 +51,6 @@ const Notifications = () => {
   if (error) {
     return <div>Error: {error.message}</div>;
   }
-
-  const unreadNotifications = notifications?.filter(
-    (notification: Notification) => notification.notificationStatus.toLocaleUpperCase() !== NotificationStatus.READ.toLocaleUpperCase()
-  ) || [];
 
   return (
     <PrivateRoute>

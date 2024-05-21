@@ -1,5 +1,5 @@
 import { axios } from "./index";
-import { Notification } from "@/types";
+import { Notification, NotificationStatus } from "@/types";
 
 const baseUrl = `/api/notifications`;
 
@@ -51,3 +51,15 @@ export const markAllNotificationsAsRead = async (): Promise<void> => {
     }
   };
 
+  export const updateNotificationStatus = async (
+    notificationId: string,
+    status: NotificationStatus
+  ): Promise<void> => {
+    try {
+      await axios.put(`${baseUrl}/${notificationId}/status`, {
+        status,
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
