@@ -6,13 +6,12 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import PrivateRoute from "@/components/PrivateRoute";
 import {
   getNotifications,
   markAllNotificationsAsRead,
   markNotificationAsRead,
-  updateNotificationStatus,
   getUnreadNotificationsCount,
 } from "../api/notifications";
 import { NotificationStatus, Notification } from "@/types";
@@ -24,9 +23,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useAuth } from "@/context/authContext";
+
 
 const Notifications = () => {
+  const queryClient = useQueryClient();
+  
   const [page, setPage] = useState(1);
   const [pageAmount, setPageAmount] = useState(10);
   const [status, setStatus] = useState<NotificationStatus | undefined>(
@@ -51,7 +52,7 @@ const Notifications = () => {
   } = useQuery<number>({
     queryKey: ["unreadNotificationCount"],
     queryFn: getUnreadNotificationsCount,
-    refetchInterval: 30 * 1000,
+    refetchInterval: 1 * 1000,
   });
 
   const handleOpenNotification = (notificationId: string | null) => {
@@ -64,10 +65,16 @@ const Notifications = () => {
 
   const handleMarkAsRead = async (notificationId: string) => {
     await markNotificationAsRead(notificationId);
+    queryClient.refetchQueries({
+      queryKey: ['notifications']
+    });
   };
 
   const handleMarkAllAsRead = async () => {
     await markAllNotificationsAsRead();
+    queryClient.refetchQueries({
+      queryKey: ['notifications'],
+    });
   };
 
   const handleStatusChange = (newStatus: NotificationStatus | undefined) => {
