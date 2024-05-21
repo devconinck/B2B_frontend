@@ -4,6 +4,7 @@ import QRCode from "qrcode";
 import { useState } from "react";
 import { updateOrder } from "../api/orders";
 import { useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/components/ui/use-toast";
 
 type PaymentProps = {
   orderId: any;
@@ -12,8 +13,8 @@ type PaymentProps = {
 
 export const Payment = ({ orderId, value }: PaymentProps) => {
   const [src, setSrc] = useState<String>("");
-
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const generateQrCode = async () => {
     try {
@@ -28,9 +29,12 @@ export const Payment = ({ orderId, value }: PaymentProps) => {
     }
   };
 
-  const handlePaying = () => {
-    updateOrder(orderId, { paymentStatus: 2 });
+  const handlePaying = async () => {
+    await updateOrder(orderId, { paymentStatus: 2 });
     queryClient.invalidateQueries({ queryKey: ["orders"] });
+    toast({
+      description: `The order ${orderId} has been paid successfully.`,
+    });
   };
   return value === "INVOICE_SENT" ? (
     <Dialog>
@@ -49,7 +53,9 @@ export const Payment = ({ orderId, value }: PaymentProps) => {
           <div className="flex justify-center items-center">
             <Button
               className="w-1/4 bg-black text-white"
-              onClick={handlePaying}
+              onClick={() => {
+                handlePaying();
+              }}
             >
               Pay here
             </Button>

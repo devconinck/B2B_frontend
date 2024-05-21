@@ -10,10 +10,16 @@ import Error from "@/components/Error";
 import Status from "@/components/Status";
 import PrivateRoute from "@/components/PrivateRoute";
 import { Payment } from "./payment";
-import { AuthContextValue, useAuth } from "@/context/authContext";
+import { useAuth } from "@/context/authContext";
+import { jwtDecode } from "jwt-decode";
+import { Toaster } from "@/components/ui/toaster";
 
 const OrderScreen: NextPage = () => {
-  const { role } = useAuth() as AuthContextValue;
+  const { token }: any = useAuth();
+  let decoded: any;
+  if (token) {
+    decoded = jwtDecode(token);
+  }
   const columns: ColumnDef<Order>[] = [];
   columns.push(
     {
@@ -95,16 +101,16 @@ const OrderScreen: NextPage = () => {
       },
     }
   );
-  if (role === "CUSTOMER") {
-    columns.push({
-      accessorKey: "Payment",
-      cell: ({ row }) => {
-        const status = row.original.paymentStatus;
-        const orderId = row.getValue("orderId");
-        return <Payment orderId={orderId} value={status} />;
-      },
-    });
-  }
+  decoded?.role === "CUSTOMER"
+    ? columns.push({
+        accessorKey: "Payment",
+        cell: ({ row }) => {
+          const status = row.original.paymentStatus;
+          const orderId = row.getValue("orderId");
+          return <Payment orderId={orderId} value={status} />;
+        },
+      })
+    : null;
 
   const {
     data: orders,
@@ -140,7 +146,9 @@ const OrderScreen: NextPage = () => {
         <div className="flex items-center justify-between space-y-2 mb-5">
           <h2 className="text-2xl font-bold tracking-tight">
             Here is an overview of all{" "}
-            {role === "SUPPLIER" ? "the orders to your company" : "your orders"}
+            {decoded?.role === "SUPPLIER"
+              ? "the orders to your company"
+              : "your orders"}
           </h2>
         </div>
         <OrderTable
@@ -151,6 +159,7 @@ const OrderScreen: NextPage = () => {
           datePicker={true}
         />
       </div>
+      <Toaster />
     </PrivateRoute>
   );
 };
