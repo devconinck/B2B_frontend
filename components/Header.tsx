@@ -96,15 +96,19 @@ const Header = () => {
                 className=""
                 alt="delaware logo"
               />
-              {/*                <h1 className="text-xl font-bold">delaware</h1>
-               */}{" "}
             </Link>
           </div>
 
-          <div className="w-full flex-1 mx-6 justify-end  items-center space-x-4 md:block lg:space-x-6">
-            <form>
+          <div className="w-full flex-1 mx-6 justify-between  items-center space-x-4 md:flex flex-wrap lg:space-x-6">
+            <Button
+              variant={"link"}
+              className="ml-6 items-center hidden md:flex "
+            >
+              <Link href={"/orders"}>My Orders</Link>
+            </Button>
+            <form className="">
               <div className="flex justify-end">
-                <div className="relative w-full appearance-none bg-background shadow-none md:w-2/3 lg:w-1/3">
+                <div className="relative w-full appearance-none bg-background shadow-none ">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
                     ref={searchInputRef}
@@ -150,7 +154,9 @@ const Header = () => {
               <ProfileButton />
             ) : (
               <Link href="/login">
-                <Button variant={"ghost"}>Login</Button>
+                <Button variant={"ghost"} className="">
+                  Login
+                </Button>
               </Link>
             )}
           </div>

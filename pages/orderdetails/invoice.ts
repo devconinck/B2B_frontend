@@ -1,8 +1,8 @@
 import jsPDFInvoiceTemplate from "jspdf-invoice-template-nodejs";
 import { OrderItem, Company, Order } from "@/types";
 
-// TODO: 
-// ORDERSTATUS 
+// TODO:
+// ORDERSTATUS
 // PAYMENTSTATUS FIELDS
 
 // IETS MOOIER LAYOUTEN
@@ -14,7 +14,6 @@ export const handleDownloadInvoice = (
   order: Order,
   orderId: String
 ) => {
-  console.log(order.paymentStatus);
   const pdfObject = jsPDFInvoiceTemplate({
     outputType: "save",
     returnJsPDFDocObject: true,
@@ -23,7 +22,7 @@ export const handleDownloadInvoice = (
     compress: true,
     logo: {
       src: "https://i.ibb.co/yqJb3Fz/Delaware-3531928973.jpg",
-      type: "JPG",
+      type: "PNG",
       width: 53.33,
       height: 26.66,
       margin: { top: 0, left: 0 },
@@ -81,10 +80,14 @@ export const handleDownloadInvoice = (
         },
         {
           col1: "Total:",
-          col2: orderItems.reduce(
-            (total, item) => total + (item.unitPrice || 0) * (item.quantity || 0),
-            0
-          ) + " " + order.currency, 
+          col2:
+            orderItems.reduce(
+              (total, item) =>
+                total + (item.unitPrice || 0) * (item.quantity || 0),
+              0
+            ) +
+            " " +
+            order.currency,
           col3: "ALL",
           style: { fontSize: 14 },
         },

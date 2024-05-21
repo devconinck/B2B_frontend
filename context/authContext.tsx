@@ -10,6 +10,7 @@ import {
 import * as api from "../pages/api/index";
 import { QueryClient, useMutation } from "@tanstack/react-query";
 import { Company, Role, User } from "@/types";
+import { jwtDecode } from "jwt-decode";
 
 const JWT_TOKEN_KEY = "jwtToken";
 //@ts-ignore
@@ -38,19 +39,23 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null);
   const [ready, setReady] = useState(false);
   const [isAuthed, setIsAuthed] = useState(false);
-  const [role, setRole] = useState(null);
+  const [role, setRole] = useState<Role | null>(null);
 
   useEffect(() => {
-    api.setAuthToken(token!!);
-    setIsAuthed(Boolean(token));
-    setReady(true);
-    console.log(user);
-  }, [token, user]);
+    if (token) {
+      api.setAuthToken(token);
+      const data: any = jwtDecode(token);
+      setUser(data);
+      setRole(data.role);
+      setIsAuthed(true);
+      setReady(true);
+    }
+  }, [token]);
 
   const setSession = useCallback(
     (
       token: string,
-      user: { id: number, email: string, role: Role, companyId: number }
+      user: { id: number; email: string; role: Role; companyId: number }
     ) => {
       setToken(token);
       setUser(user);
@@ -68,7 +73,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const login = useCallback(
     async (email: string, password: string) => {
-      console.log("login");
       try {
         const { token, user } = await loginMutation.mutateAsync({
           email,
@@ -88,11 +92,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   );
 
   const logout = useCallback(() => {
+    localStorage.removeItem(JWT_TOKEN_KEY);
     setToken(null);
     setUser(null);
     setRole(null);
-
-    localStorage.removeItem(JWT_TOKEN_KEY);
+    setIsAuthed(false);
+    setReady(false);
   }, []);
 
   const value = useMemo<AuthContextValue>(

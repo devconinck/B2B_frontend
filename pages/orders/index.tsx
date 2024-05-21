@@ -15,6 +15,13 @@ import { jwtDecode } from "jwt-decode";
 import { Toaster } from "@/components/ui/toaster";
 
 const OrderScreen: NextPage = () => {
+  return (
+    <PrivateRoute>
+      <OrdersContent />
+    </PrivateRoute>
+  );
+};
+const OrdersContent: React.FC = () => {
   const { token }: any = useAuth();
   let decoded: any;
   if (token) {

@@ -42,11 +42,7 @@ export function ProfileButton() {
           </div>
         </DropdownMenuLabel> */}
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <Link href="/orders">
-            <DropdownMenuItem>My Orders</DropdownMenuItem>
-          </Link>
-        </DropdownMenuGroup>
+
         <DropdownMenuGroup>
           <Link href="/profile">
             <DropdownMenuItem>Profile</DropdownMenuItem>

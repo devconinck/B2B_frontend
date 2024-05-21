@@ -15,9 +15,7 @@ export const CustomerDetails = () => {
   let name, fromCompanyId, fromCompany, orderStatus, paymentStatus;
   const router = useRouter();
   const { orderId } = router.query;
-  const companyId = "1";
   const companies = useContext(CompaniesContext) as Company[];
-  const company = companies.find((company) => company.id === Number(companyId));
 
   const {
     data: info,
@@ -60,19 +58,14 @@ export const CustomerDetails = () => {
         >
           RETURN TO ORDERS
         </Button>
-        <Button
-          className="bg-[rgb(239,70,60)] ml-4 mt-2"
-          onClick={handleDownloadInvoice}
-        >
-          DOWNLOAD INVOICE
-        </Button>
+
         <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-center">
             <div className="flex justify-center md:justify-start">
               <div className="relative">
                 <Image
                   src={"/random.png"}
-                  alt={company.name}
+                  alt={fromCompany?.name ? fromCompany.name : "Company Name"}
                   width={200}
                   height={200}
                   className="w-32 h-32 object-cover rounded-full shadow-lg"
@@ -88,7 +81,9 @@ export const CustomerDetails = () => {
                 {fromCompany?.address.street}, {fromCompany?.address.city},{" "}
                 {fromCompany?.address.zipcode}, {fromCompany?.address.country}
               </p>
-              <p className="mt-2">Bank Account Number: {fromCompany?.bankAccountNr}</p>
+              <p className="mt-2">
+                Bank Account Number: {fromCompany?.bankAccountNr}
+              </p>
               <p className="mt-2">VAT: {fromCompany?.vatNumber}</p>
             </div>
             <div className="text-center md:text-right space-y-3">
