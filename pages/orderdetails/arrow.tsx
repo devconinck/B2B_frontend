@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 export default function Arrow() {
   return <ArrowLeftIcon className="h-12 w-12 dark:text-white" />;
 }

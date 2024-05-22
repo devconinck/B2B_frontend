@@ -1,7 +1,5 @@
-import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown } from "lucide-react";
 import { useRouter } from "next/router";
-import { Company, Order, OrderItem } from "@/types";
+import { Company, Order } from "@/types";
 import { OrderTable } from "../orders/ordertable";
 import { getOrderItems } from "../api/orderItem";
 import { useQuery } from "@tanstack/react-query";

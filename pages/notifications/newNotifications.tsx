@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getNotifications, markNotificationAsRead, updateNotificationStatus } from "../api/notifications";
+import {
+  getNotifications,
+  updateNotificationStatus,
+} from "../api/notifications";
 import { Notification, NotificationStatus } from "@/types";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -8,7 +11,11 @@ const NewNotifications = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: notifications, isLoading, error } = useQuery<Notification[]>({
+  const {
+    data: notifications,
+    isLoading,
+    error,
+  } = useQuery<Notification[]>({
     queryKey: ["newNotifications"],
     queryFn: () => getNotifications(1, 50, NotificationStatus.NEW),
     enabled: true,
@@ -26,7 +33,10 @@ const NewNotifications = () => {
               duration: 3000,
             });
 
-            await updateNotificationStatus(notification.id, NotificationStatus.UNREAD);
+            await updateNotificationStatus(
+              notification.id,
+              NotificationStatus.UNREAD
+            );
           })
         );
 
