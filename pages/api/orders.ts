@@ -1,15 +1,25 @@
 import { axios, setAuthToken } from "./index";
-import { Order } from "@/types";
+import { Order, OrderStatus, PaymentStatus, Role } from "@/types";
 
 const baseUrl = `/api/orders`;
 
-export const getAllOrdersFromCompany = async (
-  page?: number,
-  pageAmount?: number
-): Promise<Order[]> => {
+export const getAllOrdersFromCompany = async (params: {
+  role: Role;
+  companyId: string;
+  page?: number;
+  pageAmount?: number;
+  startDate?: Date;
+  endDate?: Date;
+  companyName?: string;
+  minAmount?: number;
+  maxAmount?: number;
+  orderReference?: string;
+  orderStatus?: OrderStatus;
+  paymentStatus?: PaymentStatus;
+}): Promise<Order[]> => {
   try {
     return await axios
-      .get(`${baseUrl}/all`, { params: { page, pageAmount } })
+      .get(`${baseUrl}/all`, { params })
       .then((res) => res.data);
   } catch (error) {
     throw error;
