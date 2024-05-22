@@ -5,14 +5,14 @@ import CompaniesContext from "@/context/companiesContext";
 import { getOrderById } from "../api/orders";
 import { Company } from "@/types";
 import { Button } from "@/components/ui/button";
-import { handleDownloadInvoice } from "./invoice";
 import Image from "next/image";
 import { Mail, Phone, Package, CreditCard } from "lucide-react";
 import { LoaderPersonaldetails } from "@/components/LoaderPersonaldetails";
 import Error from "@/components/Error";
+import Arrow from "./arrow";
 
 export const CustomerDetails = () => {
-  let name, fromCompanyId, fromCompany, orderStatus, paymentStatus;
+  let name, fromCompanyId: any, fromCompany, orderStatus, paymentStatus;
   const router = useRouter();
   const { orderId } = router.query;
   const companies = useContext(CompaniesContext) as Company[];
@@ -34,6 +34,7 @@ export const CustomerDetails = () => {
     );
   }
   if (error) {
+    //@ts-ignore
     <Error error={error} />;
   }
   if (!info) {
@@ -52,11 +53,8 @@ export const CustomerDetails = () => {
   return (
     <div className="flex flex-col min-h-[25dvh]">
       <header className="bg-gray-100 dark:bg-slate-600">
-        <Button
-          className="bg-[rgb(239,70,60)] ml-4 mt-2"
-          onClick={handleReturn}
-        >
-          RETURN TO ORDERS
+        <Button variant={"ghost"} onClick={handleReturn}>
+          <Arrow />
         </Button>
 
         <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12">
@@ -71,7 +69,6 @@ export const CustomerDetails = () => {
                   className="w-32 h-32 object-cover rounded-full shadow-lg"
                   priority={true}
                 />
-                {/* Optional: You can add a background overlay for contrast */}
                 <div className="absolute inset-0 bg-black opacity-25 rounded-full"></div>
               </div>
             </div>

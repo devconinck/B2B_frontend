@@ -5,6 +5,7 @@ import { useState } from "react";
 import { updateOrder } from "../api/orders";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
+import Image from "next/image";
 
 type PaymentProps = {
   orderId: any;
@@ -12,16 +13,13 @@ type PaymentProps = {
 };
 
 export const Payment = ({ orderId, value }: PaymentProps) => {
-  const [src, setSrc] = useState<String>("");
+  const [src, setSrc] = useState<string>("");
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
   const generateQrCode = async () => {
     try {
-      const response = await QRCode.toDataURL(`Click here to pay`, {
-        width: 350,
-        height: 350,
-      });
+      const response = await QRCode.toDataURL(`Click here to pay`);
       setSrc(response);
       if (process.env.NODE_ENV === "production") handlePaying();
     } catch (error) {
@@ -48,19 +46,17 @@ export const Payment = ({ orderId, value }: PaymentProps) => {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <img src={src} />
-        {process.env.NODE_ENV === "development" && (
-          <div className="flex justify-center items-center">
-            <Button
-              className="w-1/4 bg-black text-white"
-              onClick={() => {
-                handlePaying();
-              }}
-            >
-              Pay here
-            </Button>
-          </div>
-        )}
+        <Image src={src} alt="QR-code" width="450" height="450" />
+        <div className="flex justify-center items-center">
+          <Button
+            className="w-1/4 bg-black text-white"
+            onClick={() => {
+              handlePaying();
+            }}
+          >
+            Pay here
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   ) : null;

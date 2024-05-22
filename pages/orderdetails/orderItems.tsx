@@ -13,22 +13,21 @@ import { handleDownloadInvoice } from "./invoice";
 import { useContext } from "react";
 import CompaniesContext from "@/context/companiesContext";
 import { AuthContextValue, useAuth } from "@/context/authContext";
+import { useOrderDetailsColumns } from "./columns";
 
 const OrderItems = () => {
   const router = useRouter();
-  const { orderId, currency } = router.query;
+  const { orderId, currency }: any = router.query;
+
+  const columns = useOrderDetailsColumns(currency);
 
   const companies = useContext(CompaniesContext) as Company[];
   const { user } = useAuth() as AuthContextValue;
-  const {
-    data: info,
-    isLoading,
-    error,
-  } = useQuery({
+  const { data: info } = useQuery({
     queryKey: ["info"],
     queryFn: () => getOrderById(orderId),
   });
-  const currentCompany = companies.find(
+  const currentCompany: any = companies.find(
     (company) => company.id === user?.companyId
   );
   const company = companies.find(
@@ -58,6 +57,7 @@ const OrderItems = () => {
   }
 
   if (OrderItemError || OrderError) {
+    //@ts-ignore
     return <Error error={OrderItemError || OrderError} />;
   }
 
@@ -70,97 +70,6 @@ const OrderItems = () => {
   if (!company) {
     return <p>No personal information available</p>;
   }
-
-  const useOrderDetailsColumns = (currency: any) => {
-    const columns: ColumnDef<OrderItem>[] = [
-      {
-        accessorKey: "inStock",
-        header: ({ column }) => {
-          return (
-            <div
-              className="flex items-center"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === "asc")
-              }
-            >
-              <p className="mr-2">In Stock</p>
-              <ArrowUpDown className="h-4 w-4" />
-            </div>
-          );
-        },
-      },
-      {
-        accessorKey: "name",
-        header: ({ column }) => {
-          return (
-            <div
-              className="flex items-center"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === "asc")
-              }
-            >
-              <p className="mr-2">Name</p>
-              <ArrowUpDown className="h-4 w-4" />
-            </div>
-          );
-        },
-      },
-      {
-        accessorKey: "quantity",
-        header: ({ column }) => {
-          return (
-            <div
-              className="flex items-center"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === "asc")
-              }
-            >
-              <p className="mr-2">Quantity</p>
-              <ArrowUpDown className="h-4 w-4" />
-            </div>
-          );
-        },
-      },
-      {
-        accessorFn: (row) =>
-          `${(row.total || 0) * (row.quantity || 0)} ${currency}`,
-        id: "total",
-        header: ({ column }) => {
-          return (
-            <div
-              className="flex items-center"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === "asc")
-              }
-            >
-              <p className="mr-2">Total Productprice</p>
-              <ArrowUpDown className="h-4 w-4" />
-            </div>
-          );
-        },
-      },
-      {
-        accessorFn: (row) => `${row.unitPrice} ${currency}`,
-        id: "unitPrice",
-        header: ({ column }) => {
-          return (
-            <div
-              className="flex items-center"
-              onClick={() =>
-                column.toggleSorting(column.getIsSorted() === "asc")
-              }
-            >
-              <p className="mr-2">Unit Price</p>
-              <ArrowUpDown className="h-4 w-4" />
-            </div>
-          );
-        },
-      },
-    ];
-    return columns;
-  };
-
-  const columns = useOrderDetailsColumns(currency);
 
   return (
     <div className="container mx-auto py-0">

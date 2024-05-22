@@ -46,7 +46,10 @@ interface DataTableProps<TData, TValue> {
   datePicker: boolean;
 }
 
-export const OrderTable = <TData, TValue>({
+export const OrderTable = <
+  TData extends { date: string; currency: any },
+  TValue
+>({
   columns,
   data,
   sortingValue,
@@ -175,7 +178,7 @@ export const OrderTable = <TData, TValue>({
                     window.location.pathname === "/orders"
                       ? handleRowClick(
                           row?.getValue("orderId"),
-                          dataTable[0]?.currency
+                          dataTable[row?.index]?.currency
                         )
                       : null;
                   }}

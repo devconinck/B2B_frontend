@@ -1,12 +1,6 @@
 import jsPDFInvoiceTemplate from "jspdf-invoice-template-nodejs";
 import { OrderItem, Company, Order } from "@/types";
 
-// TODO:
-// ORDERSTATUS
-// PAYMENTSTATUS FIELDS
-
-// IETS MOOIER LAYOUTEN
-
 export const handleDownloadInvoice = (
   company: Company,
   current_company: Company,

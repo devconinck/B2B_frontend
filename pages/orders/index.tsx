@@ -129,18 +129,11 @@ const OrdersContent: React.FC = () => {
       getAllOrdersFromCompany(page, pageAmount),
   });
 
-  /*const filteredOrders = orders?.filter((order) => {
-    return (
-      order.orderStatus === "Placed" ||
-      order.orderStatus === "Processed" ||
-      (order.orderStatus === "Delivered" && order.paymentStatus === "Unpaid")
-    );
-  });*/
-
   if (isLoading) {
     return <LoaderOrders />;
   }
   if (error) {
+    //@ts-ignore
     return <Error error={error} />;
   }
   if (!orders) {

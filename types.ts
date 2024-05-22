@@ -77,6 +77,8 @@ export type OrderItem = {
   PRODUCT_ID: bigint | null;
   order_table: OrderTable | null;
   product: Product | null;
+  date: string;
+  currency: any;
 };
 
 export type Role = "SUPPLIER" | "CUSTOMER";
