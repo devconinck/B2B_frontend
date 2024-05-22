@@ -6,7 +6,7 @@ import Loader from "@/components/Loader";
 import Error from "@/components/Error";
 import CompaniesContext from "@/context/companiesContext";
 import ChatBot from "@/components/ChatBot";
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster";
 import NewNotifications from "./notifications/newNotifications";
 interface LayoutProps {
   children: React.ReactNode;

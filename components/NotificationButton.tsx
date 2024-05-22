@@ -10,7 +10,10 @@ import { useRouter } from "next/router";
 import { Bell } from "lucide-react";
 import { useAuth, AuthContextValue } from "@/context/authContext";
 import { useQuery } from "@tanstack/react-query";
-import { getNotifications, getUnreadNotificationsCount } from "@/pages/api/notifications";
+import {
+  getNotifications,
+  getUnreadNotificationsCount,
+} from "@/pages/api/notifications";
 import { Notification } from "@/types";
 
 export function NotificationButton() {
@@ -73,7 +76,7 @@ export function NotificationButton() {
             ) : (
               notifications?.slice(0, 5).map((notification) => (
                 <DropdownMenuItem
-                // LATEN STAAN
+                  // LATEN STAAN
                   key={notification.orderid}
                   onClick={() => handleNotificationClick(notification.orderid)}
                 >

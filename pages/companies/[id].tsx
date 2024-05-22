@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { getAllProductsForCompany } from "../api/companies";

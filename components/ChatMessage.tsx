@@ -1,6 +1,5 @@
-import { BotMessageSquare, CircleHelp, CircleUserRound } from "lucide-react";
+import { BotMessageSquare } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
-import { Avatar } from "@radix-ui/react-avatar";
 import { useTheme } from "next-themes";
 
 type ChatMessageProps = {

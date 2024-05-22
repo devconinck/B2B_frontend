@@ -8,8 +8,8 @@ import {
   ReactNode,
 } from "react";
 import * as api from "../pages/api/index";
-import { QueryClient, useMutation } from "@tanstack/react-query";
-import { Company, Role, User } from "@/types";
+import { useMutation } from "@tanstack/react-query";
+import { Role, User } from "@/types";
 import { jwtDecode } from "jwt-decode";
 
 const JWT_TOKEN_KEY = "jwtToken";

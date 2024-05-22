@@ -71,7 +71,7 @@ export type OrderItem = {
   quantity: number | null;
   SYNCID: number | null;
   total: number | null;
-  UNITOFMEASUREID: string | null;
+  unitOfMeasureId: string | null;
   unitPrice: number | null;
   FROMORDER_ID: bigint | null;
   PRODUCT_ID: bigint | null;
@@ -92,6 +92,7 @@ export type Order = {
   paymentStatus: string;
   fromCompanyId: string;
   currency: String;
+  orderDate: Date;
 };
 
 export enum OrderStatus {
@@ -110,22 +111,23 @@ export enum PaymentStatus {
 }
 
 export type Notification = {
-  id: string,
+  id: string;
   notificationType: NotificationType;
   date: string;
   text: string;
   orderId: string;
   notificationStatus: NotificationStatus;
+  orderid: string;
 };
 
 export enum NotificationType {
   PAYMENT_REQUEST = "Payment Request", // Only for the customer
   PAYMENT_RECEIVED = "Payment Received", // Only for the supplier
-  ORDER_READY = "Order Ready" // Only for the supplier
+  ORDER_READY = "Order Ready", // Only for the supplier
 }
 
 export enum NotificationStatus {
   READ = "READ",
   UNREAD = "UNREAD",
-  NEW = "NEW"
+  NEW = "NEW",
 }

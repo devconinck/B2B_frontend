@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { CompanyDetails } from "./cards/companyDetails";
 import { PersonalDetails } from "./cards/personalDetails";
-import { Formik, Form, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import { ProfileValidation } from "./profile_InitValues_Validation";
 import { InitialValues } from "./profile_InitValues_Validation";
 import { Payment } from "./cards/payment";
@@ -11,7 +11,7 @@ import { ErrorDisplay } from "./errorDisplay";
 import PrivateRoute from "@/components/PrivateRoute";
 import { NextPage } from "next";
 import { useAuth } from "@/context/authContext";
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
 
 const ProfileScreen: NextPage = () => {
   return (
@@ -22,10 +22,9 @@ const ProfileScreen: NextPage = () => {
 };
 
 const Profile = () => {
-
   const { token }: any = useAuth();
   let decoded: any;
-  if(token) {
+  if (token) {
     decoded = jwtDecode(token);
   }
   const { toast } = useToast();
@@ -57,7 +56,7 @@ const Profile = () => {
           <h1 className="text-3xl font-semibold">Profile</h1>
         </div>
         <div className="items-center mx-auto max-w-6xl">
-          <Formik             
+          <Formik
             initialValues={InitialValues()}
             validationSchema={ProfileValidation}
             onSubmit={async (values: any) => {
@@ -68,9 +67,14 @@ const Profile = () => {
               <Form className="flex flex-col gap-6">
                 <ErrorDisplay />
                 <CompanyDetails />
-                { decoded?.role === "SUPPLIER" ? <Payment /> : null}
+                {decoded?.role === "SUPPLIER" ? <Payment /> : null}
                 <PersonalDetails />
-                <Button type="submit" disabled={!isValid || isSubmitting} variant={"destructive"} className="w-full">
+                <Button
+                  type="submit"
+                  disabled={!isValid || isSubmitting}
+                  variant={"destructive"}
+                  className="w-full"
+                >
                   Submit
                 </Button>
               </Form>
@@ -80,7 +84,6 @@ const Profile = () => {
       </main>
     </div>
   );
-}
-
+};
 
 export default ProfileScreen;

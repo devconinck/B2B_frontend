@@ -1,8 +1,6 @@
-import React, { useState, FormEvent, useCallback } from "react";
-import { BotMessageSquare, Car, Moon, Send, Sun, X } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useState, FormEvent, useCallback } from "react";
+import { BotMessageSquare, Send, X } from "lucide-react";
 
-import { Button } from "./ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { Input } from "./ui/input";
 import ChatMessage from "./ChatMessage";
@@ -27,9 +25,7 @@ export default function ChatBot() {
   async function sendQuestion(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setQuestion("");
-    setChats([
-      ...chats,
-      { type: "Q", timestamp: "", msg: question }])
+    setChats([...chats, { type: "Q", timestamp: "", msg: question }]);
     setIsLoading(true);
     setError(null); // Clear previous errors when a new request starts
     try {
@@ -37,13 +33,14 @@ export default function ChatBot() {
         throw new Error("Gelieve iets in te vullen");
       }
       const answer = await sendChatMessage(question);
-      setChats([...chats,
+      setChats([
+        ...chats,
         { type: "Q", timestamp: "", msg: question },
         { type: "A", timestamp: "", msg: answer },
       ]);
     } catch (error) {
       // Capture the error message to display to the user
-      setError(error);
+      setError(error as string);
     } finally {
       setIsLoading(false);
     }

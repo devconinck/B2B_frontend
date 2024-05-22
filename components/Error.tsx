@@ -1,6 +1,5 @@
 import { isAxiosError } from "axios";
 import { useRouter } from "next/router";
-import React, { useCallback } from "react";
 import {
   AlertDialog,
   AlertDialogAction,

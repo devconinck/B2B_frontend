@@ -2,9 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { NextPage } from "next";
-import { FormProvider, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import Error from "@/components/Error";
 
 import { useRouter } from "next/router";
@@ -13,7 +12,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -111,7 +109,10 @@ export const Login: NextPage = () => {
               </div>
               <div className="mt-4 text-center text-sm">
                 Don&apos;t have an account?{" "}
-                <Link href="#" className="underline">
+                <Link
+                  href="mailto:support@delawareb2b.com"
+                  className="underline"
+                >
                   Contact us
                 </Link>
               </div>

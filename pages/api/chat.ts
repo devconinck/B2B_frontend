@@ -1,10 +1,11 @@
+import { AxiosResponse } from "axios";
 import { axios } from "./index";
 
 const baseUrl = `/api/chat`;
 
 export const sendChatMessage = async (message: string): Promise<string> => {
   try {
-    const response: object = await axios({
+    const response: AxiosResponse = await axios({
       method: "POST",
       url: baseUrl,
       data: {
@@ -13,7 +14,6 @@ export const sendChatMessage = async (message: string): Promise<string> => {
     });
 
     const answer: string = response.data;
-    console.log(answer);
     return answer;
   } catch (error) {
     throw error;

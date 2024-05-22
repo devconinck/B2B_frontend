@@ -24,10 +24,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-
 const Notifications = () => {
   const queryClient = useQueryClient();
-  
+
   const [page, setPage] = useState(1);
   const [pageAmount, setPageAmount] = useState(10);
   const [status, setStatus] = useState<NotificationStatus | undefined>(
@@ -66,14 +65,14 @@ const Notifications = () => {
   const handleMarkAsRead = async (notificationId: string) => {
     await markNotificationAsRead(notificationId);
     queryClient.refetchQueries({
-      queryKey: ['notifications']
+      queryKey: ["notifications"],
     });
   };
 
   const handleMarkAllAsRead = async () => {
     await markAllNotificationsAsRead();
     queryClient.refetchQueries({
-      queryKey: ['notifications'],
+      queryKey: ["notifications"],
     });
   };
 
@@ -91,7 +90,11 @@ const Notifications = () => {
   }
 
   if (error || unreadNotificationCountError) {
-    return <div>Error: {error?.message || unreadNotificationCountError?.message}</div>;
+    return (
+      <div>
+        Error: {error?.message || unreadNotificationCountError?.message}
+      </div>
+    );
   }
 
   return (
@@ -118,7 +121,10 @@ const Notifications = () => {
             </CardHeader>
             <CardContent className="p-0">
               <div className="mb-4">
-                <Select value={status} onValueChange={handleStatusChange}>
+                <Select
+                  value={status}
+                  onValueChange={handleStatusChange as (value: string) => void}
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Filter by status" />
                   </SelectTrigger>
