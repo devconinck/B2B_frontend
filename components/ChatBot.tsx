@@ -19,7 +19,6 @@ export default function ChatBot() {
 
   const handleClickBot = useCallback(() => {
     setVisible(!visible);
-    console.log(visible);
   }, [visible]);
 
   async function sendQuestion(event: FormEvent<HTMLFormElement>) {

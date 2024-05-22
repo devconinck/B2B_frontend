@@ -99,5 +99,4 @@ export const handleDownloadInvoice = (
     pageEnable: true,
     pageLabel: "Page ",
   });
-  console.log("PDF created", pdfObject);
 };

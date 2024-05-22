@@ -2,7 +2,7 @@ import Link from "next/link";
 import Container from "./ui/container";
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Menu, Search } from "lucide-react";
 import { Input } from "./ui/input";
 
@@ -10,16 +10,24 @@ import ModeToggle from "./ModeToggle";
 import { ProfileButton } from "./ProfileButton";
 import { NotificationButton } from "./NotificationButton";
 import { Separator } from "./ui/separator";
-import { useState, useRef, SetStateAction, useContext } from "react";
+import {
+  useState,
+  useRef,
+  SetStateAction,
+  useContext,
+  useCallback,
+} from "react";
 import CompaniesContext from "@/context/companiesContext";
 import { Company } from "@/types";
 import { useAuth, AuthContextValue } from "@/context/authContext";
+import router, { useRouter } from "next/router";
 
 const Header = () => {
   const companies: Company[] = useContext(CompaniesContext) as Company[];
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
-  const { isAuthed } = useAuth() as AuthContextValue;
+  const { isAuthed, logout } = useAuth() as AuthContextValue;
 
   const [search, setSearch] = useState("");
   const [numResults, setNumResults] = useState(5);
@@ -36,6 +44,11 @@ const Header = () => {
     setNumResults(numResults + 5);
     searchInputRef.current?.focus();
   };
+  const handleLogout = useCallback(async () => {
+    logout();
+
+    router.push("/");
+  }, [logout, router]);
 
   const routes = [
     {
@@ -43,12 +56,12 @@ const Header = () => {
       label: "My Orders",
     },
     {
-      href: "/profile",
-      label: "Profile",
-    },
-    {
       href: "/notifications",
       label: "Notifications",
+    },
+    {
+      href: "/profile",
+      label: "Profile",
     },
   ];
 
@@ -65,25 +78,43 @@ const Header = () => {
               <SheetContent side="left" className="w-[300px] sm:w-[400px]">
                 <nav className="flex flex-col gap-4">
                   {routes.map((route, i) => (
-                    <Link
-                      key={i}
-                      href={route.href}
-                      className="block px-2 py-1 text-lg"
-                    >
-                      {route.label}
-                    </Link>
+                    <SheetClose asChild key={i}>
+                      <Link
+                        key={i}
+                        href={route.href}
+                        className="block px-2 py-1 text-lg"
+                      >
+                        {route.label}
+                      </Link>
+                    </SheetClose>
                   ))}
                   <Separator />
-                  <Link
-                    href="/"
-                    /*onClick={handleLogout} */
-                    className="block px-2 py-1 text-lg "
-                  >
-                    Logout
-                  </Link>
+                  {isAuthed ? (
+                    <SheetClose asChild>
+                      <Button
+                        variant={"link"}
+                        className="block px-2 py-1 text-lg"
+                        onClick={handleLogout}
+                      >
+                        Log out
+                      </Button>
+                    </SheetClose>
+                  ) : (
+                    <SheetClose asChild>
+                      <Link href="/login">
+                        <Button
+                          variant={"ghost"}
+                          className="block px-2 py-1 text-lg"
+                        >
+                          Login
+                        </Button>
+                      </Link>
+                    </SheetClose>
+                  )}
                 </nav>
               </SheetContent>
             </Sheet>
+
             <Link href="/" className="ml-4 lg:ml-0">
               <Image
                 src="/Delaware-logo.svg.png"

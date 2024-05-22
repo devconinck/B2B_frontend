@@ -103,11 +103,11 @@ const CompanyPage: NextPage = () => {
             <h2 className="text-2xl md:text-3xl font-bold mb-8">
               Our Products
             </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {products.map((product, index) => (
                 <div
                   key={index}
-                  className="rounded-lg shadow-md overflow-hidden"
+                  className="rounded-lg shadow-md overflow-hidden bg-white p-4 transition-transform transform hover:scale-105"
                 >
                   <div className="p-4">
                     <h3 className="text-lg font-bold mb-2">
@@ -116,13 +116,13 @@ const CompanyPage: NextPage = () => {
                     <p className={expandedIndex === index ? "mb-2" : "hidden"}>
                       {product.description}
                     </p>
-                    <div className="flex justify-between items-center">
-                      <span className="font-semibold text-lg">
+                    <div className="flex justify-between items-center mt-4">
+                      <span className="font-semibold text-lg text-gray-800">
                         Price: ${product.price}
                       </span>
                       <button
                         onClick={() => toggleDescription(index)}
-                        className="text-blue-500"
+                        className="text-blue-500 hover:text-blue-700 transition-colors"
                       >
                         {expandedIndex === index ? "Show Less" : "Learn More"}
                       </button>

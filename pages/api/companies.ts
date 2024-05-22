@@ -5,16 +5,6 @@ import { setAuthToken } from "./index";
 
 const baseUrl = `/api/company`;
 
-export const getCompanyById = async (companyId: string): Promise<Company> => {
-  try {
-    return await axios
-      .get(`${baseUrl}/${companyId}`)
-      .then((res) => res.data[0]);
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const getAllCompanies = async (): Promise<Company[]> => {
   try {
     return await axios.get(baseUrl).then((res) => res.data.items);
