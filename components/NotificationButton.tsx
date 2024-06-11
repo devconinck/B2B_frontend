@@ -30,7 +30,7 @@ export function NotificationButton() {
     queryKey: ["unreadNotificationCount"],
     queryFn: getUnreadNotificationsCount,
     enabled: isAuthed,
-    refetchInterval: 30 * 1000,
+    refetchInterval: 1 * 1000,
   });
 
   const {
@@ -41,7 +41,7 @@ export function NotificationButton() {
     queryKey: ["notifications", currentPage, pageAmount],
     queryFn: () => getNotifications(currentPage, pageAmount),
     enabled: isAuthed,
-    refetchInterval: 30 * 1000,
+    refetchInterval: 1 * 1000,
   });
 
   const handleNotifications = () => {

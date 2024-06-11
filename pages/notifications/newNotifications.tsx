@@ -19,7 +19,7 @@ const NewNotifications = () => {
     queryKey: ["newNotifications"],
     queryFn: () => getNotifications(1, 50, NotificationStatus.NEW),
     enabled: true,
-    refetchInterval: 30 * 1000,
+    refetchInterval: 1 * 1000,
   });
 
   useEffect(() => {
