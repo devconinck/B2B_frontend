@@ -4,8 +4,6 @@ import { Order, OrderStatus, PaymentStatus, Role } from "@/types";
 const baseUrl = `/api/orders`;
 
 export const getAllOrdersFromCompany = async (params: {
-  role: Role;
-  companyId: string;
   page?: number;
   pageAmount?: number;
   startDate?: Date;

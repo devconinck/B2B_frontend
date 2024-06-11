@@ -32,8 +32,8 @@ const OrdersContent: React.FC = () => {
 
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState({
-    role: decoded?.role,
-    companyId: decoded?.companyId,
+    //role: decoded?.role,
+    //companyId: decoded?.companyId,
     page: 1,
     pageAmount: 20,
     startDate: undefined,

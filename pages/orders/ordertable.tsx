@@ -206,6 +206,7 @@ export const OrderTable = <
           </TableBody>
         </Table>
       </div>
+      {/* 
       <div className="flex flex-col sm:flex-row sm:items-end justify-end space-x-2 py-4">
         <div className="flex items-center space-x-6 lg:space-x-8">
           <div className="flex-items-center space-x-2">
@@ -256,6 +257,8 @@ export const OrderTable = <
           </div>
         </div>
       </div>
+
+      */}
     </div>
   );
 };
